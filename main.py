@@ -1,5 +1,6 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, request
 from dotenv import load_dotenv
+from http import HTTPStatus
 
 
 from util import json_response
@@ -35,6 +36,13 @@ def get_cards_for_board(board_id: int):
     :param board_id: id of the parent board
     """
     return queires.get_cards_for_board(board_id)
+
+
+@app.route("/api/boards/<int:board_id>/change_name", methods=["PUT"])
+def rename_board(board_id:int):
+    name = request.get_json()
+    queires.update_board_title(board_id, name)
+    return "Board title changed", HTTPStatus.OK
 
 
 def main():
