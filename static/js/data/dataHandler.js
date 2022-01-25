@@ -54,7 +54,7 @@ async function apiDelete(url) {
 
 async function apiPut(url, payload) {
   await fetch(url, {
-    method: "POST",
+    method: "PUT",
     headers: {
       'Content-Type': 'application/json'
     },
