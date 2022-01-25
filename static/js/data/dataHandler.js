@@ -37,36 +37,27 @@ async function apiGet(url) {
 }
 
 async function apiPost(url, payload) {
-  let response = await fetch(url, {
+  await fetch(url, {
     method: "POST",
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(payload)
   });
-  if (response.status === 200) {
-    return response.json();
-  }
 }
 
 async function apiDelete(url) {
-  let response = await fetch(url, {
+  await fetch(url, {
     method: "DELETE",
   });
-  if (response.status === 200) {
-    return response.json();
-  }
 }
 
 async function apiPut(url, payload) {
-  let response = await fetch(url, {
+  await fetch(url, {
     method: "POST",
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(payload)
   });
-  if (response.status === 200) {
-    return response.json();
-  }
 }
