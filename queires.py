@@ -55,4 +55,4 @@ def update_board_title(board_id, new_name):
         UPDATE boards SET title = %(new_name)s
         WHERE board_id = %(board_id)s
         """
-        , {"board_id": board_id, "new_title": new_name})
+        , {"board_id": board_id, "new_name": new_name})
