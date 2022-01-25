@@ -15,6 +15,11 @@ export let boardsManager = {
         "click",
         showHideButtonHandler
       );
+      domManager.addEventListener(
+          `.rename-board-button[data-board-id="${board.id}"]`,
+          "click",
+          renameBoardHandler
+      );
     }
   },
 };
@@ -22,4 +27,9 @@ export let boardsManager = {
 function showHideButtonHandler(clickEvent) {
   const boardId = clickEvent.target.dataset.boardId;
   cardsManager.loadCards(boardId);
+}
+
+function renameBoardHandler(clickEvent) {
+  const boardId = clickEvent.target.dataset.boardId;
+  dataHandler.renameBoard(boardId)
 }
