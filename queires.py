@@ -53,6 +53,6 @@ def update_board_title(board_id, new_name):
     data_manager.execute_modify(
         """
         UPDATE boards SET title = %(new_name)s
-        WHERE board_id = %(board_id)s
+        WHERE id = %(board_id)s
         """
         , {"board_id": board_id, "new_name": new_name})
