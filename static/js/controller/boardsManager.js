@@ -30,6 +30,7 @@ function showHideButtonHandler(clickEvent) {
 }
 
 function renameBoardHandler(submitEvent) {
+  submitEvent.preventDefault();
   const boardId = submitEvent.target.dataset.boardId;
   const newTitle = submitEvent.target.querySelector("input").value;
   dataHandler.renameBoard(boardId, newTitle);
