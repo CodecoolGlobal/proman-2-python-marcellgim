@@ -32,13 +32,41 @@ async function apiGet(url) {
     method: "GET",
   });
   if (response.status === 200) {
-    let data = response.json();
-    return data;
+    return response.json();
   }
 }
 
-async function apiPost(url, payload) {}
+async function apiPost(url, payload) {
+  let response = await fetch(url, {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  });
+  if (response.status === 200) {
+    return response.json();
+  }
+}
 
-async function apiDelete(url) {}
+async function apiDelete(url) {
+  let response = await fetch(url, {
+    method: "DELETE",
+  });
+  if (response.status === 200) {
+    return response.json();
+  }
+}
 
-async function apiPut(url) {}
+async function apiPut(url, payload) {
+  let response = await fetch(url, {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  });
+  if (response.status === 200) {
+    return response.json();
+  }
+}
