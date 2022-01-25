@@ -16,9 +16,9 @@ export let boardsManager = {
         showHideButtonHandler
       );
       domManager.addEventListener(
-          `.rename-board-button[data-board-id="${board.id}"]`,
+          `.board-title[data-board-id="${board.id}"]`,
           "click",
-          renameBoardHandler
+          editBoardnameHandler
       );
     }
   },
@@ -29,7 +29,17 @@ function showHideButtonHandler(clickEvent) {
   cardsManager.loadCards(boardId);
 }
 
-function renameBoardHandler(clickEvent) {
-  const boardId = clickEvent.target.dataset.boardId;
-  dataHandler.renameBoard(boardId)
+function renameBoardHandler(submitEvent) {
+  const boardId = submitEvent.target.dataset.boardId;
+  const newTitle = submitEvent.target.querySelector("input").value;
+  dataHandler.renameBoard(boardId, newTitle);
+}
+
+function editBoardnameHandler(clickEvent) {
+  const nameForm = document.createElement("form");
+  const formBuilder = htmlFactory(htmlTemplates.nameForm);
+  nameForm.dataset.boardId = clickEvent.target.dataset.boardId;
+  nameForm.innerHTML = formBuilder(clickEvent.target.innerText);
+  nameForm.addEventListener("submit", renameBoardHandler)
+  clickEvent.target.replaceWith(nameForm);
 }
