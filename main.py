@@ -42,7 +42,7 @@ def login():
         return redirect(url_for("index"))
 
 
-@app.route("/logout", methods=["GET", "POST"])
+@app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("index"))
