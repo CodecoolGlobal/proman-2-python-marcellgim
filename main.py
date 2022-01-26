@@ -1,14 +1,14 @@
-from flask import Flask, render_template, url_for, request
+from flask import Flask, render_template, url_for, request, redirect, session, flash
 from dotenv import load_dotenv
 
-
-from util import json_response
+from util import json_response, hash_password, check_password
 import mimetypes
 import queires
 from http import HTTPStatus
 
 mimetypes.add_type('application/javascript', '.js')
 app = Flask(__name__)
+app.secret_key = "so_secret"
 load_dotenv()
 
 
@@ -18,6 +18,41 @@ def index():
     This is a one-pager which shows all the boards and cards
     """
     return render_template('index.html')
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "GET":
+        return render_template('register.html')
+    username = request.form.get("username")
+    password = hash_password(request.form.get("password"))
+    if not queires.check_existing_user(username):
+        queires.new_user(username, password)
+        return redirect(url_for("index"))
+    else:
+        flash("Username already exists")
+        return redirect(url_for("register"))
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "GET":
+        return render_template('login.html')
+    else:
+        username = request.form.get("username")
+        plain_pw = request.form.get("password")
+        if check_password(plain_pw, username):
+            session["username"] = username
+            return redirect(url_for("index"))
+        else:
+            flash("Wrong username and/or password")
+            return redirect(url_for("login"))
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("index"))
 
 
 @app.route("/api/boards")
@@ -47,14 +82,14 @@ def add_new_card(board_id):
 
 
 @app.route("/api/cards/<int:card_id>/change_name", methods=["PUT"])
-def rename_card(card_id:int):
+def rename_card(card_id: int):
     name = request.get_json()
     queires.update_card_title(card_id, name)
     return "Card title changed", HTTPStatus.OK
 
 
 @app.route("/api/boards/<int:board_id>/change_name", methods=["PUT"])
-def rename_board(board_id:int):
+def rename_board(board_id: int):
     name = request.get_json()
     queires.update_board_title(board_id, name)
     return "Board title changed", HTTPStatus.OK
