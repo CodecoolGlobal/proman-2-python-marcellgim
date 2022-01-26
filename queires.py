@@ -69,3 +69,12 @@ def get_password_by_username(username):
         WHERE username = %(username)s;
         """
         , {"username": username}, False)
+
+
+def new_user(username, password):
+    data_manager.execute_modify(
+        """
+        INSERT INTO users (username, password)
+        VALUES (%(username)s, %(password)s);
+        """
+        , {"username": username, "password": password})
