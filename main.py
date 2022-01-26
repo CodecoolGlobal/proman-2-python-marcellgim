@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, request
 from dotenv import load_dotenv
 
+
 from util import json_response
 import mimetypes
 import queires
@@ -42,6 +43,20 @@ def add_new_card(board_id):
     title = request.json['cardTitle']
     queires.add_new_card(board_id, title)
     return "Card added", HTTPStatus.OK
+
+
+@app.route("/api/cards/<int:card_id>/change_name", methods=["PUT"])
+def rename_card(card_id:int):
+    name = request.get_json()
+    queires.update_card_title(card_id, name)
+    return "Card title changed", HTTPStatus.OK
+
+
+@app.route("/api/boards/<int:board_id>/change_name", methods=["PUT"])
+def rename_board(board_id:int):
+    name = request.get_json()
+    queires.update_board_title(board_id, name)
+    return "Board title changed", HTTPStatus.OK
 
 
 def main():
