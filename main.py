@@ -79,6 +79,12 @@ def board_statuses(boardId: int):
     return queires.get_statuses_by_table_id(boardId)
 
 
+@app.route("/api/board/latest/")
+@json_response
+def get_latest_board():
+    return queires.get_latest_board()
+
+
 def main():
     app.run(debug=True)
 

@@ -9,6 +9,8 @@ export let boardsManager = {
     for (let board of boards) {
       const statuses = await dataHandler.getStatusesByBoardId(board.id)
       const boardBuilder = htmlFactory(htmlTemplates.board);
+      // console.log(board)
+      // console.log(statuses)
       const content = boardBuilder(board, statuses);
 
       domManager.addChild("#root", content);
@@ -29,19 +31,24 @@ export let boardsManager = {
       );
     }
   },
-  createBoard: async function () {
+  createBoard: function () {
     domManager.addEventListener(
         '.new-board',
         "click",
-        await createBoard
+        createBoard
     )
   }
-
-
 };
-function createBoard(){
-  console.log("woo")
-  dataHandler.createNewBoard()
+async function createBoard(){
+  await dataHandler.createNewBoard()
+  const board = await dataHandler.getLatestBoard()
+  const statuses = await dataHandler.getStatuses()
+  console.log(board)
+  console.log(statuses)
+  const boardBuilder = htmlFactory(htmlTemplates.board)
+  const content = boardBuilder(board, statuses)
+  domManager.addChild("#root", content);
+
 }
 
 function showHideButtonHandler(clickEvent) {

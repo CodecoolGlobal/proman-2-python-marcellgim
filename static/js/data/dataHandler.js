@@ -36,8 +36,12 @@ export let dataHandler = {
   renameCard: async function (cardId, newTitle) {
     await apiPut(`/api/cards/${cardId}/change_name`, newTitle)
   },
-    renameBoard: async function (boardId, newTitle) {
+  renameBoard: async function (boardId, newTitle) {
     await apiPut(`/api/boards/${boardId}/change_name`, newTitle)
+  },
+  getLatestBoard: async function () {
+    const response = await apiGet("/api/board/latest/")
+    return response
   }
 
 };

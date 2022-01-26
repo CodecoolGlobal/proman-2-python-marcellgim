@@ -101,3 +101,16 @@ def create_new_board(board_title):
         """
         , {"board_title": board_title})
 
+
+def get_latest_board():
+    board_id = data_manager.execute_select(
+        """
+        SELECT id, title
+        FROM boards
+        WHERE id=(
+            SELECT MAX(id)
+            FROM boards
+        )
+        """
+    , fetchall=False)
+    return board_id
