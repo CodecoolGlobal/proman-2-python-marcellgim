@@ -19,11 +19,19 @@ export let cardsManager = {
           "click",
           editCardnameHandler
       );
+      domManager.addEventListener(
+          `.delete-card[data-card-id="${card.id}"]`,
+          "click",
+          deleteButtonHandler
+      );
     }
   },
 };
 
-function deleteButtonHandler(clickEvent) {}
+function deleteButtonHandler(clickEvent) {
+  const cardId = clickEvent.target.dataset.cardId
+  dataHandler.deleteCard(cardId)
+}
 
 
 function renameCardHandler(submitEvent) {
@@ -32,6 +40,7 @@ function renameCardHandler(submitEvent) {
   const newTitle = submitEvent.target.querySelector("input").value;
   dataHandler.renameCard(cardId, newTitle);
 }
+
 
 function editCardnameHandler(clickEvent) {
   const nameForm = document.createElement("form");
