@@ -91,3 +91,21 @@ def update_board_title(board_id, new_name):
         WHERE id = %(board_id)s
         """
         , {"board_id": board_id, "new_name": new_name})
+
+
+def get_board(board_id):
+    return data_manager.execute_select(
+        """
+        SELECT * FROM boards
+        WHERE id = %(board_id)s;
+        """
+        , {"board_id": board_id}, False)
+
+
+def get_card(card_id):
+    return data_manager.execute_select(
+        """
+        SELECT * FROM cards
+        WHERE id = %(card_id)s;
+        """
+        , {"card_id": card_id}, False)

@@ -3,7 +3,9 @@ import {dataHandler} from "../data/dataHandler.js";
 export const htmlTemplates = {
     board: 1,
     card: 2,
-    nameForm: 3
+    nameForm: 3,
+    boardTitle: 4,
+    cardTitle: 5
 }
 
 export function htmlFactory(template) {
@@ -14,6 +16,10 @@ export function htmlFactory(template) {
             return cardBuilder
         case htmlTemplates.nameForm:
             return nameFormBuilder
+        case htmlTemplates.boardTitle:
+            return boardTitleBuilder
+        case htmlTemplates.cardTitle:
+            return cardTitleBuilder
         default:
             console.error("Undefined template: " + template)
             return () => { return "" }
@@ -66,4 +72,12 @@ function columnBuilder(board, statuses){
 `
     }
     return columns
+}
+
+function boardTitleBuilder(board) {
+    return `<span class="board-title" data-board-id="${board.id}">${board.title}</span>`
+}
+
+function cardTitleBuilder(card) {
+    return `<div class="card-title" data-card-id="${card.id}">${card.title}</div>`
 }
