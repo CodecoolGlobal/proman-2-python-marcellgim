@@ -29,7 +29,20 @@ export let boardsManager = {
       );
     }
   },
+  createBoard: async function () {
+    domManager.addEventListener(
+        '.new-board',
+        "click",
+        await createBoard
+    )
+  }
+
+
 };
+function createBoard(){
+  console.log("woo")
+  dataHandler.createNewBoard()
+}
 
 function showHideButtonHandler(clickEvent) {
   const boardId = clickEvent.target.dataset.boardId;

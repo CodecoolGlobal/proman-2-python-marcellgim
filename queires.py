@@ -91,3 +91,13 @@ def update_board_title(board_id, new_name):
         WHERE id = %(board_id)s
         """
         , {"board_id": board_id, "new_name": new_name})
+
+
+def create_new_board(board_title):
+    data_manager.execute_modify(
+        """
+        INSERT INTO boards
+        VALUES(DEFAULT, %(board_title)s );
+        """
+        , {"board_title": board_title})
+

@@ -68,6 +68,12 @@ section.board{
     display: none;
     flex-wrap: nowrap;
 }
+.board-columns-shown{
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    background-color: white;
+}
 
 .board-column{
     padding: 10px;
@@ -126,4 +132,12 @@ section.board{
 
 .card-title{
     padding-right: 16px;
+}
+
+.header-column{
+    display: flex;
+    padding: 10px;
+    flex: 1;
+    justify-content: space-between;
+    align-items: center;
 }

@@ -15,6 +15,14 @@
         <script type="module" src="{{ url_for('static', filename='js/main.js') }}" defer></script>
     </head>
     <body>
+        <div class="board-container" id="ui-board">
+            <div class="board-columns-shown">
+                <div class="header-column">
+                    <div>Proman</div>
+                    <div><button class="new-board">+ New Board</button></div>
+                </div>
+            </div>
+        </div>
         <div id="root" class="board-container"></div>
     </body>
 </html>
