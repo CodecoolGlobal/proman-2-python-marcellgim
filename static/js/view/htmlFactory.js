@@ -1,6 +1,7 @@
 export const htmlTemplates = {
     board: 1,
-    card: 2
+    card: 2,
+    nameForm: 3
 }
 
 export function htmlFactory(template) {
@@ -9,6 +10,8 @@ export function htmlFactory(template) {
             return boardBuilder
         case htmlTemplates.card:
             return cardBuilder
+        case htmlTemplates.nameForm:
+            return nameFormBuilder
         default:
             console.error("Undefined template: " + template)
             return () => { return "" }
@@ -24,5 +27,10 @@ function boardBuilder(board) {
 
 function cardBuilder(card) {
     return `<div class="card" data-card-id="${card.id}">${card.title}</div>`;
+}
+
+function nameFormBuilder(currentValue) {
+    return `<input type="text" value="${currentValue}">
+            <button type="submit">Save</button>`
 }
 
