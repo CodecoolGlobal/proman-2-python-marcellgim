@@ -26,8 +26,11 @@ def register():
         return render_template('register.html')
     username = request.form.get("username")
     password = hash_password(request.form.get("password"))
-    queires.new_user(username, password)
-    return redirect(url_for("index"))
+    if not queires.check_existing_user(username):
+        queires.new_user(username, password)
+        return redirect(url_for("index"))
+    else:
+        return redirect(url_for("register"))
 
 
 @app.route("/login", methods=["GET", "POST"])

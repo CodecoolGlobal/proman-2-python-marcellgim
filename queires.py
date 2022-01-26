@@ -78,3 +78,13 @@ def new_user(username, password):
         VALUES (%(username)s, %(password)s);
         """
         , {"username": username, "password": password})
+
+
+def check_existing_user(username):
+    users = data_manager.execute_select(
+        """
+        SELECT username FROM users;
+        """
+        )
+    usernames = [user["username"] for user in users]
+    return username in usernames
