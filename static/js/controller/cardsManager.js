@@ -13,11 +13,6 @@ export let cardsManager = {
       domManager.addChild(`.board-column-content[data-board-id="${boardId}"].board-column-content[status-id="${card['status_id']}"]`, content);
 
       domManager.addEventListener(
-        `.card[data-card-id="${card.id}"]`,
-        "click",
-        deleteButtonHandler
-      );
-      domManager.addEventListener(
           `.card-title[data-card-id="${card.id}"]`,
           "click",
           editCardnameHandler

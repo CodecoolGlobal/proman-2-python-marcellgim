@@ -65,7 +65,7 @@ function createCardEventHandler(submitEvent){
   submitEvent.preventDefault();
   const boardId = submitEvent.target.dataset.boardId;
   const title = submitEvent.target.querySelector("input").value;
-  dataHandler.createNewCard(boardId, title).then();
+  dataHandler.createNewCard(boardId, title);
 }
 
 
