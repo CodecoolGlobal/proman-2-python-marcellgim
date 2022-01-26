@@ -28,7 +28,15 @@ export let boardsManager = {
 function showHideButtonHandler(clickEvent) {
   const boardId = clickEvent.target.dataset.boardId;
   toggleBoard(boardId)
-  cardsManager.loadCards(boardId);
+  if(!clickEvent.target.classList.contains("loaded")){
+    clickEvent.target.classList.add("loaded")
+    cardsManager.loadCards(boardId);
+  }
+  if(clickEvent.target.innerHTML === "Show Cards"){
+    clickEvent.target.innerHTML = "Hide cards"
+  } else {
+    clickEvent.target.innerHTML = "Show cards"
+  }
 }
 
 function renameBoardHandler(submitEvent) {
@@ -48,6 +56,10 @@ function editBoardnameHandler(clickEvent) {
 }
 
 function toggleBoard(boardId){
-
-  // let board = document.querySelector('')
+  let board = document.querySelector(`.board-columns[data-board-id="${boardId}"]`)
+  if(board.style.display === ""){
+    board.style.display = "flex"
+  }else if(board.style.display === "flex"){
+    board.style.display = ""
+  }
 }

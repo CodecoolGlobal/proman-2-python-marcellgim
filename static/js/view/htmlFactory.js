@@ -27,7 +27,7 @@ function boardBuilder(board, statuses) {
     return `
 <section class="board" data-board-id=${board.id}>
     <div class="board-header"><span class="board-title" data-board-id="${board.id}">${board.title}</span><button class="toggle-board-button" data-board-id="${board.id}">Show Cards</button></div>
-    <div class="board-columns">
+    <div class="board-columns" data-board-id="${board.id}">
         ${columns}
     </div>
 </section>
