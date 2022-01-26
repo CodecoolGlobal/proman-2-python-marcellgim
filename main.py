@@ -1,10 +1,10 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, request
 from dotenv import load_dotenv
-
 
 from util import json_response
 import mimetypes
 import queires
+from http import HTTPStatus
 
 mimetypes.add_type('application/javascript', '.js')
 app = Flask(__name__)
@@ -35,6 +35,13 @@ def get_cards_for_board(board_id: int):
     :param board_id: id of the parent board
     """
     return queires.get_cards_for_board(board_id)
+
+
+@app.route("/api/boards/<int:board_id>/add_card", methods=["POST"])
+def add_new_card(board_id):
+    title = request.json['cardTitle']
+    queires.add_new_card(board_id, title)
+    return "Card added", HTTPStatus.OK
 
 
 def main():

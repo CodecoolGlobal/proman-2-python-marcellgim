@@ -17,5 +17,5 @@ export let cardsManager = {
     }
   },
 };
-
 function deleteButtonHandler(clickEvent) {}
+

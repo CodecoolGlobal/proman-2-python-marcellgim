@@ -1,6 +1,7 @@
 export const htmlTemplates = {
     board: 1,
     card: 2
+
 }
 
 export function htmlFactory(template) {
@@ -19,10 +20,17 @@ function boardBuilder(board) {
     return `<div class="board-container">
                 <div class="board" data-board-id=${board.id}>${board.title}</div>
                 <button class="toggle-board-button" data-board-id="${board.id}">Show Cards</button>
+                <button class="new-card" data-board-id="${board.id}">Add new card</button>
             </div>`;
 }
 
 function cardBuilder(card) {
     return `<div class="card" data-card-id="${card.id}">${card.title}</div>`;
+}
+
+export function addNewCardForm() {
+    return'<input type="text">' +
+          '<button type="submit">Save</button>'
+
 }
 
