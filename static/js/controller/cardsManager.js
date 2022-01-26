@@ -10,7 +10,7 @@ export let cardsManager = {
       console.log(card)
       const cardBuilder = htmlFactory(htmlTemplates.card);
       const content = cardBuilder(card);
-      domManager.addChild(`.board-column[data-board-id="${boardId}"].board-column[status-id="${card['status_id']}"]`, content);
+      domManager.addChild(`.board-column-content[data-board-id="${boardId}"].board-column-content[status-id="${card['status_id']}"]`, content);
 
       domManager.addEventListener(
         `.card[data-card-id="${card.id}"]`,

@@ -18,6 +18,15 @@ def get_card_status(status_id):
     return status
 
 
+def get_statuses():
+    status = data_manager.execute_select(
+        """
+        SELECT * FROM statuses
+        """
+    )
+    return status
+
+
 def get_boards():
     """
     Gather all boards
@@ -43,3 +52,15 @@ def get_cards_for_board(board_id):
         , {"board_id": board_id})
 
     return matching_cards
+
+
+def get_statuses_by_table_id(table_id):
+    statuses = data_manager.execute_select(
+        """
+        SELECT status_id, statuses.title
+        FROM cards
+        JOIN statuses ON cards.status_id = statuses.id
+        GROUP BY status_id, statuses.id
+        """
+    )
+    return statuses

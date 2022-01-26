@@ -7,8 +7,9 @@ export let boardsManager = {
   loadBoards: async function () {
     const boards = await dataHandler.getBoards();
     for (let board of boards) {
+      const statuses = await dataHandler.getStatusesByBoardId(board.id)
       const boardBuilder = htmlFactory(htmlTemplates.board);
-      const content = boardBuilder(board);
+      const content = boardBuilder(board, statuses);
       domManager.addChild("#root", content);
       domManager.addEventListener(
         `.toggle-board-button[data-board-id="${board.id}"]`,
