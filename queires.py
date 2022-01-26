@@ -23,6 +23,7 @@ def get_boards():
     Gather all boards
     :return:
     """
+
     return data_manager.execute_select(
         """
         SELECT * FROM boards
@@ -44,6 +45,15 @@ def get_cards_for_board(board_id):
     return matching_cards
 
 
+def add_new_card(board_id, title):
+
+    data_manager.execute_modify(
+        """
+        INSERT INTO cards VALUES(DEFAULT, %(board_id)s, DEFAULT, %(title)s, DEFAULT);
+        """
+        , {"board_id": board_id, "title": title})
+
+
 def update_card_title(card_id, new_name):
     data_manager.execute_modify(
         """
@@ -51,8 +61,8 @@ def update_card_title(card_id, new_name):
         WHERE id = %(card_id)s
         """
         , {"card_id": card_id, "new_name": new_name})
-    
-    
+
+
 def update_board_title(board_id, new_name):
     data_manager.execute_modify(
         """
