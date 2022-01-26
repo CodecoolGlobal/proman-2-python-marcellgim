@@ -27,18 +27,34 @@ def get_statuses():
     return status
 
 
-def get_boards():
+def get_public_boards():
     """
-    Gather all boards
+    Gather all public boards
     :return:
     """
 
     return data_manager.execute_select(
         """
         SELECT * FROM boards
+        WHERE user_id IS null;
         ;
         """
     )
+
+
+def get_user_boards(user_id):
+    """
+    Gather all public boards and private boards for user
+    :return:
+    """
+
+    return data_manager.execute_select(
+        """
+        SELECT * FROM boards
+        WHERE user_id IS null OR user_id = %(user_id)s
+        ;
+        """
+        , {"user_id": user_id})
 
 
 def get_cards_for_board(board_id):
@@ -146,3 +162,13 @@ def delete_card(card_id):
         WHERE id = %(card_id)s
         """
         , {"card_id": card_id})
+
+
+def get_user_id(username):
+    return data_manager.execute_select(
+        """
+        SELECT id FROM users
+        WHERE username = %(username)s
+        ;
+        """
+        , {"username": username}, False)
