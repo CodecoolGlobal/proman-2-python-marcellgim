@@ -26,7 +26,7 @@ function boardBuilder(board, statuses) {
     let columns = columnBuilder(board, statuses)
     return `
 <section class="board" data-board-id=${board.id}>
-    <div class="board-header"><span class="board-title" data-board-id="${board.id}">${board.title}</span><button class="toggle-board-button" data-board-id="${board.id}">Show Cards</button></div>
+    <div class="board-header"><span class="board-title" data-board-id="${board.id}">${board.title}</span><button class="toggle-board-button" data-board-id="${board.id}">Show Cards</button><button class="new-card" data-board-id="${board.id}">Add new card</button></div>
     <div class="board-columns" data-board-id="${board.id}">
         ${columns}
     </div>
@@ -40,6 +40,12 @@ function cardBuilder(card) {
     <div class="card-remove"></div>
     <div class="card-title" data-card-id="${card.id}">${card.title}</div>
 </div>`;
+}
+
+export function addNewCardForm() {
+    return'<input type="text">' +
+          '<button type="submit">Save</button>'
+
 }
 
 function nameFormBuilder(currentValue) {

@@ -66,6 +66,15 @@ def get_statuses_by_table_id(table_id):
     return statuses
 
 
+def add_new_card(board_id, title):
+
+    data_manager.execute_modify(
+        """
+        INSERT INTO cards VALUES(DEFAULT, %(board_id)s, DEFAULT, %(title)s, DEFAULT);
+        """
+        , {"board_id": board_id, "title": title})
+
+
 def update_card_title(card_id, new_name):
     data_manager.execute_modify(
         """

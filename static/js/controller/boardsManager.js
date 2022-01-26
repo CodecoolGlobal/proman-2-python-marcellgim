@@ -1,5 +1,5 @@
 import { dataHandler } from "../data/dataHandler.js";
-import { htmlFactory, htmlTemplates } from "../view/htmlFactory.js";
+import {addNewCardForm, htmlFactory, htmlTemplates} from "../view/htmlFactory.js";
 import { domManager } from "../view/domManager.js";
 import { cardsManager } from "./cardsManager.js";
 
@@ -10,6 +10,7 @@ export let boardsManager = {
       const statuses = await dataHandler.getStatusesByBoardId(board.id)
       const boardBuilder = htmlFactory(htmlTemplates.board);
       const content = boardBuilder(board, statuses);
+
       domManager.addChild("#root", content);
       domManager.addEventListener(
         `.toggle-board-button[data-board-id="${board.id}"]`,
@@ -20,6 +21,11 @@ export let boardsManager = {
           `.board-title[data-board-id="${board.id}"]`,
           "click",
           editBoardnameHandler
+      );
+      domManager.addEventListener(
+          `.new-card[data-board-id="${board.id}"]`,
+          "click",
+          addCardEventHandler
       );
     }
   },
@@ -33,9 +39,9 @@ function showHideButtonHandler(clickEvent) {
     cardsManager.loadCards(boardId);
   }
   if(clickEvent.target.innerHTML === "Show Cards"){
-    clickEvent.target.innerHTML = "Hide cards"
+    clickEvent.target.innerHTML = "Hide Cards"
   } else {
-    clickEvent.target.innerHTML = "Show cards"
+    clickEvent.target.innerHTML = "Show Cards"
   }
 }
 
@@ -53,6 +59,23 @@ function editBoardnameHandler(clickEvent) {
   nameForm.innerHTML = formBuilder(clickEvent.target.innerText);
   nameForm.addEventListener("submit", renameBoardHandler)
   clickEvent.target.replaceWith(nameForm);
+}
+
+function createCardEventHandler(submitEvent){
+  submitEvent.preventDefault();
+  const boardId = submitEvent.target.dataset.boardId;
+  const title = submitEvent.target.querySelector("input").value;
+  dataHandler.createNewCard(boardId, title).then();
+}
+
+
+function addCardEventHandler(clickEvent) {
+    const cardForm = document.createElement("form");
+    cardForm.dataset.boardId = clickEvent.target.dataset.boardId;
+    cardForm.innerHTML = addNewCardForm()
+    cardForm.addEventListener("submit", createCardEventHandler);
+    clickEvent.target.replaceWith(cardForm)
+
 }
 
 function toggleBoard(boardId){
