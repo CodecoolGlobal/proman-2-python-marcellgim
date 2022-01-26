@@ -2,12 +2,13 @@ from flask import Flask, render_template, url_for, request, redirect, session
 from dotenv import load_dotenv
 from http import HTTPStatus
 
-from util import json_response, hash_password
+from util import json_response, hash_password, check_password
 import mimetypes
 import queires
 
 mimetypes.add_type('application/javascript', '.js')
 app = Flask(__name__)
+app.secret_key = "so_secret"
 load_dotenv()
 
 
@@ -27,6 +28,18 @@ def register():
     password = hash_password(request.form.get("password"))
     queires.new_user(username, password)
     return redirect(url_for("index"))
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "GET":
+        return render_template('login.html')
+    else:
+        username = request.form.get("username")
+        plain_pw = request.form.get("password")
+        if check_password(plain_pw, username):
+            session["username"] = username
+        return redirect(url_for("index"))
 
 
 @app.route("/api/boards")
@@ -49,14 +62,14 @@ def get_cards_for_board(board_id: int):
 
 
 @app.route("/api/boards/<int:card_id>/change_name", methods=["PUT"])
-def rename_card(card_id:int):
+def rename_card(card_id: int):
     name = request.get_json()
     queires.update_card_title(card_id, name)
     return "Card title changed", HTTPStatus.OK
-  
-  
+
+
 @app.route("/api/boards/<int:board_id>/change_name", methods=["PUT"])
-def rename_board(board_id:int):
+def rename_board(board_id: int):
     name = request.get_json()
     queires.update_board_title(board_id, name)
     return "Board title changed", HTTPStatus.OK
