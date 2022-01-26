@@ -14,6 +14,10 @@ export let boardsManager = {
       const content = boardBuilder(board, statuses);
 
       domManager.addChild("#root", content);
+      this.eventListeners(board)
+    }
+  },
+  eventListeners: function (board){
       domManager.addEventListener(
         `.toggle-board-button[data-board-id="${board.id}"]`,
         "click",
@@ -29,7 +33,6 @@ export let boardsManager = {
           "click",
           addCardEventHandler
       );
-    }
   },
   createBoard: function () {
     domManager.addEventListener(
@@ -43,11 +46,11 @@ async function createBoard(){
   await dataHandler.createNewBoard()
   const board = await dataHandler.getLatestBoard()
   const statuses = await dataHandler.getStatuses()
-  console.log(board)
-  console.log(statuses)
   const boardBuilder = htmlFactory(htmlTemplates.board)
   const content = boardBuilder(board, statuses)
   domManager.addChild("#root", content);
+  boardsManager.eventListeners(board)
+
 
 }
 
