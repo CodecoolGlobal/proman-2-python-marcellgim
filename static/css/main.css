@@ -2,6 +2,10 @@
     background-color: green;
 }
 
+.alert {
+    text-align: center;
+}
+
 nav ul {
     display: flex;
     align-items: center;

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, request, redirect, session
+from flask import Flask, render_template, url_for, request, redirect, session, flash
 from dotenv import load_dotenv
 from http import HTTPStatus
 
@@ -30,6 +30,7 @@ def register():
         queires.new_user(username, password)
         return redirect(url_for("index"))
     else:
+        flash("Username already exists")
         return redirect(url_for("register"))
 
 
@@ -44,6 +45,7 @@ def login():
             session["username"] = username
             return redirect(url_for("index"))
         else:
+            flash("Wrong username and/or password")
             return redirect(url_for("login"))
 
 
