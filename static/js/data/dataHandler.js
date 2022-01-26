@@ -30,7 +30,14 @@ export let dataHandler = {
   getStatusesByBoardId: async function (boardId) {
     const response = await apiGet(`/api/${boardId}/statuses/`);
     return response
+  },
+  renameCard: async function (cardId, newTitle) {
+    await apiPut(`/api/cards/${cardId}/change_name`, newTitle)
+  },
+    renameBoard: async function (boardId, newTitle) {
+    await apiPut(`/api/boards/${boardId}/change_name`, newTitle)
   }
+
 };
 
 async function apiGet(url) {
@@ -38,13 +45,32 @@ async function apiGet(url) {
     method: "GET",
   });
   if (response.status === 200) {
-    let data = response.json();
-    return data;
+    return response.json();
   }
 }
 
-async function apiPost(url, payload) {}
+async function apiPost(url, payload) {
+  await fetch(url, {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  });
+}
 
-async function apiDelete(url) {}
+async function apiDelete(url) {
+  await fetch(url, {
+    method: "DELETE",
+  });
+}
 
-async function apiPut(url) {}
+async function apiPut(url, payload) {
+  await fetch(url, {
+    method: "PUT",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  });
+}

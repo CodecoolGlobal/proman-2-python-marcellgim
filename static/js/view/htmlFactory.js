@@ -2,7 +2,8 @@ import {dataHandler} from "../data/dataHandler.js";
 
 export const htmlTemplates = {
     board: 1,
-    card: 2
+    card: 2,
+    nameForm: 3
 }
 
 export function htmlFactory(template) {
@@ -11,6 +12,8 @@ export function htmlFactory(template) {
             return boardBuilder
         case htmlTemplates.card:
             return cardBuilder
+        case htmlTemplates.nameForm:
+            return nameFormBuilder
         default:
             console.error("Undefined template: " + template)
             return () => { return "" }
@@ -18,11 +21,9 @@ export function htmlFactory(template) {
 }
 
 function boardBuilder(board, statuses) {
-    console.log(board)
-    console.log(statuses)
+    // console.log(board)
+    // console.log(statuses)
     let columns = columnBuilder(board, statuses)
-    // console.log(statuses[0]['status_id'])
-
     return `
 <section class="board" data-board-id=${board.id}>
     <div class="board-header"><span class="board-title" data-board-id="${board.id}">${board.title}</span><button class="toggle-board-button" data-board-id="${board.id}">Show Cards</button></div>
@@ -35,9 +36,17 @@ function boardBuilder(board, statuses) {
 
 function cardBuilder(card) {
     return `
-<div class="card" data-card-id="${card.id}">${card.title}</div>
-`;
+<div class="card" data-card-id="${card.id}">
+    <div class="card-remove"></div>
+    <div class="card-title" data-card-id="${card.id}">${card.title}</div>
+</div>`;
 }
+
+function nameFormBuilder(currentValue) {
+    return `<input type="text" value="${currentValue}">
+            <button type="submit">Save</button>`
+}
+
 
 function columnBuilder(board, statuses){
     let columns = ``

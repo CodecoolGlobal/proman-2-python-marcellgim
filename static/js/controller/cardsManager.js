@@ -17,8 +17,30 @@ export let cardsManager = {
         "click",
         deleteButtonHandler
       );
+      domManager.addEventListener(
+          `.card-title[data-card-id="${card.id}"]`,
+          "click",
+          editCardnameHandler
+      );
     }
   },
 };
 
 function deleteButtonHandler(clickEvent) {}
+
+
+function renameCardHandler(submitEvent) {
+  submitEvent.preventDefault();
+  const cardId = submitEvent.target.dataset.cardId;
+  const newTitle = submitEvent.target.querySelector("input").value;
+  dataHandler.renameCard(cardId, newTitle);
+}
+
+function editCardnameHandler(clickEvent) {
+  const nameForm = document.createElement("form");
+  nameForm.dataset.cardId = clickEvent.target.dataset.cardId;
+  const formBuilder = htmlFactory(htmlTemplates.nameForm);
+  nameForm.innerHTML = formBuilder(clickEvent.target.innerText);
+  nameForm.addEventListener("submit", renameCardHandler)
+  clickEvent.target.replaceWith(nameForm);
+}

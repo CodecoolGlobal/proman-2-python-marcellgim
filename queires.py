@@ -64,3 +64,21 @@ def get_statuses_by_table_id(table_id):
         """
     )
     return statuses
+
+
+def update_card_title(card_id, new_name):
+    data_manager.execute_modify(
+        """
+        UPDATE cards SET title = %(new_name)s
+        WHERE id = %(card_id)s
+        """
+        , {"card_id": card_id, "new_name": new_name})
+
+
+def update_board_title(board_id, new_name):
+    data_manager.execute_modify(
+        """
+        UPDATE boards SET title = %(new_name)s
+        WHERE id = %(board_id)s
+        """
+        , {"board_id": board_id, "new_name": new_name})
