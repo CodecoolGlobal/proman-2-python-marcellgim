@@ -93,6 +93,7 @@ def update_board_title(board_id, new_name):
         , {"board_id": board_id, "new_name": new_name})
 
 
+
 def get_board(board_id):
     return data_manager.execute_select(
         """
@@ -109,3 +110,12 @@ def get_card(card_id):
         WHERE id = %(card_id)s;
         """
         , {"card_id": card_id}, False)
+ 
+
+def delete_card(card_id):
+    data_manager.execute_modify(
+        """
+        DELETE from cards
+        WHERE id = %(card_id)s
+        """
+        , {"card_id": card_id})

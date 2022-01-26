@@ -13,20 +13,23 @@ export let cardsManager = {
       domManager.addChild(`.board-column-content[data-board-id="${boardId}"].board-column-content[status-id="${card['status_id']}"]`, content);
 
       domManager.addEventListener(
-        `.card[data-card-id="${card.id}"]`,
-        "click",
-        deleteButtonHandler
-      );
-      domManager.addEventListener(
           `.card-title[data-card-id="${card.id}"]`,
           "click",
           editCardnameHandler
+      );
+      domManager.addEventListener(
+          `.delete-card[data-card-id="${card.id}"]`,
+          "click",
+          deleteButtonHandler
       );
     }
   },
 };
 
 function deleteButtonHandler(clickEvent) {
+  const cardId = clickEvent.target.dataset.cardId
+  dataHandler.deleteCard(cardId)
+  clickEvent.target.parentElement.remove()
 }
 
 
@@ -39,6 +42,7 @@ async function renameCardHandler(submitEvent) {
   const titleBuilder = htmlFactory(htmlTemplates.cardTitle);
   submitEvent.target.outerHTML = titleBuilder(newCard);
 }
+
 
 function editCardnameHandler(clickEvent) {
   const nameForm = document.createElement("form");
