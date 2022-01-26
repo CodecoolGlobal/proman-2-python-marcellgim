@@ -60,3 +60,12 @@ def update_board_title(board_id, new_name):
         WHERE id = %(board_id)s
         """
         , {"board_id": board_id, "new_name": new_name})
+
+
+def get_password_by_username(username):
+    return data_manager.execute_select(
+        """
+        SELECT password FROM user
+        WHERE username = %(username)s;
+        """
+        , {"username": username}, False)
