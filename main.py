@@ -11,6 +11,7 @@ mimetypes.add_type('application/javascript', '.js')
 app = Flask(__name__)
 load_dotenv()
 
+
 @app.route("/")
 def index():
     """
@@ -57,6 +58,18 @@ def rename_board(board_id:int):
     name = request.get_json()
     queires.update_board_title(board_id, name)
     return "Board title changed", HTTPStatus.OK
+
+
+@app.route("/api/statuses/")
+@json_response
+def statuses():
+    return queires.get_statuses()
+
+
+@app.route("/api/<int:boardId>/statuses/")
+@json_response
+def board_statuses(boardId: int):
+    return queires.get_statuses_by_table_id(boardId)
 
 
 def main():

@@ -7,8 +7,9 @@ export let boardsManager = {
   loadBoards: async function () {
     const boards = await dataHandler.getBoards();
     for (let board of boards) {
+      const statuses = await dataHandler.getStatusesByBoardId(board.id)
       const boardBuilder = htmlFactory(htmlTemplates.board);
-      const content = boardBuilder(board);
+      const content = boardBuilder(board, statuses);
 
       domManager.addChild("#root", content);
       domManager.addEventListener(
@@ -32,7 +33,16 @@ export let boardsManager = {
 
 function showHideButtonHandler(clickEvent) {
   const boardId = clickEvent.target.dataset.boardId;
-  cardsManager.loadCards(boardId);
+  toggleBoard(boardId)
+  if(!clickEvent.target.classList.contains("loaded")){
+    clickEvent.target.classList.add("loaded")
+    cardsManager.loadCards(boardId);
+  }
+  if(clickEvent.target.innerHTML === "Show Cards"){
+    clickEvent.target.innerHTML = "Hide Cards"
+  } else {
+    clickEvent.target.innerHTML = "Show Cards"
+  }
 }
 
 function renameBoardHandler(submitEvent) {
@@ -66,4 +76,13 @@ function addCardEventHandler(clickEvent) {
     cardForm.addEventListener("submit", createCardEventHandler);
     clickEvent.target.replaceWith(cardForm)
 
+}
+
+function toggleBoard(boardId){
+  let board = document.querySelector(`.board-columns[data-board-id="${boardId}"]`)
+  if(board.style.display === ""){
+    board.style.display = "flex"
+  }else if(board.style.display === "flex"){
+    board.style.display = ""
+  }
 }
