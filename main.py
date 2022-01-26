@@ -42,6 +42,12 @@ def login():
         return redirect(url_for("index"))
 
 
+@app.route("/logout", methods=["GET", "POST"])
+def logout():
+    session.clear()
+    return redirect(url_for("index"))
+
+
 @app.route("/api/boards")
 @json_response
 def get_boards():
