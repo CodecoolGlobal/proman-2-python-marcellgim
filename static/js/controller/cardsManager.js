@@ -33,11 +33,14 @@ function deleteButtonHandler(clickEvent) {
 }
 
 
-function renameCardHandler(submitEvent) {
+async function renameCardHandler(submitEvent) {
   submitEvent.preventDefault();
   const cardId = submitEvent.target.dataset.cardId;
   const newTitle = submitEvent.target.querySelector("input").value;
-  dataHandler.renameCard(cardId, newTitle);
+  await dataHandler.renameCard(cardId, newTitle);
+  const newCard = await dataHandler.getCard(cardId);
+  const titleBuilder = htmlFactory(htmlTemplates.cardTitle);
+  submitEvent.target.outerHTML = titleBuilder(newCard);
 }
 
 

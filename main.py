@@ -78,6 +78,18 @@ def board_statuses(boardId: int):
     return queires.get_statuses_by_table_id(boardId)
 
 
+@app.route("/api/boards/<int:board_id>")
+@json_response
+def get_board(board_id):
+    return queires.get_board(board_id)
+
+
+@app.route("/api/cards/<int:card_id>")
+@json_response
+def get_card(card_id):
+    return queires.get_card(card_id)
+
+
 def main():
     app.run(debug=True)
 
