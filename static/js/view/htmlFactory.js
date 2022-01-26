@@ -27,9 +27,11 @@ function boardBuilder(board) {
 }
 
 function cardBuilder(card) {
-    return `<div class="card" data-card-id="${card.id}">${card.title}
-            <button class="delete-card" data-card-id="${card.id}">Delete</button>
-            </div>`;
+    return `
+    <div class="card" data-card-id="${card.id}">${card.title}
+        <button class="delete-card" data-card-id="${card.id}">Delete</button>
+        <div class="card-title" data-card-id="${card.id}"></div>
+    </div>`;
 }
 
 export function addNewCardForm() {
