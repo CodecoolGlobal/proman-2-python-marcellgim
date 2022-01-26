@@ -42,7 +42,9 @@ def login():
         plain_pw = request.form.get("password")
         if check_password(plain_pw, username):
             session["username"] = username
-        return redirect(url_for("index"))
+            return redirect(url_for("index"))
+        else:
+            return redirect(url_for("login"))
 
 
 @app.route("/logout")
