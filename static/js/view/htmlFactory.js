@@ -36,10 +36,11 @@ function boardBuilder(board, statuses) {
 
 function cardBuilder(card) {
     return `
-<div class="card" data-card-id="${card.id}">
-    <div class="card-remove"></div>
-    <div class="card-title" data-card-id="${card.id}">${card.title}</div>
-</div>`;
+    <div class="card" data-card-id="${card.id}">
+        <button class="delete-card" data-card-id="${card.id}">Delete</button>
+        <div class="card-title" data-card-id="${card.id}">${card.title}</div>
+    </div>`;
+
 }
 
 export function addNewCardForm() {

@@ -91,3 +91,12 @@ def update_board_title(board_id, new_name):
         WHERE id = %(board_id)s
         """
         , {"board_id": board_id, "new_name": new_name})
+
+
+def delete_card(card_id):
+    data_manager.execute_modify(
+        """
+        DELETE from cards
+        WHERE id = %(card_id)s
+        """
+        , {"card_id": card_id})
