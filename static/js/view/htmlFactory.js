@@ -42,7 +42,6 @@ function boardBuilder(board, statuses) {
         <div class="button-container">
             <button class="new-card" data-board-id="${board.id}"> New Card</button>
             <button class="toggle-board-button" data-board-id="${board.id}">&xvee;</button>
-            <button class="new-card" data-board-id="${board.id}">Add new card</button>
             <button class="archived-cards" data-board-id="${board.id}">Show Archived Cards</button>
         </div>
     </div>
