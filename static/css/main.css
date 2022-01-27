@@ -22,6 +22,9 @@ h1{
     letter-spacing: 5px;
     transform: scale(1.2, 1);
 }
+h2{
+    margin: 0px;
+}
 
 button{
     background: #222;
@@ -45,9 +48,11 @@ section.board{
 }
 
 .board-header{
+    display: flex;
     height: 50px;
     background: #fff;
     border-radius: var(--border-radius) var(--border-radius) 0 0;
+    justify-content: space-between;
 }
 
 .board-title{
@@ -81,19 +86,23 @@ section.board{
 }
 
 .board-column-content{
-    min-height: 49px;
+    min-height: 278px;
+    border: 4px solid #cdcdcd;
+    border-radius: 0px 0px 10px 10px;
+    background: #eee;
 }
 
 .board-column-content:empty{
     /*This only works if the tag is really empty and there is not even whitespace inside*/
     border: 4px solid #cdcdcd;
-    margin-top: 4px;
-    border-radius: 10px;
+    border-radius: 0px 0px 10px 10px;
     background: #eee;
 }
 
-.board-column-title{
+.board-column .title{
     text-align: center;
+    border: 4px solid #cdcdcd;
+    background: #cdcdcd;
 }
 
 .card{
@@ -168,4 +177,7 @@ nav ul li {
 
 #current-user {
     justify-self: flex-end;
+}
+.button-container{
+    display: flex;
 }

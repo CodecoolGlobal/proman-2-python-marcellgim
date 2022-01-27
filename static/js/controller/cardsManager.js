@@ -9,24 +9,12 @@ export let cardsManager = {
       //todo: Implement a function that gets all statusIds
       const cardBuilder = htmlFactory(htmlTemplates.card);
       const content = cardBuilder(card);
-      domManager.addChild(`.board-column-content[data-board-id="${boardId}"].board-column-content[status-id="${card['status_id']}"]`, content);
-
-      domManager.addEventListener(
-          `.card-title[data-card-id="${card.id}"]`,
-          "click",
-          editCardnameHandler
+      domManager.addChild(
+          `.board-column-content[data-board-id="${boardId}"][data-status-id="${card['status_id']}"]`,
+          content
       );
-      domManager.addEventListener(
-          `.delete-card[data-card-id="${card.id}"]`,
-          "click",
-          deleteButtonHandler
-      );
-      domManager.addEventListener(
-          `.archive-card[data-card-id="${card.id}"]`,
-          "click",
-          archiveCardHandler
-      );
-
+      
+      initEventListeners(card);
     }
   },
   loadArchivedCards: async function(boardId){
@@ -68,6 +56,7 @@ async function renameCardHandler(submitEvent) {
   const newCard = await dataHandler.getCard(cardId);
   const titleBuilder = htmlFactory(htmlTemplates.cardTitle);
   submitEvent.target.outerHTML = titleBuilder(newCard);
+  initEventListeners(newCard);
 }
 
 
@@ -86,3 +75,27 @@ function unarchiveCardHandler(clickEvent) {
   clickEvent.target.parentElement.remove()
 }
 
+function initEventListeners(card) {
+  const cardIdentifier = `.card[data-card-id="${card.id}"]`;
+  domManager.addEventListener(
+    `.card-title[data-card-id="${card.id}"]`,
+    "click",
+    editCardnameHandler
+      );
+  domManager.addEventListener(
+    `.delete-card[data-card-id="${card.id}"]`,
+    "click",
+    deleteButtonHandler
+  );
+  domManager.addEventListener(
+          `.archive-card[data-card-id="${card.id}"]`,
+          "click",
+          archiveCardHandler
+      );
+  domManager.addEventListener(cardIdentifier, "dragstart", handleDragStart);
+}
+
+function handleDragStart(dragEvent) {
+  const cardIdentifier = `.card[data-card-id="${dragEvent.target.dataset.cardId}"]`
+  dragEvent.dataTransfer.setData("text/plain", cardIdentifier);
+}

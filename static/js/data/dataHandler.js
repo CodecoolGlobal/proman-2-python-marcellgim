@@ -11,42 +11,37 @@ export let dataHandler = {
     return await apiGet(`/api/boards/${boardId}`);
   },
   getStatuses: async function () {
-    const response = await apiGet('/api/statuses/')
-    return response
+    return await apiGet('/api/statuses/')
     // the statuses are retrieved and then the callback function is called with the statuses
   },
   getStatus: async function (statusId) {
     // the status is retrieved and then the callback function is called with the status
   },
   getCardsByBoardId: async function (boardId) {
-    const response = await apiGet(`/api/boards/${boardId}/cards/`);
-    return response;
+    return await apiGet(`/api/boards/${boardId}/cards/`);
   },
   getCard: async function (cardId) {
     // the card is retrieved and then the callback function is called with the card
     return await apiGet(`/api/cards/${cardId}`);
   },
-  createNewBoard: async function () {
-    await apiPost(`/api/boards/create/board/`, {});
+  createPublicBoard: async function () {
+    return await apiPost(`/api/boards/create/public/`, {});
+  },
+  createPrivateBoard: async function(userId) {
+    return await apiPost(`/api/boards/create/private/${userId}`, {userId})
   },
   createNewCard: async function (boardId, cardTitle) {
     // creates new card, saves it and calls the callback function with its data, statusId needed
-    const response = await apiPost(`/api/boards/${boardId}/add_card`, {cardTitle, boardId});
-    return response
+    return await apiPost(`/api/boards/${boardId}/add_card`, cardTitle)
   },
   getStatusesByBoardId: async function (boardId) {
-    const response = await apiGet(`/api/${boardId}/statuses/`);
-    return response
+    return await apiGet(`/api/${boardId}/statuses/`)
   },
   renameCard: async function (cardId, newTitle) {
     await apiPut(`/api/cards/${cardId}/change_name`, newTitle);
   },
   renameBoard: async function (boardId, newTitle) {
     await apiPut(`/api/boards/${boardId}/change_name`, newTitle);
-  },
-  getLatestBoard: async function () {
-    const response = await apiGet("/api/board/latest/")
-    return response
   },
   deleteCard: async function (cardId) {
     await apiDelete(`/api/cards/${cardId}/delete`);
@@ -62,6 +57,9 @@ export let dataHandler = {
   },
   unarchiveCard: async function (cardId) {
     await apiPost( `/api/card/${cardId}/unarchive`);
+  },
+  moveCard: async function (cardId, newStatus) {
+    await apiPut(`/api/cards/${cardId}/move`, newStatus)
   }
 };
 
@@ -75,27 +73,36 @@ async function apiGet(url) {
 }
 
 async function apiPost(url, payload) {
-  await fetch(url, {
+  let response = await fetch(url, {
     method: "POST",
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(payload)
   });
+  if (response.status === 200) {
+    return response.json();
+  }
 }
 
 async function apiDelete(url) {
-  await fetch(url, {
+  let response = await fetch(url, {
     method: "DELETE",
   });
+  if (response.status === 200) {
+    return response.json();
+  }
 }
 
 async function apiPut(url, payload) {
-  await fetch(url, {
+  let response = await fetch(url, {
     method: "PUT",
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(payload)
   });
+  if (response.status === 200) {
+    return response.json();
+  }
 }
