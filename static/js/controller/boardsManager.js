@@ -125,9 +125,9 @@ function toggleBoard(boardId){
 async function dropCardHandler(dropEvent) {
   dropEvent.preventDefault()
   const targetColumn = dropEvent.target.closest(".board-column");
-  if (targetColumn !== null) {
-    const identifier = dropEvent.dataTransfer.getData("text/plain");
-    const draggedCard = document.querySelector(identifier);
+  const identifier = dropEvent.dataTransfer.getData("text/plain");
+  const draggedCard = document.querySelector(identifier);
+  if (targetColumn !== null && draggedCard.dataset.boardId === targetColumn.dataset.boardId) {
     const targetContentBox = targetColumn.querySelector(".board-column-content");
     const cardId = draggedCard.dataset.cardId;
     const newStatus = targetContentBox.dataset.statusId;

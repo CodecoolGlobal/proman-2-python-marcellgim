@@ -42,7 +42,7 @@ function boardBuilder(board, statuses) {
 
 function cardBuilder(card) {
     return `
-    <div class="card" data-card-id="${card.id}" draggable="true">
+    <div class="card" data-card-id="${card.id}" data-board-id="${card['board_id']}" draggable="true">
         <button class="delete-card" data-card-id="${card.id}">Delete</button>
         <button class="archive-card" data-card-id="${card.id}">Archive</button>
         <div class="card-title" data-card-id="${card.id}">${card.title}</div>
