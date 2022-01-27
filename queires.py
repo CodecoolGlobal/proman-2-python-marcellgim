@@ -217,3 +217,16 @@ def get_archived_cards(board_id):
         WHERE board_id = %(board_id)s;
         """
         , {"board_id": board_id})
+
+
+def unarchive_card(card_id):
+    data_manager.execute_modify(
+        """
+        INSERT INTO cards (id, board_id, status_id, title, card_order)
+        SELECT card_id, board_id, status_id, title, card_order
+        FROM archived_cards
+        WHERE card_id = %(card_id)s;
+        DELETE FROM archived_cards
+        WHERE card_id = %(card_id)s;
+        """
+        , {"card_id": card_id})

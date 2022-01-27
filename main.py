@@ -120,8 +120,13 @@ def list_archived_cards(board_id):
     archived_cards = queires.get_archived_cards(board_id)
     return archived_cards
 
-@
-  
+
+@app.route("/api/card/<int:card_id>/unarchive", methods=["POST"])
+def unarchive_card(card_id):
+    queires.unarchive_card(card_id)
+    return "Card unarchived", HTTPStatus.OK
+
+
 @app.route("/api/statuses/")
 @json_response
 def statuses():

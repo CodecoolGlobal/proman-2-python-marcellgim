@@ -39,6 +39,7 @@ export let boardsManager = {
           "click",
           getArchivedCardsHandler
       );
+
   },
   createBoard: function () {
     domManager.addEventListener(

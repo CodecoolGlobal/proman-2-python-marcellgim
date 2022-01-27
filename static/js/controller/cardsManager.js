@@ -5,6 +5,7 @@ import { domManager } from "../view/domManager.js";
 export let cardsManager = {
   loadCards: async function (boardId) {
     const cards = await dataHandler.getCardsByBoardId(boardId);
+    const archivedCards = await dataHandler.getArchivedCards(boardId)
     for (let card of cards) {
       //todo: Implement a function that gets all statusIds
       const cardBuilder = htmlFactory(htmlTemplates.card);
@@ -26,15 +27,21 @@ export let cardsManager = {
           "click",
           archiveCardHandler
       );
+
     }
   },
   loadArchivedCards: async function(boardId){
     const cards = await dataHandler.getArchivedCards(boardId);
     for (let card of cards){
-      //console.log(card, "yes")
+      console.log(card, "yes")
       const cardBuilder = htmlFactory(htmlTemplates.archivedCards);
       const content = cardBuilder(card);
       domManager.addChild(`.board[data-board-id="${boardId}"]`, content);
+      domManager.addEventListener(
+          `.unarchive-card[data-card-id="${card["card_id"]}"]`,
+          "click",
+          unarchiveCardHandler
+      );
     }
 
   }
@@ -74,3 +81,10 @@ function editCardnameHandler(clickEvent) {
   nameForm.addEventListener("submit", renameCardHandler)
   clickEvent.target.replaceWith(nameForm);
 }
+
+function unarchiveCardHandler(clickEvent) {
+  const cardId = clickEvent.target.dataset.cardId;
+  dataHandler.unarchiveCard(cardId)
+  clickEvent.target.parentElement.remove()
+}
+
