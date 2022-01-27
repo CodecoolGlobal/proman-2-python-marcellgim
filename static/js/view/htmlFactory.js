@@ -5,7 +5,8 @@ export const htmlTemplates = {
     card: 2,
     nameForm: 3,
     boardTitle: 4,
-    cardTitle: 5
+    cardTitle: 5,
+    archivedCards: 6
 }
 
 export function htmlFactory(template) {
@@ -20,6 +21,8 @@ export function htmlFactory(template) {
             return boardTitleBuilder
         case htmlTemplates.cardTitle:
             return cardTitleBuilder
+        case htmlTemplates.archivedCards:
+            return archivedCardsBuilder
         default:
             console.error("Undefined template: " + template)
             return () => { return "" }
@@ -32,7 +35,11 @@ function boardBuilder(board, statuses) {
     let columns = columnBuilder(board, statuses)
     return `
 <section class="board" data-board-id=${board.id}>
-    <div class="board-header"><span class="board-title" data-board-id="${board.id}">${board.title}</span><button class="toggle-board-button" data-board-id="${board.id}">Show Cards</button><button class="new-card" data-board-id="${board.id}">Add new card</button></div>
+    <div class="board-header"><span class="board-title" data-board-id="${board.id}">${board.title}</span>
+    <button class="toggle-board-button" data-board-id="${board.id}">Show Cards</button>
+    <button class="new-card" data-board-id="${board.id}">Add new card</button>
+    <button class="archived-cards" data-board-id="${board.id}">Show Archived Cards</button>
+    </div>
     <div class="board-columns" data-board-id="${board.id}">
         ${columns}
     </div>
@@ -82,4 +89,10 @@ function boardTitleBuilder(board) {
 
 function cardTitleBuilder(card) {
     return `<div class="card-title" data-card-id="${card.id}">${card.title}</div>`
+}
+
+function archivedCardsBuilder(archivedCards){
+    console.log( archivedCards)
+    return `<div class="archived-cards" data-card-id="${archivedCards['card_id']}">${archivedCards['title']}</div>
+            <button class="unarchive-card data-card-id="${archivedCards['card_id']}" >Unarchive card</button>`
 }

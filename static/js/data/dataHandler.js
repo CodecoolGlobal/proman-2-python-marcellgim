@@ -56,6 +56,9 @@ export let dataHandler = {
   },
   archiveCard: async function (cardId) {
     await apiPost(`/api/cards/${cardId}/archive`);
+  },
+  getArchivedCards: async function (boardId) {
+    return await apiGet(`/api/board/${boardId}/archived`);
   }
 };
 

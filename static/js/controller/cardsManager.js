@@ -28,6 +28,16 @@ export let cardsManager = {
       );
     }
   },
+  loadArchivedCards: async function(boardId){
+    const cards = await dataHandler.getArchivedCards(boardId);
+    for (let card of cards){
+      //console.log(card, "yes")
+      const cardBuilder = htmlFactory(htmlTemplates.archivedCards);
+      const content = cardBuilder(card);
+      domManager.addChild(`.board[data-board-id="${boardId}"]`, content);
+    }
+
+  }
 };
 
 function deleteButtonHandler(clickEvent) {

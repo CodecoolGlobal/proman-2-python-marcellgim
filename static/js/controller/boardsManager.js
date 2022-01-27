@@ -34,6 +34,11 @@ export let boardsManager = {
           "click",
           addCardEventHandler
       );
+      domManager.addEventListener(
+          `.archived-cards[data-board-id="${board.id}"]`,
+          "click",
+          getArchivedCardsHandler
+      );
   },
   createBoard: function () {
     domManager.addEventListener(
@@ -111,5 +116,21 @@ function toggleBoard(boardId){
     board.style.display = "flex"
   }else if(board.style.display === "flex"){
     board.style.display = ""
+  }
+}
+
+async function getArchivedCardsHandler(clickEvent) {
+  const boardId = clickEvent.target.dataset.boardId
+  const archivedCards = await dataHandler.getArchivedCards(boardId)
+  console.log(archivedCards)
+  if(!clickEvent.target.classList.contains("loaded")){
+    clickEvent.target.classList.add("loaded")
+  await cardsManager.loadArchivedCards(boardId);
+
+  }
+  if(clickEvent.target.innerHTML === "Show Archived Cards"){
+    clickEvent.target.innerHTML = "Hide Archived Cards"
+  } else {
+    clickEvent.target.innerHTML = "Show Archived Cards"
   }
 }
