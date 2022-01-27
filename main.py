@@ -74,10 +74,17 @@ def get_cards_for_board(board_id: int):
     return queires.get_cards_for_board(board_id)
 
 
-@app.route("/api/boards/create/board/", methods=["POST"])
+@app.route("/api/boards/create/public/", methods=["POST"])
 def create_new_board():
     default_board_title = "Board Title"
     queires.create_new_board(default_board_title)
+    return "Board created", HTTPStatus.OK
+
+
+@app.route("/api/boards/create/private/<int:user_id>", methods=["POST"])
+def create_private_board(user_id):
+    default_board_title = "Private Board"
+    queires.create_private_board(default_board_title, user_id)
     return "Board created", HTTPStatus.OK
 
 

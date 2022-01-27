@@ -26,8 +26,11 @@ export let dataHandler = {
     // the card is retrieved and then the callback function is called with the card
     return await apiGet(`/api/cards/${cardId}`);
   },
-  createNewBoard: async function () {
-    await apiPost(`/api/boards/create/board/`, {});
+  createPublicBoard: async function () {
+    await apiPost(`/api/boards/create/public/`, {});
+  },
+  createPrivateBoard: async function(userId) {
+    await apiPost(`/api/boards/create/private/${userId}`, {userId})
   },
   createNewCard: async function (boardId, cardTitle) {
     // creates new card, saves it and calls the callback function with its data, statusId needed
