@@ -10,8 +10,6 @@ export let boardsManager = {
     for (let board of boards) {
       const statuses = await dataHandler.getStatusesByBoardId(board.id)
       const boardBuilder = htmlFactory(htmlTemplates.board);
-      // console.log(board)
-      // console.log(statuses)
       const content = boardBuilder(board, statuses);
 
       domManager.addChild("#root", content);
@@ -123,7 +121,6 @@ function toggleBoard(boardId){
 async function getArchivedCardsHandler(clickEvent) {
   const boardId = clickEvent.target.dataset.boardId
   const archivedCards = await dataHandler.getArchivedCards(boardId)
-  console.log(archivedCards)
   if(!clickEvent.target.classList.contains("loaded")){
     clickEvent.target.classList.add("loaded")
   await cardsManager.loadArchivedCards(boardId);

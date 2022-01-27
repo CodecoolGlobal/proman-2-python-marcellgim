@@ -92,7 +92,6 @@ function cardTitleBuilder(card) {
 }
 
 function archivedCardsBuilder(archivedCards){
-    //  console.log( archivedCards)
     return `<div class="archived-cards" data-card-id="${archivedCards['card_id']}">${archivedCards['title']}
             <button class="unarchive-card" data-card-id="${archivedCards['card_id']}">Unarchive card</button>
             </div>`

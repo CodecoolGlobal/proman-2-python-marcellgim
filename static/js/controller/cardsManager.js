@@ -5,7 +5,6 @@ import { domManager } from "../view/domManager.js";
 export let cardsManager = {
   loadCards: async function (boardId) {
     const cards = await dataHandler.getCardsByBoardId(boardId);
-    const archivedCards = await dataHandler.getArchivedCards(boardId)
     for (let card of cards) {
       //todo: Implement a function that gets all statusIds
       const cardBuilder = htmlFactory(htmlTemplates.card);
@@ -33,7 +32,6 @@ export let cardsManager = {
   loadArchivedCards: async function(boardId){
     const cards = await dataHandler.getArchivedCards(boardId);
     for (let card of cards){
-      console.log(card, "yes")
       const cardBuilder = htmlFactory(htmlTemplates.archivedCards);
       const content = cardBuilder(card);
       domManager.addChild(`.board[data-board-id="${boardId}"]`, content);
