@@ -34,6 +34,7 @@ button {
     font-size: 14px;
     font-family: sans-serif;
     padding: 4px 10px;
+    margin: 0 3px;
 }
 
 .board-container, .container {
@@ -115,6 +116,9 @@ section.board {
     border-radius: var(--border-radius);
     margin: 4px 0;
     padding: 4px;
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
 }
 
 .board-column:nth-of-type(1) .card {
@@ -184,4 +188,5 @@ nav ul li {
 
 .button-container {
     display: flex;
+    align-items: center;
 }
