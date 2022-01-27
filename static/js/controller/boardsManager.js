@@ -95,7 +95,6 @@ function showHideButtonHandler(clickEvent) {
   } else {
     clickEvent.target.innerHTML = "⋁"
   }
-  console.log(clickEvent.target.innerHTML)
 }
 
 async function renameBoardHandler(submitEvent) {
