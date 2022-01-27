@@ -123,7 +123,6 @@ async function getArchivedCardsHandler(clickEvent) {
   if(!clickEvent.target.classList.contains("loaded")){
     clickEvent.target.classList.add("loaded")
   await cardsManager.loadArchivedCards(boardId);
-
   }
   if(clickEvent.target.innerHTML === "Show Archived Cards"){
     clickEvent.target.innerHTML = "Hide Archived Cards"
