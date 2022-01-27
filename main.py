@@ -102,7 +102,7 @@ def rename_board(board_id: int):
     return "Board title changed", HTTPStatus.OK
 
 
-@app.route("/api/boards/<int:card_id>/delete", methods=["DELETE"])
+@app.route("/api/cards/<int:card_id>/delete", methods=["DELETE"])
 def delete_card(card_id):
     queires.delete_card(card_id)
     return "Card deleted", HTTPStatus.OK

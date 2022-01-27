@@ -49,7 +49,7 @@ export let dataHandler = {
     return response
   },
   deleteCard: async function (cardId) {
-    await apiDelete(`/api/boards/${cardId}/delete`);
+    await apiDelete(`/api/cards/${cardId}/delete`);
   },
   getUser: async function () {
     return await apiGet("/api/current_user")
