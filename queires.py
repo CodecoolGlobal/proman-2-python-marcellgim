@@ -118,6 +118,15 @@ def create_new_board(board_title):
         , {"board_title": board_title})
 
 
+def create_private_board(board_title, user_id):
+    data_manager.execute_modify(
+        """
+        INSERT INTO boards
+        VALUES(DEFAULT, %(board_title)s, %(user_id)s )
+        """
+        , {"board_title": board_title, "user_id": user_id})
+
+
 def get_latest_board():
     board_id = data_manager.execute_select(
         """
