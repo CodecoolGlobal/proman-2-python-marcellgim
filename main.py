@@ -110,7 +110,8 @@ def delete_card(card_id):
 
 @app.route("/api/cards/<int:card_id>/archive", methods=["POST"])
 def archive_card(card_id):
-    pass
+    queires.save_archived_cards(card_id)
+    return "Card archived", HTTPStatus.OK
 
   
 @app.route("/api/statuses/")

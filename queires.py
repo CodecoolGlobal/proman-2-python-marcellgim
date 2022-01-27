@@ -195,3 +195,14 @@ def get_user_id(username):
         ;
         """
         , {"username": username}, False)
+
+
+def save_archived_cards(card_id):
+    data_manager.execute_modify(
+        """
+        INSERT INTO archived_cards (card_id, board_id, status_id, title, card_order)
+        SELECT id, board_id, status_id, title, card_order
+        FROM cards
+        WHERE id = %(card_id)s;
+        """
+        , {"card_id": card_id})

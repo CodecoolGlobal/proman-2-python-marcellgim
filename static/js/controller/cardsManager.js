@@ -21,12 +21,25 @@ export let cardsManager = {
           "click",
           deleteButtonHandler
       );
+      domManager.addEventListener(
+          `.archive-card[data-card-id="${card.id}"]`,
+          "click",
+          archiveCardHandler
+      );
     }
   },
 };
 
 function deleteButtonHandler(clickEvent) {
   const cardId = clickEvent.target.dataset.cardId
+  dataHandler.deleteCard(cardId)
+  clickEvent.target.parentElement.remove()
+}
+
+
+function archiveCardHandler(clickEvent) {
+  const cardId = clickEvent.target.dataset.cardId
+  dataHandler.archiveCard(cardId)
   dataHandler.deleteCard(cardId)
   clickEvent.target.parentElement.remove()
 }

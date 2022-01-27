@@ -53,6 +53,9 @@ export let dataHandler = {
   },
   getUser: async function () {
     return await apiGet("/api/current_user")
+  },
+  archiveCard: async function (cardId) {
+    await apiPost(`/api/cards/${cardId}/archive`);
   }
 };
 
