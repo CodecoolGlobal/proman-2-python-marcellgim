@@ -11,7 +11,6 @@ export let boardsManager = {
       const statuses = await dataHandler.getStatusesByBoardId(board.id)
       const boardBuilder = htmlFactory(htmlTemplates.board);
       const content = boardBuilder(board, statuses);
-
       domManager.addChild("#root", content);
       this.eventListeners(board)
     }
@@ -32,6 +31,16 @@ export let boardsManager = {
           "click",
           addCardEventHandler
       );
+      domManager.addEventListener(
+          `.board-columns[data-board-id="${board.id}"]`,
+          "drop",
+          dropCardHandler
+      );
+      domManager.addEventListener(
+          `.board-columns[data-board-id="${board.id}"]`,
+          "dragover",
+          dragoverHandler
+      );
   },
   createPublicBoardButton: function () {
     domManager.addEventListener(
@@ -49,7 +58,7 @@ export let boardsManager = {
   }
 };
 
-async function createPublicBoard(){
+async function createPublicBoard() {
   await dataHandler.createPublicBoard()
   const board = await dataHandler.getLatestBoard()
   const statuses = await dataHandler.getStatuses()
@@ -58,7 +67,8 @@ async function createPublicBoard(){
   domManager.addChild("#root", content);
   boardsManager.eventListeners(board)
 }
-async function createPrivateBoard(){
+
+async function createPrivateBoard() {
   const userId = await dataHandler.getUser()
   await dataHandler.createPrivateBoard(userId)
   const board = await dataHandler.getLatestBoard()
@@ -130,4 +140,23 @@ function toggleBoard(boardId){
   }else if(board.style.display === "flex"){
     board.style.display = ""
   }
+}
+
+async function dropCardHandler(dropEvent) {
+  dropEvent.preventDefault()
+  const targetColumn = dropEvent.target.closest(".board-column");
+  const identifier = dropEvent.dataTransfer.getData("text/plain");
+  const draggedCard = document.querySelector(identifier);
+  if (targetColumn !== null && draggedCard.dataset.boardId === targetColumn.dataset.boardId) {
+    const targetContentBox = targetColumn.querySelector(".board-column-content");
+    const cardId = draggedCard.dataset.cardId;
+    const newStatus = targetContentBox.dataset.statusId;
+    await dataHandler.moveCard(cardId, newStatus);
+    targetContentBox.appendChild(draggedCard);
+  }
+}
+
+function dragoverHandler (dragEvent) {
+    dragEvent.preventDefault();
+    dragEvent.dataTransfer.dropEffect = "move";
 }

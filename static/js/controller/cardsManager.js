@@ -9,18 +9,11 @@ export let cardsManager = {
       //todo: Implement a function that gets all statusIds
       const cardBuilder = htmlFactory(htmlTemplates.card);
       const content = cardBuilder(card);
-      domManager.addChild(`.board-column-content[data-board-id="${boardId}"].board-column-content[status-id="${card['status_id']}"]`, content);
-
-      domManager.addEventListener(
-          `.card-title[data-card-id="${card.id}"]`,
-          "click",
-          editCardnameHandler
+      domManager.addChild(
+          `.board-column-content[data-board-id="${boardId}"][data-status-id="${card['status_id']}"]`,
+          content
       );
-      domManager.addEventListener(
-          `.delete-card[data-card-id="${card.id}"]`,
-          "click",
-          deleteButtonHandler
-      );
+      initEventListeners(card);
     }
   },
 };
@@ -40,6 +33,7 @@ async function renameCardHandler(submitEvent) {
   const newCard = await dataHandler.getCard(cardId);
   const titleBuilder = htmlFactory(htmlTemplates.cardTitle);
   submitEvent.target.outerHTML = titleBuilder(newCard);
+  initEventListeners(newCard);
 }
 
 
@@ -50,4 +44,25 @@ function editCardnameHandler(clickEvent) {
   nameForm.innerHTML = formBuilder(clickEvent.target.innerText);
   nameForm.addEventListener("submit", renameCardHandler)
   clickEvent.target.replaceWith(nameForm);
+}
+
+function initEventListeners(card) {
+  const cardIdentifier = `.card[data-card-id="${card.id}"]`;
+  domManager.addEventListener(
+    `.card-title[data-card-id="${card.id}"]`,
+    "click",
+    editCardnameHandler
+      );
+  domManager.addEventListener(
+    `.delete-card[data-card-id="${card.id}"]`,
+    "click",
+    deleteButtonHandler
+  );
+  domManager.addEventListener(cardIdentifier, "dragstart", handleDragStart);
+}
+
+
+function handleDragStart(dragEvent) {
+  const cardIdentifier = `.card[data-card-id="${dragEvent.target.dataset.cardId}"]`
+  dragEvent.dataTransfer.setData("text/plain", cardIdentifier);
 }
