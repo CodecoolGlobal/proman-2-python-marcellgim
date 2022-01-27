@@ -116,6 +116,7 @@ function editBoardnameHandler(clickEvent) {
   const nameForm = document.createElement("form");
   const formBuilder = htmlFactory(htmlTemplates.nameForm);
   nameForm.dataset.boardId = clickEvent.target.dataset.boardId;
+  nameForm.classList.add("board-title");
   nameForm.innerHTML = formBuilder(clickEvent.target.innerText);
   nameForm.addEventListener("submit", renameBoardHandler)
   clickEvent.target.replaceWith(nameForm);

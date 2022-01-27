@@ -63,7 +63,7 @@ section.board {
     font-size: 20px;
 }
 
-.board-title, .board-add, .board-toggle {
+.board-add, .board-toggle {
     display: inline-block;
 }
 
