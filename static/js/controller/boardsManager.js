@@ -10,10 +10,7 @@ export let boardsManager = {
     for (let board of boards) {
       const statuses = await dataHandler.getStatusesByBoardId(board.id)
       const boardBuilder = htmlFactory(htmlTemplates.board);
-      // console.log(board)
-      // console.log(statuses)
       const content = boardBuilder(board, statuses);
-
       domManager.addChild("#root", content);
       this.eventListeners(board)
     }
@@ -34,6 +31,16 @@ export let boardsManager = {
           "click",
           addCardEventHandler
       );
+      domManager.addEventListener(
+          `.board-columns[data-board-id="${board.id}"]`,
+          "drop",
+          dropCardHandler
+      );
+      domManager.addEventListener(
+          `.board-columns[data-board-id="${board.id}"]`,
+          "dragover",
+          dragoverHandler
+      );
   },
   createBoard: function () {
     domManager.addEventListener(
@@ -43,6 +50,7 @@ export let boardsManager = {
     )
   }
 };
+
 async function createBoard(){
   await dataHandler.createNewBoard()
   const board = await dataHandler.getLatestBoard()
@@ -112,4 +120,23 @@ function toggleBoard(boardId){
   }else if(board.style.display === "flex"){
     board.style.display = ""
   }
+}
+
+async function dropCardHandler(dropEvent) {
+  dropEvent.preventDefault()
+  const targetColumn = dropEvent.target.closest(".board-column");
+  if (targetColumn !== null) {
+    const identifier = dropEvent.dataTransfer.getData("text/plain");
+    const draggedCard = document.querySelector(identifier);
+    const targetContentBox = targetColumn.querySelector(".board-column-content");
+    const cardId = draggedCard.dataset.cardId;
+    const newStatus = targetContentBox.dataset.statusId;
+    await dataHandler.moveCard(cardId, newStatus);
+    targetContentBox.appendChild(draggedCard);
+  }
+}
+
+function dragoverHandler (dragEvent) {
+    dragEvent.preventDefault();
+    dragEvent.dataTransfer.dropEffect = "move";
 }
