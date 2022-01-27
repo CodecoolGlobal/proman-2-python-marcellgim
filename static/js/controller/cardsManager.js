@@ -7,16 +7,10 @@ export let cardsManager = {
     const cards = await dataHandler.getCardsByBoardId(boardId);
     for (let card of cards) {
       //todo: Implement a function that gets all statusIds
-      console.log(card)
       const cardBuilder = htmlFactory(htmlTemplates.card);
       const content = cardBuilder(card);
       domManager.addChild(`.board-column-content[data-board-id="${boardId}"].board-column-content[status-id="${card['status_id']}"]`, content);
 
-      domManager.addEventListener(
-        `.card[data-card-id="${card.id}"]`,
-        "click",
-        deleteButtonHandler
-      );
       domManager.addEventListener(
           `.card-title[data-card-id="${card.id}"]`,
           "click",
@@ -38,11 +32,14 @@ function deleteButtonHandler(clickEvent) {
 }
 
 
-function renameCardHandler(submitEvent) {
+async function renameCardHandler(submitEvent) {
   submitEvent.preventDefault();
   const cardId = submitEvent.target.dataset.cardId;
   const newTitle = submitEvent.target.querySelector("input").value;
-  dataHandler.renameCard(cardId, newTitle);
+  await dataHandler.renameCard(cardId, newTitle);
+  const newCard = await dataHandler.getCard(cardId);
+  const titleBuilder = htmlFactory(htmlTemplates.cardTitle);
+  submitEvent.target.outerHTML = titleBuilder(newCard);
 }
 
 

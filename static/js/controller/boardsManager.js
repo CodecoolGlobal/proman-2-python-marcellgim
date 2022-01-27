@@ -5,13 +5,20 @@ import { cardsManager } from "./cardsManager.js";
 
 export let boardsManager = {
   loadBoards: async function () {
-    const boards = await dataHandler.getBoards();
+    const user = await dataHandler.getUser();
+    const boards = await dataHandler.getBoards(user);
     for (let board of boards) {
       const statuses = await dataHandler.getStatusesByBoardId(board.id)
       const boardBuilder = htmlFactory(htmlTemplates.board);
+      // console.log(board)
+      // console.log(statuses)
       const content = boardBuilder(board, statuses);
 
       domManager.addChild("#root", content);
+      this.eventListeners(board)
+    }
+  },
+  eventListeners: function (board){
       domManager.addEventListener(
         `.toggle-board-button[data-board-id="${board.id}"]`,
         "click",
@@ -27,9 +34,26 @@ export let boardsManager = {
           "click",
           addCardEventHandler
       );
-    }
   },
+  createBoard: function () {
+    domManager.addEventListener(
+        '.new-board',
+        "click",
+        createBoard
+    )
+  }
 };
+async function createBoard(){
+  await dataHandler.createNewBoard()
+  const board = await dataHandler.getLatestBoard()
+  const statuses = await dataHandler.getStatuses()
+  const boardBuilder = htmlFactory(htmlTemplates.board)
+  const content = boardBuilder(board, statuses)
+  domManager.addChild("#root", content);
+  boardsManager.eventListeners(board)
+
+
+}
 
 function showHideButtonHandler(clickEvent) {
   const boardId = clickEvent.target.dataset.boardId;
@@ -45,11 +69,14 @@ function showHideButtonHandler(clickEvent) {
   }
 }
 
-function renameBoardHandler(submitEvent) {
+async function renameBoardHandler(submitEvent) {
   submitEvent.preventDefault();
   const boardId = submitEvent.target.dataset.boardId;
   const newTitle = submitEvent.target.querySelector("input").value;
-  dataHandler.renameBoard(boardId, newTitle);
+  await dataHandler.renameBoard(boardId, newTitle);
+  const newBoard = await dataHandler.getBoard(boardId);
+  const titleBuilder = htmlFactory(htmlTemplates.boardTitle);
+  submitEvent.target.outerHTML = titleBuilder(newBoard);
 }
 
 function editBoardnameHandler(clickEvent) {
@@ -65,7 +92,7 @@ function createCardEventHandler(submitEvent){
   submitEvent.preventDefault();
   const boardId = submitEvent.target.dataset.boardId;
   const title = submitEvent.target.querySelector("input").value;
-  dataHandler.createNewCard(boardId, title).then();
+  dataHandler.createNewCard(boardId, title);
 }
 
 

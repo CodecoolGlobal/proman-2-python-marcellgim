@@ -27,18 +27,34 @@ def get_statuses():
     return status
 
 
-def get_boards():
+def get_public_boards():
     """
-    Gather all boards
+    Gather all public boards
     :return:
     """
 
     return data_manager.execute_select(
         """
         SELECT * FROM boards
+        WHERE user_id IS null;
         ;
         """
     )
+
+
+def get_user_boards(user_id):
+    """
+    Gather all public boards and private boards for user
+    :return:
+    """
+
+    return data_manager.execute_select(
+        """
+        SELECT * FROM boards
+        WHERE user_id IS null OR user_id = %(user_id)s
+        ;
+        """
+        , {"user_id": user_id})
 
 
 def get_cards_for_board(board_id):
@@ -93,6 +109,75 @@ def update_board_title(board_id, new_name):
         , {"board_id": board_id, "new_name": new_name})
 
 
+def create_new_board(board_title):
+    data_manager.execute_modify(
+        """
+        INSERT INTO boards
+        VALUES(DEFAULT, %(board_title)s );
+        """
+        , {"board_title": board_title})
+
+
+def get_latest_board():
+    board_id = data_manager.execute_select(
+        """
+        SELECT id, title
+        FROM boards
+        WHERE id=(
+            SELECT MAX(id)
+            FROM boards
+        )
+        """
+    , fetchall=False)
+    return board_id
+
+
+def get_password_by_username(username):
+    return data_manager.execute_select(
+        """
+        SELECT password FROM users
+        WHERE username = %(username)s;
+        """
+        , {"username": username}, False)
+
+
+def new_user(username, password):
+    data_manager.execute_modify(
+        """
+        INSERT INTO users (username, password)
+        VALUES (%(username)s, %(password)s);
+        """
+        , {"username": username, "password": password})
+
+
+def check_existing_user(username):
+    users = data_manager.execute_select(
+        """
+        SELECT username FROM users;
+        """
+        )
+    usernames = [user["username"] for user in users]
+    return username in usernames
+
+
+def get_board(board_id):
+    return data_manager.execute_select(
+        """
+        SELECT * FROM boards
+        WHERE id = %(board_id)s;
+        """
+        , {"board_id": board_id}, False)
+
+
+def get_card(card_id):
+    return data_manager.execute_select(
+        """
+        SELECT * FROM cards
+        WHERE id = %(card_id)s;
+        """
+        , {"card_id": card_id}, False)
+ 
+
 def delete_card(card_id):
     data_manager.execute_modify(
         """
@@ -100,3 +185,13 @@ def delete_card(card_id):
         WHERE id = %(card_id)s
         """
         , {"card_id": card_id})
+
+
+def get_user_id(username):
+    return data_manager.execute_select(
+        """
+        SELECT id FROM users
+        WHERE username = %(username)s
+        ;
+        """
+        , {"username": username}, False)

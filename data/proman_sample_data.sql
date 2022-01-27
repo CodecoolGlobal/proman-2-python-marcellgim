@@ -20,6 +20,7 @@ SET default_with_oids = false;
 DROP TABLE IF EXISTS statuses CASCADE;
 DROP TABLE IF EXISTS boards CASCADE;
 DROP TABLE IF EXISTS cards;
+DROP TABLE IF EXISTS users;
 
 ---
 --- create tables
@@ -32,7 +33,8 @@ CREATE TABLE statuses (
 
 CREATE TABLE boards (
     id          SERIAL PRIMARY KEY  NOT NULL,
-    title       VARCHAR(200)        NOT NULL
+    title       VARCHAR(200)        NOT NULL,
+    user_id     INTEGER
 );
 
 CREATE TABLE cards (
@@ -41,6 +43,12 @@ CREATE TABLE cards (
     status_id   INTEGER             DEFAULT 1,
     title       VARCHAR (200)       NOT NULL,
     card_order  INTEGER             DEFAULT 1
+);
+
+CREATE TABLE users (
+    id          SERIAL PRIMARY KEY  NOT NULL,
+    username    TEXT                NOT NULL,
+    password    TEXT                NOT NULL
 );
 
 ---
@@ -77,3 +85,6 @@ ALTER TABLE ONLY cards
 
 ALTER TABLE ONLY cards
     ADD CONSTRAINT fk_cards_status_id FOREIGN KEY (status_id) REFERENCES statuses(id);
+
+ALTER TABLE ONLY boards
+    ADD CONSTRAINT  fk_boards_user_id FOREIGN KEY  (user_id) REFERENCES users(id);
