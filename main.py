@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 from util import json_response, hash_password, check_password
 import mimetypes
 import queires
-from http import HTTPStatus
 
 mimetypes.add_type('application/javascript', '.js')
 app = Flask(__name__)
@@ -75,44 +74,47 @@ def get_cards_for_board(board_id: int):
 
 
 @app.route("/api/boards/create/public/", methods=["POST"])
+@json_response
 def create_new_board():
     default_board_title = "Board Title"
-    queires.create_new_board(default_board_title)
-    return "Board created", HTTPStatus.OK
+    return queires.create_new_board(default_board_title)
 
 
 @app.route("/api/boards/create/private/<int:user_id>", methods=["POST"])
+@json_response
 def create_private_board(user_id):
     default_board_title = "Private Board"
-    queires.create_private_board(default_board_title, user_id)
-    return "Board created", HTTPStatus.OK
+    return queires.create_private_board(default_board_title, user_id)
 
 
 @app.route("/api/boards/<int:board_id>/add_card", methods=["POST"])
+@json_response
 def add_new_card(board_id):
-    title = request.json['cardTitle']
-    queires.add_new_card(board_id, title)
-    return "Card added", HTTPStatus.OK
+    title = request.get_json()
+    return queires.add_new_card(board_id, title)
 
 
 @app.route("/api/cards/<int:card_id>/change_name", methods=["PUT"])
+@json_response
 def rename_card(card_id: int):
     name = request.get_json()
     queires.update_card_title(card_id, name)
-    return "Card title changed", HTTPStatus.OK
+    return "Card title changed"
 
 
 @app.route("/api/boards/<int:board_id>/change_name", methods=["PUT"])
+@json_response
 def rename_board(board_id: int):
     name = request.get_json()
     queires.update_board_title(board_id, name)
-    return "Board title changed", HTTPStatus.OK
+    return "Board title changed"
 
 
 @app.route("/api/cards/<int:card_id>/delete", methods=["DELETE"])
+@json_response
 def delete_card(card_id):
     queires.delete_card(card_id)
-    return "Card deleted", HTTPStatus.OK
+    return "Card deleted"
 
   
 @app.route("/api/statuses/")
@@ -165,10 +167,11 @@ def get_user_boards(user_id=None):
 
 
 @app.route("/api/cards/<int:card_id>/move", methods=["PUT"])
+@json_response
 def move_card(card_id):
     new_status = request.get_json()
     queires.change_card_status(card_id, new_status)
-    return "Card moved", HTTPStatus.OK
+    return "Card moved"
 
 
 def main():
