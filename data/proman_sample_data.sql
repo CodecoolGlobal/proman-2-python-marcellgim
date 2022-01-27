@@ -51,6 +51,16 @@ CREATE TABLE users (
     password    TEXT                NOT NULL
 );
 
+CREATE TABLE archived_cards
+(
+    id         SERIAL PRIMARY KEY  NOT NULL,
+    card_id    int,
+    board_id   int,
+    status_id  int,
+    title      varchar(200),
+    card_order int
+);
+
 ---
 --- insert data
 ---
