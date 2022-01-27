@@ -14,12 +14,12 @@ export let cardsManager = {
           content
       );
       
-      initEventListeners(card);
+      this.initEventListeners(card);
     }
   },
-  loadArchivedCards: async function(boardId){
+  loadArchivedCards: async function(boardId) {
     const cards = await dataHandler.getArchivedCards(boardId);
-    for (let card of cards){
+    for (let card of cards) {
       const cardBuilder = htmlFactory(htmlTemplates.archivedCards);
       const content = cardBuilder(card);
       domManager.addChild(`.board[data-board-id="${boardId}"]`, content);
@@ -29,54 +29,8 @@ export let cardsManager = {
           unarchiveCardHandler
       );
     }
-
-
-  }
-};
-
-function deleteButtonHandler(clickEvent) {
-  const cardId = clickEvent.target.dataset.cardId
-  dataHandler.deleteCard(cardId)
-  clickEvent.target.parentElement.remove()
-}
-
-
-function archiveCardHandler(clickEvent) {
-  const cardId = clickEvent.target.dataset.cardId
-  dataHandler.archiveCard(cardId)
-  dataHandler.deleteCard(cardId)
-  clickEvent.target.parentElement.remove()
-}
-
-
-async function renameCardHandler(submitEvent) {
-  submitEvent.preventDefault();
-  const cardId = submitEvent.target.dataset.cardId;
-  const newTitle = submitEvent.target.querySelector("input").value;
-  await dataHandler.renameCard(cardId, newTitle);
-  const newCard = await dataHandler.getCard(cardId);
-  const titleBuilder = htmlFactory(htmlTemplates.cardTitle);
-  submitEvent.target.outerHTML = titleBuilder(newCard);
-  initEventListeners(newCard);
-}
-
-
-function editCardnameHandler(clickEvent) {
-  const nameForm = document.createElement("form");
-  nameForm.dataset.cardId = clickEvent.target.dataset.cardId;
-  const formBuilder = htmlFactory(htmlTemplates.nameForm);
-  nameForm.innerHTML = formBuilder(clickEvent.target.innerText);
-  nameForm.addEventListener("submit", renameCardHandler)
-  clickEvent.target.replaceWith(nameForm);
-}
-
-function unarchiveCardHandler(clickEvent) {
-  const cardId = clickEvent.target.dataset.cardId;
-  dataHandler.unarchiveCard(cardId)
-  clickEvent.target.parentElement.remove()
-}
-
-function initEventListeners(card) {
+  },
+  initEventListeners: function (card) {
   const cardIdentifier = `.card[data-card-id="${card.id}"]`;
   domManager.addEventListener(
     `.card-title[data-card-id="${card.id}"]`,
@@ -94,6 +48,46 @@ function initEventListeners(card) {
           archiveCardHandler
       );
   domManager.addEventListener(cardIdentifier, "dragstart", handleDragStart);
+  }
+};
+
+function deleteButtonHandler(clickEvent) {
+  const cardId = clickEvent.target.dataset.cardId
+  dataHandler.deleteCard(cardId)
+  clickEvent.target.parentElement.remove()
+}
+
+function archiveCardHandler(clickEvent) {
+  const cardId = clickEvent.target.dataset.cardId
+  dataHandler.archiveCard(cardId)
+  dataHandler.deleteCard(cardId)
+  clickEvent.target.parentElement.remove()
+}
+
+async function renameCardHandler(submitEvent) {
+  submitEvent.preventDefault();
+  const cardId = submitEvent.target.dataset.cardId;
+  const newTitle = submitEvent.target.querySelector("input").value;
+  await dataHandler.renameCard(cardId, newTitle);
+  const newCard = await dataHandler.getCard(cardId);
+  const titleBuilder = htmlFactory(htmlTemplates.cardTitle);
+  submitEvent.target.outerHTML = titleBuilder(newCard);
+  cardsManager.initEventListeners(newCard);
+}
+
+function editCardnameHandler(clickEvent) {
+  const nameForm = document.createElement("form");
+  nameForm.dataset.cardId = clickEvent.target.dataset.cardId;
+  const formBuilder = htmlFactory(htmlTemplates.nameForm);
+  nameForm.innerHTML = formBuilder(clickEvent.target.innerText);
+  nameForm.addEventListener("submit", renameCardHandler)
+  clickEvent.target.replaceWith(nameForm);
+}
+
+function unarchiveCardHandler(clickEvent) {
+  const cardId = clickEvent.target.dataset.cardId;
+  dataHandler.unarchiveCard(cardId)
+  clickEvent.target.parentElement.remove()
 }
 
 function handleDragStart(dragEvent) {

@@ -129,6 +129,7 @@ async function createCardEventHandler(submitEvent){
   const cardBuilder = htmlFactory(htmlTemplates.card);
   const content = cardBuilder(newCard);
   domManager.addChild(`.board-column-content[data-board-id="${boardId}"]`, content);
+  cardsManager.initEventListeners(newCard);
   // Replace with initial button
   const addButton = document.createElement("button");
   addButton.classList.add("new-card");
