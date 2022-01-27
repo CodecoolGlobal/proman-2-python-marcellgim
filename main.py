@@ -65,6 +65,11 @@ def delete_card(card_id):
     queires.delete_card(card_id)
     return "Card deleted", HTTPStatus.OK
 
+
+@app.route("/api/cards/<int:card_id>/archive", methods=["POST"])
+def archive_card(card_id):
+    pass
+
   
 @app.route("/api/statuses/")
 @json_response
