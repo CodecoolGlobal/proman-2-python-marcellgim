@@ -157,6 +157,13 @@ def get_user_boards(user_id=None):
         return queires.get_user_boards(user_id)
 
 
+@app.route("/api/cards/<int:card_id>/move", methods=["PUT"])
+def move_card(card_id):
+    new_status = request.get_json()
+    queires.change_card_status(card_id, new_status)
+    return "Card moved", HTTPStatus.OK
+
+
 def main():
     app.run(debug=True)
 

@@ -195,3 +195,14 @@ def get_user_id(username):
         ;
         """
         , {"username": username}, False)
+
+
+def change_card_status(card_id, new_status):
+    data_manager.execute_modify(
+        """
+        UPDATE cards SET
+            status_id = %(new_status)s
+        WHERE id = %(card_id)s
+        ;
+        """
+        , {"card_id": card_id, "new_status": new_status})
