@@ -109,6 +109,29 @@ def update_board_title(board_id, new_name):
         , {"board_id": board_id, "new_name": new_name})
 
 
+def create_new_board(board_title):
+    data_manager.execute_modify(
+        """
+        INSERT INTO boards
+        VALUES(DEFAULT, %(board_title)s );
+        """
+        , {"board_title": board_title})
+
+
+def get_latest_board():
+    board_id = data_manager.execute_select(
+        """
+        SELECT id, title
+        FROM boards
+        WHERE id=(
+            SELECT MAX(id)
+            FROM boards
+        )
+        """
+    , fetchall=False)
+    return board_id
+
+
 def get_password_by_username(username):
     return data_manager.execute_select(
         """

@@ -74,6 +74,13 @@ def get_cards_for_board(board_id: int):
     return queires.get_cards_for_board(board_id)
 
 
+@app.route("/api/boards/create/board/", methods=["POST"])
+def create_new_board():
+    default_board_title = "Board Title"
+    queires.create_new_board(default_board_title)
+    return "Board created", HTTPStatus.OK
+
+
 @app.route("/api/boards/<int:board_id>/add_card", methods=["POST"])
 def add_new_card(board_id):
     title = request.json['cardTitle']
@@ -111,6 +118,12 @@ def statuses():
 @json_response
 def board_statuses(board_id: int):
     return queires.get_statuses_by_table_id(board_id)
+
+
+@app.route("/api/board/latest/")
+@json_response
+def get_latest_board():
+    return queires.get_latest_board()
 
 
 @app.route("/api/boards/<int:board_id>")

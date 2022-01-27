@@ -10,9 +10,15 @@ export let boardsManager = {
     for (let board of boards) {
       const statuses = await dataHandler.getStatusesByBoardId(board.id)
       const boardBuilder = htmlFactory(htmlTemplates.board);
+      // console.log(board)
+      // console.log(statuses)
       const content = boardBuilder(board, statuses);
 
       domManager.addChild("#root", content);
+      this.eventListeners(board)
+    }
+  },
+  eventListeners: function (board){
       domManager.addEventListener(
         `.toggle-board-button[data-board-id="${board.id}"]`,
         "click",
@@ -28,9 +34,26 @@ export let boardsManager = {
           "click",
           addCardEventHandler
       );
-    }
   },
+  createBoard: function () {
+    domManager.addEventListener(
+        '.new-board',
+        "click",
+        createBoard
+    )
+  }
 };
+async function createBoard(){
+  await dataHandler.createNewBoard()
+  const board = await dataHandler.getLatestBoard()
+  const statuses = await dataHandler.getStatuses()
+  const boardBuilder = htmlFactory(htmlTemplates.board)
+  const content = boardBuilder(board, statuses)
+  domManager.addChild("#root", content);
+  boardsManager.eventListeners(board)
+
+
+}
 
 function showHideButtonHandler(clickEvent) {
   const boardId = clickEvent.target.dataset.boardId;
