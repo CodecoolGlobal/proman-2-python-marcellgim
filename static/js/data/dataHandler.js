@@ -53,6 +53,9 @@ export let dataHandler = {
   },
   getUser: async function () {
     return await apiGet("/api/current_user")
+  },
+  moveCard: async function (cardId, newStatus) {
+    await apiPut(`/api/cards/${cardId}/move`, newStatus)
   }
 };
 
