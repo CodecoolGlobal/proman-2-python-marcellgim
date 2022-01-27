@@ -4,7 +4,10 @@
         <div class="board-columns-shown">
             <div class="header-column">
                 <div>Proman</div>
-                <div><button class="new-board">+ New Board</button></div>
+                {% if session.username %}
+                <div><button class="new-board-private">+ New Private Board</button></div>
+                {% endif %}
+                <div><button class="new-board-public">+ New Public Board</button></div>
             </div>
         </div>
     </div>

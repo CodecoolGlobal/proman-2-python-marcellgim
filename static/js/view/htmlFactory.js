@@ -35,10 +35,16 @@ function boardBuilder(board, statuses) {
     let columns = columnBuilder(board, statuses)
     return `
 <section class="board" data-board-id=${board.id}>
-    <div class="board-header"><span class="board-title" data-board-id="${board.id}">${board.title}</span>
-    <button class="toggle-board-button" data-board-id="${board.id}">Show Cards</button>
-    <button class="new-card" data-board-id="${board.id}">Add new card</button>
-    <button class="archived-cards" data-board-id="${board.id}">Show Archived Cards</button>
+    <div class="board-header">
+        <div>
+            <span class="board-title" data-board-id="${board.id}">${board.title}</span>
+        </div>
+        <div class="button-container">
+            <button class="new-card" data-board-id="${board.id}"> New Card</button>
+            <button class="toggle-board-button" data-board-id="${board.id}">&xvee;</button>
+            <button class="new-card" data-board-id="${board.id}">Add new card</button>
+            <button class="archived-cards" data-board-id="${board.id}">Show Archived Cards</button>
+        </div>
     </div>
     <div class="board-columns" data-board-id="${board.id}">
         ${columns}
@@ -49,7 +55,7 @@ function boardBuilder(board, statuses) {
 
 function cardBuilder(card) {
     return `
-    <div class="card" data-card-id="${card.id}">
+    <div class="card" data-card-id="${card.id}" data-board-id="${card['board_id']}" draggable="true">
         <button class="delete-card" data-card-id="${card.id}">Delete</button>
         <button class="archive-card" data-card-id="${card.id}">Archive</button>
         <div class="card-title" data-card-id="${card.id}">${card.title}</div>
@@ -75,8 +81,8 @@ function columnBuilder(board, statuses){
         columns +=
 `
 <div class="board-column" data-board-id=${board.id}>
-    <div class="board-column title">${statuses[i]['title']}</div>
-    <div class="board-column-content" data-board-id="${board.id}" status-id=${statuses[i]['status_id']}></div>
+    <div class="board-column title"><h2>${statuses[i]['title']}</h2></div>
+    <div class="board-column-content" data-board-id="${board.id}" data-status-id=${statuses[i]['status_id']}></div>
 </div>
 `
     }

@@ -84,12 +84,13 @@ def get_statuses_by_table_id(table_id):
 
 
 def add_new_card(board_id, title):
-
-    data_manager.execute_modify(
+    return data_manager.execute_select(
         """
-        INSERT INTO cards VALUES(DEFAULT, %(board_id)s, DEFAULT, %(title)s, DEFAULT);
+        INSERT INTO cards (board_id, title)
+        VALUES(%(board_id)s, %(title)s)
+        RETURNING *;
         """
-        , {"board_id": board_id, "title": title})
+        , {"board_id": board_id, "title": title}, False)
 
 
 def update_card_title(card_id, new_name):
@@ -111,12 +112,23 @@ def update_board_title(board_id, new_name):
 
 
 def create_new_board(board_title):
-    data_manager.execute_modify(
+    return data_manager.execute_select(
         """
-        INSERT INTO boards
-        VALUES(DEFAULT, %(board_title)s );
+        INSERT INTO boards (title)
+        VALUES (%(board_title)s)
+        RETURNING *;
         """
-        , {"board_title": board_title})
+        , {"board_title": board_title}, False)
+
+
+def create_private_board(board_title, user_id):
+    return data_manager.execute_select(
+        """
+        INSERT INTO boards (title, user_id)
+        VALUES(%(board_title)s, %(user_id)s)
+        RETURNING *;
+        """
+        , {"board_title": board_title, "user_id": user_id}, False)
 
 
 def get_latest_board():
@@ -230,3 +242,14 @@ def unarchive_card(card_id):
         WHERE card_id = %(card_id)s;
         """
         , {"card_id": card_id})
+
+
+def change_card_status(card_id, new_status):
+    data_manager.execute_modify(
+        """
+        UPDATE cards SET
+            status_id = %(new_status)s
+        WHERE id = %(card_id)s
+        ;
+        """
+        , {"card_id": card_id, "new_status": new_status})
