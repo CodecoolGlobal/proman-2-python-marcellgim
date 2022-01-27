@@ -7,6 +7,7 @@ export let boardsManager = {
   loadBoards: async function () {
     const user = await dataHandler.getUser();
     const boards = await dataHandler.getBoards(user);
+    this.createBoardButtonListeners(user);
     for (let board of boards) {
       const statuses = await dataHandler.getStatusesByBoardId(board.id)
       const boardBuilder = htmlFactory(htmlTemplates.board);
@@ -15,68 +16,66 @@ export let boardsManager = {
       this.eventListeners(board)
     }
   },
-  eventListeners: function (board){
-      domManager.addEventListener(
+  eventListeners: function (board) {
+    domManager.addEventListener(
         `.toggle-board-button[data-board-id="${board.id}"]`,
         "click",
         showHideButtonHandler
-      );
-      domManager.addEventListener(
-          `.board-title[data-board-id="${board.id}"]`,
-          "click",
-          editBoardnameHandler
-      );
-      domManager.addEventListener(
-          `.new-card[data-board-id="${board.id}"]`,
-          "click",
-          addCardEventHandler
-      );
-      domManager.addEventListener(
-          `.board-columns[data-board-id="${board.id}"]`,
-          "drop",
-          dropCardHandler
-      );
-      domManager.addEventListener(
-          `.board-columns[data-board-id="${board.id}"]`,
-          "dragover",
-          dragoverHandler
-      );
+    );
+    domManager.addEventListener(
+        `.board-title[data-board-id="${board.id}"]`,
+        "click",
+        editBoardnameHandler
+    );
+    domManager.addEventListener(
+        `.new-card[data-board-id="${board.id}"]`,
+        "click",
+        addCardEventHandler
+    );
+    domManager.addEventListener(
+        `.board-columns[data-board-id="${board.id}"]`,
+        "drop",
+        dropCardHandler
+    );
+    domManager.addEventListener(
+        `.board-columns[data-board-id="${board.id}"]`,
+        "dragover",
+        dragoverHandler
+    );
   },
-  createPublicBoardButton: function () {
+  createBoardButtonListeners: function (user) {
     domManager.addEventListener(
         '.new-board-public',
         "click",
         createPublicBoard
-    )
-  },
-  createPrivateBoardButton: function () {
-    domManager.addEventListener(
-        '.new-board-private',
-        "click",
-        createPrivateBoard
-    )
+    );
+    if (+user >= 0) {
+      domManager.addEventListener(
+          '.new-board-private',
+          "click",
+          createPrivateBoard
+      );
+    }
   }
 };
 
 async function createPublicBoard() {
-  await dataHandler.createPublicBoard()
-  const board = await dataHandler.getLatestBoard()
+  const newBoard = await dataHandler.createPublicBoard()
   const statuses = await dataHandler.getStatuses()
   const boardBuilder = htmlFactory(htmlTemplates.board)
-  const content = boardBuilder(board, statuses)
+  const content = boardBuilder(newBoard, statuses)
   domManager.addChild("#root", content);
-  boardsManager.eventListeners(board)
+  boardsManager.eventListeners(newBoard)
 }
 
 async function createPrivateBoard() {
   const userId = await dataHandler.getUser()
-  await dataHandler.createPrivateBoard(userId)
-  const board = await dataHandler.getLatestBoard()
+  const newBoard = await dataHandler.createPrivateBoard(userId)
   const statuses = await dataHandler.getStatuses()
   const boardBuilder = htmlFactory(htmlTemplates.board)
-  const content = boardBuilder(board, statuses)
+  const content = boardBuilder(newBoard, statuses)
   domManager.addChild("#root", content);
-  boardsManager.eventListeners(board)
+  boardsManager.eventListeners(newBoard)
 }
 
 function showHideButtonHandler(clickEvent) {
@@ -117,20 +116,30 @@ function editBoardnameHandler(clickEvent) {
   clickEvent.target.replaceWith(nameForm);
 }
 
-function createCardEventHandler(submitEvent){
+async function createCardEventHandler(submitEvent){
   submitEvent.preventDefault();
   const boardId = submitEvent.target.dataset.boardId;
   const title = submitEvent.target.querySelector("input").value;
-  dataHandler.createNewCard(boardId, title);
+  const newCard = await dataHandler.createNewCard(boardId, title);
+  const cardBuilder = htmlFactory(htmlTemplates.card);
+  const content = cardBuilder(newCard);
+  domManager.addChild(`.board-column-content[data-board-id="${boardId}"]`, content);
+  // Replace with initial button
+  const addButton = document.createElement("button");
+  addButton.classList.add("new-card");
+  addButton.dataset.boardId = boardId;
+  addButton.textContent = "Add new card";
+  addButton.addEventListener("click", addCardEventHandler);
+  submitEvent.target.replaceWith(addButton);
 }
 
 
 function addCardEventHandler(clickEvent) {
     const cardForm = document.createElement("form");
     cardForm.dataset.boardId = clickEvent.target.dataset.boardId;
-    cardForm.innerHTML = addNewCardForm()
+    cardForm.innerHTML = addNewCardForm();
     cardForm.addEventListener("submit", createCardEventHandler);
-    clickEvent.target.replaceWith(cardForm)
+    clickEvent.target.replaceWith(cardForm);
 
 }
 
