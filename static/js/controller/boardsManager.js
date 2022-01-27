@@ -86,11 +86,12 @@ function showHideButtonHandler(clickEvent) {
     clickEvent.target.classList.add("loaded")
     cardsManager.loadCards(boardId);
   }
-  if(clickEvent.target.innerHTML === "Show Cards"){
-    clickEvent.target.innerHTML = "Hide Cards"
+  if(clickEvent.target.innerHTML === "⋁"){
+    clickEvent.target.innerHTML = "⋀"
   } else {
-    clickEvent.target.innerHTML = "Show Cards"
+    clickEvent.target.innerHTML = "⋁"
   }
+  console.log(clickEvent.target.innerHTML)
 }
 
 async function renameBoardHandler(submitEvent) {
