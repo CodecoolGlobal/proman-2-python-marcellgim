@@ -33,7 +33,8 @@ CREATE TABLE statuses (
 
 CREATE TABLE boards (
     id          SERIAL PRIMARY KEY  NOT NULL,
-    title       VARCHAR(200)        NOT NULL
+    title       VARCHAR(200)        NOT NULL,
+    user_id     INTEGER
 );
 
 CREATE TABLE cards (
@@ -84,3 +85,6 @@ ALTER TABLE ONLY cards
 
 ALTER TABLE ONLY cards
     ADD CONSTRAINT fk_cards_status_id FOREIGN KEY (status_id) REFERENCES statuses(id);
+
+ALTER TABLE ONLY boards
+    ADD CONSTRAINT  fk_boards_user_id FOREIGN KEY  (user_id) REFERENCES users(id);

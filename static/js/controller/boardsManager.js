@@ -5,7 +5,8 @@ import { cardsManager } from "./cardsManager.js";
 
 export let boardsManager = {
   loadBoards: async function () {
-    const boards = await dataHandler.getBoards();
+    const user = await dataHandler.getUser();
+    const boards = await dataHandler.getBoards(user);
     for (let board of boards) {
       const statuses = await dataHandler.getStatusesByBoardId(board.id)
       const boardBuilder = htmlFactory(htmlTemplates.board);

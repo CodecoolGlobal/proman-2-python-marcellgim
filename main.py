@@ -114,10 +114,10 @@ def statuses():
     return queires.get_statuses()
 
 
-@app.route("/api/<int:boardId>/statuses/")
+@app.route("/api/<int:board_id>/statuses/")
 @json_response
-def board_statuses(boardId: int):
-    return queires.get_statuses_by_table_id(boardId)
+def board_statuses(board_id: int):
+    return queires.get_statuses_by_table_id(board_id)
 
 
 @app.route("/api/board/latest/")
@@ -136,6 +136,25 @@ def get_board(board_id):
 @json_response
 def get_card(card_id):
     return queires.get_card(card_id)
+
+
+@app.route("/api/current_user")
+@json_response
+def get_user_id():
+    if "username" in session:
+        return queires.get_user_id(session["username"])["id"]
+    else:
+        return -1
+
+
+@app.route("/api/users/<int:user_id>/boards")
+@app.route("/api/public/boards")
+@json_response
+def get_user_boards(user_id=None):
+    if user_id is None:
+        return queires.get_public_boards()
+    else:
+        return queires.get_user_boards(user_id)
 
 
 def main():

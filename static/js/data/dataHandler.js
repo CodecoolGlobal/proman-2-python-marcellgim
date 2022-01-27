@@ -1,7 +1,10 @@
 export let dataHandler = {
-  getBoards: async function () {
-    const response = await apiGet("/api/boards");
-    return response;
+  getBoards: async function (userId) {
+    if (+userId >= 0) {
+      return await apiGet(`/api/users/${userId}/boards`);
+    } else {
+      return await apiGet("/api/public/boards")
+    }
   },
   getBoard: async function (boardId) {
     // the board is retrieved and then the callback function is called with the board
@@ -36,17 +39,20 @@ export let dataHandler = {
     return response
   },
   renameCard: async function (cardId, newTitle) {
-    await apiPut(`/api/cards/${cardId}/change_name`, newTitle)
+    await apiPut(`/api/cards/${cardId}/change_name`, newTitle);
   },
   renameBoard: async function (boardId, newTitle) {
-    await apiPut(`/api/boards/${boardId}/change_name`, newTitle)
+    await apiPut(`/api/boards/${boardId}/change_name`, newTitle);
   },
   getLatestBoard: async function () {
     const response = await apiGet("/api/board/latest/")
     return response
   },
   deleteCard: async function (cardId) {
-    await apiDelete(`/api/boards/${cardId}/delete`)
+    await apiDelete(`/api/boards/${cardId}/delete`);
+  },
+  getUser: async function () {
+    return await apiGet("/api/current_user")
   }
 };
 

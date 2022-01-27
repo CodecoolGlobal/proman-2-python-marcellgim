@@ -32,7 +32,7 @@ button{
     padding: 4px 10px;
 }
 
-.board-container{
+.board-container, .container{
     max-width: 960px;
     margin: 0 auto;
 }

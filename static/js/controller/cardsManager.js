@@ -7,7 +7,6 @@ export let cardsManager = {
     const cards = await dataHandler.getCardsByBoardId(boardId);
     for (let card of cards) {
       //todo: Implement a function that gets all statusIds
-      console.log(card)
       const cardBuilder = htmlFactory(htmlTemplates.card);
       const content = cardBuilder(card);
       domManager.addChild(`.board-column-content[data-board-id="${boardId}"].board-column-content[status-id="${card['status_id']}"]`, content);
