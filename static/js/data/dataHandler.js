@@ -5,6 +5,7 @@ export let dataHandler = {
   },
   getBoard: async function (boardId) {
     // the board is retrieved and then the callback function is called with the board
+    return await apiGet(`/api/boards/${boardId}`);
   },
   getStatuses: async function () {
     const response = await apiGet('/api/statuses/')
@@ -20,6 +21,7 @@ export let dataHandler = {
   },
   getCard: async function (cardId) {
     // the card is retrieved and then the callback function is called with the card
+    return await apiGet(`/api/cards/${cardId}`);
   },
   createNewBoard: async function () {
     await apiPost(`/api/boards/create/board/`, {});
@@ -42,8 +44,10 @@ export let dataHandler = {
   getLatestBoard: async function () {
     const response = await apiGet("/api/board/latest/")
     return response
+  },
+  deleteCard: async function (cardId) {
+    await apiDelete(`/api/boards/${cardId}/delete`)
   }
-
 };
 
 async function apiGet(url) {

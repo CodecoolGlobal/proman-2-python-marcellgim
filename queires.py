@@ -114,3 +114,58 @@ def get_latest_board():
         """
     , fetchall=False)
     return board_id
+
+
+def get_password_by_username(username):
+    return data_manager.execute_select(
+        """
+        SELECT password FROM users
+        WHERE username = %(username)s;
+        """
+        , {"username": username}, False)
+
+
+def new_user(username, password):
+    data_manager.execute_modify(
+        """
+        INSERT INTO users (username, password)
+        VALUES (%(username)s, %(password)s);
+        """
+        , {"username": username, "password": password})
+
+
+def check_existing_user(username):
+    users = data_manager.execute_select(
+        """
+        SELECT username FROM users;
+        """
+        )
+    usernames = [user["username"] for user in users]
+    return username in usernames
+
+
+def get_board(board_id):
+    return data_manager.execute_select(
+        """
+        SELECT * FROM boards
+        WHERE id = %(board_id)s;
+        """
+        , {"board_id": board_id}, False)
+
+
+def get_card(card_id):
+    return data_manager.execute_select(
+        """
+        SELECT * FROM cards
+        WHERE id = %(card_id)s;
+        """
+        , {"card_id": card_id}, False)
+ 
+
+def delete_card(card_id):
+    data_manager.execute_modify(
+        """
+        DELETE from cards
+        WHERE id = %(card_id)s
+        """
+        , {"card_id": card_id})

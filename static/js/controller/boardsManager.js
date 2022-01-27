@@ -68,11 +68,14 @@ function showHideButtonHandler(clickEvent) {
   }
 }
 
-function renameBoardHandler(submitEvent) {
+async function renameBoardHandler(submitEvent) {
   submitEvent.preventDefault();
   const boardId = submitEvent.target.dataset.boardId;
   const newTitle = submitEvent.target.querySelector("input").value;
-  dataHandler.renameBoard(boardId, newTitle);
+  await dataHandler.renameBoard(boardId, newTitle);
+  const newBoard = await dataHandler.getBoard(boardId);
+  const titleBuilder = htmlFactory(htmlTemplates.boardTitle);
+  submitEvent.target.outerHTML = titleBuilder(newBoard);
 }
 
 function editBoardnameHandler(clickEvent) {
@@ -88,7 +91,7 @@ function createCardEventHandler(submitEvent){
   submitEvent.preventDefault();
   const boardId = submitEvent.target.dataset.boardId;
   const title = submitEvent.target.querySelector("input").value;
-  dataHandler.createNewCard(boardId, title).then();
+  dataHandler.createNewCard(boardId, title);
 }
 
 
