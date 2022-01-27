@@ -120,7 +120,6 @@ function toggleBoard(boardId){
 
 async function getArchivedCardsHandler(clickEvent) {
   const boardId = clickEvent.target.dataset.boardId
-  const archivedCards = await dataHandler.getArchivedCards(boardId)
   if(!clickEvent.target.classList.contains("loaded")){
     clickEvent.target.classList.add("loaded")
   await cardsManager.loadArchivedCards(boardId);
