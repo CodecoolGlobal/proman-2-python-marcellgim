@@ -1,4 +1,4 @@
-:root{
+:root {
     --border-radius: 3px;
     --status-1: #590000;
     --status-2: #594300;
@@ -6,27 +6,28 @@
     --status-4: #085900;
 }
 
-body{
+body {
     min-width: 620px;
     background: #ddd url(http://cdn.backgroundhost.com/backgrounds/subtlepatterns/diagonal-noise.png);
     font-family: sans-serif;
 }
 
-h1, .board-title, .board-column-title{
+h1, .board-title, .board-column-title {
     font-weight: 100;
 }
 
-h1{
+h1 {
     text-align: center;
     font-size: 4em;
     letter-spacing: 5px;
     transform: scale(1.2, 1);
 }
-h2{
-    margin: 0px;
+
+h2 {
+    margin: 0;
 }
 
-button{
+button {
     background: #222;
     color: #fff;
     border: none;
@@ -35,19 +36,19 @@ button{
     padding: 4px 10px;
 }
 
-.board-container, .container{
+.board-container, .container {
     max-width: 960px;
     margin: 0 auto;
 }
 
-section.board{
+section.board {
     margin: 20px;
     border: aliceblue;
     background: #ffffff90;
     border-radius: 3px;
 }
 
-.board-header{
+.board-header {
     display: flex;
     height: 50px;
     background: #fff;
@@ -55,57 +56,59 @@ section.board{
     justify-content: space-between;
 }
 
-.board-title{
+.board-title {
     margin: 13px;
     display: inline-block;
     font-size: 20px;
 }
-.board-title, .board-add, .board-toggle{
+
+.board-title, .board-add, .board-toggle {
     display: inline-block;
 }
 
-.board-toggle{
+.board-toggle {
     float: right;
     margin: 13px;
 }
 
-.board-columns{
+.board-columns {
     display: none;
     flex-wrap: nowrap;
 }
-.board-columns-shown{
+
+.board-columns-shown {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
     background-color: white;
 }
 
-.board-column{
+.board-column {
     padding: 10px;
     flex: 1;
 }
 
-.board-column-content{
+.board-column-content {
     min-height: 278px;
     border: 4px solid #cdcdcd;
     border-radius: 0px 0px 10px 10px;
     background: #eee;
 }
 
-.board-column-content:empty{
+.board-column-content:empty {
     /*This only works if the tag is really empty and there is not even whitespace inside*/
     border: 4px solid #cdcdcd;
-    border-radius: 0px 0px 10px 10px;
+    border-radius: 0 0 10px 10px;
     background: #eee;
 }
 
-.board-column .title{
+.board-column .title {
     text-align: center;
     border: 4px solid #cdcdcd;
     background: #cdcdcd;
 }
 
-.card{
+.card {
     position: relative;
     background: #222;
     color: #fff;
@@ -114,23 +117,23 @@ section.board{
     padding: 4px;
 }
 
-.board-column:nth-of-type(1) .card{
+.board-column:nth-of-type(1) .card {
     background: var(--status-1);
 }
 
-.board-column:nth-of-type(2) .card{
+.board-column:nth-of-type(2) .card {
     background: var(--status-2);
 }
 
-.board-column:nth-of-type(3) .card{
+.board-column:nth-of-type(3) .card {
     background: var(--status-3);
 }
 
-.board-column:nth-of-type(4) .card{
+.board-column:nth-of-type(4) .card {
     background: var(--status-4);
 }
 
-.card-remove{
+.card-remove {
     display: block;
     position: absolute;
     top: 4px;
@@ -139,11 +142,11 @@ section.board{
     cursor: pointer;
 }
 
-.card-title{
+.card-title {
     padding-right: 16px;
 }
 
-.header-column{
+.header-column {
     display: flex;
     padding: 10px;
     flex: 1;
@@ -178,6 +181,7 @@ nav ul li {
 #current-user {
     justify-self: flex-end;
 }
-.button-container{
+
+.button-container {
     display: flex;
 }
