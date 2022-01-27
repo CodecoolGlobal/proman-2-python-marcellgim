@@ -21,17 +21,22 @@ export let boardsManager = {
         `.toggle-board-button[data-board-id="${board.id}"]`,
         "click",
         showHideButtonHandler
-    );
-    domManager.addEventListener(
-        `.board-title[data-board-id="${board.id}"]`,
-        "click",
-        editBoardnameHandler
-    );
-    domManager.addEventListener(
-        `.new-card[data-board-id="${board.id}"]`,
-        "click",
-        addCardEventHandler
-    );
+      );
+      domManager.addEventListener(
+          `.board-title[data-board-id="${board.id}"]`,
+          "click",
+          editBoardnameHandler
+      );
+      domManager.addEventListener(
+          `.new-card[data-board-id="${board.id}"]`,
+          "click",
+          addCardEventHandler
+      );
+      domManager.addEventListener(
+          `.archived-cards[data-board-id="${board.id}"]`,
+          "click",
+          getArchivedCardsHandler
+      );
     domManager.addEventListener(
         `.board-columns[data-board-id="${board.id}"]`,
         "drop",
@@ -149,6 +154,21 @@ function toggleBoard(boardId){
     board.style.display = "flex"
   }else if(board.style.display === "flex"){
     board.style.display = ""
+  }
+}
+
+
+async function getArchivedCardsHandler(clickEvent) {
+  const boardId = clickEvent.target.dataset.boardId
+  if(!clickEvent.target.classList.contains("loaded")){
+    clickEvent.target.classList.add("loaded")
+  await cardsManager.loadArchivedCards(boardId);
+
+  }
+  if(clickEvent.target.innerHTML === "Show Archived Cards"){
+    clickEvent.target.innerHTML = "Hide Archived Cards"
+  } else {
+    clickEvent.target.innerHTML = "Show Archived Cards"
   }
 }
 

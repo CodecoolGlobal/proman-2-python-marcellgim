@@ -13,13 +13,36 @@ export let cardsManager = {
           `.board-column-content[data-board-id="${boardId}"][data-status-id="${card['status_id']}"]`,
           content
       );
+      
       initEventListeners(card);
     }
   },
+  loadArchivedCards: async function(boardId){
+    const cards = await dataHandler.getArchivedCards(boardId);
+    for (let card of cards){
+      const cardBuilder = htmlFactory(htmlTemplates.archivedCards);
+      const content = cardBuilder(card);
+      domManager.addChild(`.board[data-board-id="${boardId}"]`, content);
+      domManager.addEventListener(
+          `.unarchive-card[data-card-id="${card["card_id"]}"]`,
+          "click",
+          unarchiveCardHandler
+      );
+    }
+
+  }
 };
 
 function deleteButtonHandler(clickEvent) {
   const cardId = clickEvent.target.dataset.cardId
+  dataHandler.deleteCard(cardId)
+  clickEvent.target.parentElement.remove()
+}
+
+
+function archiveCardHandler(clickEvent) {
+  const cardId = clickEvent.target.dataset.cardId
+  dataHandler.archiveCard(cardId)
   dataHandler.deleteCard(cardId)
   clickEvent.target.parentElement.remove()
 }
@@ -46,6 +69,12 @@ function editCardnameHandler(clickEvent) {
   clickEvent.target.replaceWith(nameForm);
 }
 
+function unarchiveCardHandler(clickEvent) {
+  const cardId = clickEvent.target.dataset.cardId;
+  dataHandler.unarchiveCard(cardId)
+  clickEvent.target.parentElement.remove()
+}
+
 function initEventListeners(card) {
   const cardIdentifier = `.card[data-card-id="${card.id}"]`;
   domManager.addEventListener(
@@ -58,9 +87,13 @@ function initEventListeners(card) {
     "click",
     deleteButtonHandler
   );
+  domManager.addEventListener(
+          `.archive-card[data-card-id="${card.id}"]`,
+          "click",
+          archiveCardHandler
+      );
   domManager.addEventListener(cardIdentifier, "dragstart", handleDragStart);
 }
-
 
 function handleDragStart(dragEvent) {
   const cardIdentifier = `.card[data-card-id="${dragEvent.target.dataset.cardId}"]`

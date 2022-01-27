@@ -116,7 +116,26 @@ def delete_card(card_id):
     queires.delete_card(card_id)
     return "Card deleted"
 
-  
+
+@app.route("/api/cards/<int:card_id>/archive", methods=["POST"])
+def archive_card(card_id):
+    queires.save_archived_cards(card_id)
+    return "Card archived", HTTPStatus.OK
+
+
+@app.route("/api/board/<int:board_id>/archived", methods=["GET"])
+@json_response
+def list_archived_cards(board_id):
+    archived_cards = queires.get_archived_cards(board_id)
+    return archived_cards
+
+
+@app.route("/api/card/<int:card_id>/unarchive", methods=["POST"])
+def unarchive_card(card_id):
+    queires.unarchive_card(card_id)
+    return "Card unarchived", HTTPStatus.OK
+
+
 @app.route("/api/statuses/")
 @json_response
 def statuses():

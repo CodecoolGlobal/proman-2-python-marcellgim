@@ -77,6 +77,7 @@ def get_statuses_by_table_id(table_id):
         FROM cards
         JOIN statuses ON cards.status_id = statuses.id
         GROUP BY status_id, statuses.id
+        ORDER BY status_id
         """
     )
     return statuses
@@ -207,6 +208,40 @@ def get_user_id(username):
         ;
         """
         , {"username": username}, False)
+
+
+def save_archived_cards(card_id):
+    data_manager.execute_modify(
+        """
+        INSERT INTO archived_cards (card_id, board_id, status_id, title, card_order)
+        SELECT id, board_id, status_id, title, card_order
+        FROM cards
+        WHERE id = %(card_id)s;
+        """
+        , {"card_id": card_id})
+
+
+def get_archived_cards(board_id):
+    return data_manager.execute_select(
+        """
+        SELECT card_id, board_id, status_id, title, card_order
+        FROM archived_cards
+        WHERE board_id = %(board_id)s;
+        """
+        , {"board_id": board_id})
+
+
+def unarchive_card(card_id):
+    data_manager.execute_modify(
+        """
+        INSERT INTO cards (id, board_id, status_id, title, card_order)
+        SELECT card_id, board_id, status_id, title, card_order
+        FROM archived_cards
+        WHERE card_id = %(card_id)s;
+        DELETE FROM archived_cards
+        WHERE card_id = %(card_id)s;
+        """
+        , {"card_id": card_id})
 
 
 def change_card_status(card_id, new_status):
