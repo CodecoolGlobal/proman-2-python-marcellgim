@@ -10,8 +10,6 @@ export let boardsManager = {
     for (let board of boards) {
       const statuses = await dataHandler.getStatusesByBoardId(board.id)
       const boardBuilder = htmlFactory(htmlTemplates.board);
-      // console.log(board)
-      // console.log(statuses)
       const content = boardBuilder(board, statuses);
 
       domManager.addChild("#root", content);
@@ -35,24 +33,40 @@ export let boardsManager = {
           addCardEventHandler
       );
   },
-  createBoard: function () {
+  createPublicBoardButton: function () {
     domManager.addEventListener(
-        '.new-board',
+        '.new-board-public',
         "click",
-        createBoard
+        createPublicBoard
+    )
+  },
+  createPrivateBoardButton: function () {
+    domManager.addEventListener(
+        '.new-board-private',
+        "click",
+        createPrivateBoard
     )
   }
 };
-async function createBoard(){
-  await dataHandler.createNewBoard()
+
+async function createPublicBoard(){
+  await dataHandler.createPublicBoard()
   const board = await dataHandler.getLatestBoard()
   const statuses = await dataHandler.getStatuses()
   const boardBuilder = htmlFactory(htmlTemplates.board)
   const content = boardBuilder(board, statuses)
   domManager.addChild("#root", content);
   boardsManager.eventListeners(board)
-
-
+}
+async function createPrivateBoard(){
+  const userId = await dataHandler.getUser()
+  await dataHandler.createPrivateBoard(userId)
+  const board = await dataHandler.getLatestBoard()
+  const statuses = await dataHandler.getStatuses()
+  const boardBuilder = htmlFactory(htmlTemplates.board)
+  const content = boardBuilder(board, statuses)
+  domManager.addChild("#root", content);
+  boardsManager.eventListeners(board)
 }
 
 function showHideButtonHandler(clickEvent) {
@@ -72,11 +86,15 @@ function showHideButtonHandler(clickEvent) {
 async function renameBoardHandler(submitEvent) {
   submitEvent.preventDefault();
   const boardId = submitEvent.target.dataset.boardId;
-  const newTitle = submitEvent.target.querySelector("input").value;
+  let newTitle = submitEvent.target.querySelector("input").value;
+  if(newTitle === ""){
+    newTitle = "Board"
+  }
   await dataHandler.renameBoard(boardId, newTitle);
   const newBoard = await dataHandler.getBoard(boardId);
   const titleBuilder = htmlFactory(htmlTemplates.boardTitle);
   submitEvent.target.outerHTML = titleBuilder(newBoard);
+  boardsManager.eventListeners(newBoard)
 }
 
 function editBoardnameHandler(clickEvent) {
