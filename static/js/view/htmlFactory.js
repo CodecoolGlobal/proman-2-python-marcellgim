@@ -32,7 +32,15 @@ function boardBuilder(board, statuses) {
     let columns = columnBuilder(board, statuses)
     return `
 <section class="board" data-board-id=${board.id}>
-    <div class="board-header"><span class="board-title" data-board-id="${board.id}">${board.title}</span><button class="toggle-board-button" data-board-id="${board.id}">Show Cards</button><button class="new-card" data-board-id="${board.id}">Add new card</button></div>
+    <div class="board-header">
+        <div>
+            <span class="board-title" data-board-id="${board.id}">${board.title}</span>
+        </div>
+        <div class="button-container">
+            <button class="new-card" data-board-id="${board.id}"> New Card</button>
+            <button class="toggle-board-button" data-board-id="${board.id}">&xvee;</button>
+        </div>
+    </div>
     <div class="board-columns" data-board-id="${board.id}">
         ${columns}
     </div>
@@ -68,7 +76,7 @@ function columnBuilder(board, statuses){
         columns +=
 `
 <div class="board-column" data-board-id=${board.id}>
-    <div class="board-column title">${statuses[i]['title']}</div>
+    <div class="board-column title"><h2>${statuses[i]['title']}</h2></div>
     <div class="board-column-content" data-board-id="${board.id}" data-status-id=${statuses[i]['status_id']}></div>
 </div>
 `
