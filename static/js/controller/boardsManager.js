@@ -7,6 +7,7 @@ export let boardsManager = {
   loadBoards: async function () {
     const user = await dataHandler.getUser();
     const boards = await dataHandler.getBoards(user);
+    this.createBoardButtonListeners(user);
     for (let board of boards) {
       const statuses = await dataHandler.getStatusesByBoardId(board.id)
       const boardBuilder = htmlFactory(htmlTemplates.board);
@@ -15,46 +16,46 @@ export let boardsManager = {
       this.eventListeners(board)
     }
   },
-  eventListeners: function (board){
-      domManager.addEventListener(
+  eventListeners: function (board) {
+    domManager.addEventListener(
         `.toggle-board-button[data-board-id="${board.id}"]`,
         "click",
         showHideButtonHandler
-      );
-      domManager.addEventListener(
-          `.board-title[data-board-id="${board.id}"]`,
-          "click",
-          editBoardnameHandler
-      );
-      domManager.addEventListener(
-          `.new-card[data-board-id="${board.id}"]`,
-          "click",
-          addCardEventHandler
-      );
-      domManager.addEventListener(
-          `.board-columns[data-board-id="${board.id}"]`,
-          "drop",
-          dropCardHandler
-      );
-      domManager.addEventListener(
-          `.board-columns[data-board-id="${board.id}"]`,
-          "dragover",
-          dragoverHandler
-      );
+    );
+    domManager.addEventListener(
+        `.board-title[data-board-id="${board.id}"]`,
+        "click",
+        editBoardnameHandler
+    );
+    domManager.addEventListener(
+        `.new-card[data-board-id="${board.id}"]`,
+        "click",
+        addCardEventHandler
+    );
+    domManager.addEventListener(
+        `.board-columns[data-board-id="${board.id}"]`,
+        "drop",
+        dropCardHandler
+    );
+    domManager.addEventListener(
+        `.board-columns[data-board-id="${board.id}"]`,
+        "dragover",
+        dragoverHandler
+    );
   },
-  createPublicBoardButton: function () {
+  createBoardButtonListeners: function (user) {
     domManager.addEventListener(
         '.new-board-public',
         "click",
         createPublicBoard
-    )
-  },
-  createPrivateBoardButton: function () {
-    domManager.addEventListener(
-        '.new-board-private',
-        "click",
-        createPrivateBoard
-    )
+    );
+    if (+user >= 0) {
+      domManager.addEventListener(
+          '.new-board-private',
+          "click",
+          createPrivateBoard
+      );
+    }
   }
 };
 
