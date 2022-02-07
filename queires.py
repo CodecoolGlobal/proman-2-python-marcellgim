@@ -273,3 +273,22 @@ def get_owner(board_id):
         WHERE boards.id = %(board_id)s;
         """
         , {"board_id": board_id}, False)
+
+
+def test():
+    return data_manager.execute_modify("""
+    UPDATE board_columns
+    SET title='test'
+    WHERE status_id = 1 AND board_columns.board_id = 1;
+    
+    """)
+
+
+def test2():
+    return data_manager.execute_modify("""
+    SELECT cards.status_id, bc.title, bc.board_id
+        FROM cards
+        JOIN board_columns bc on cards.status_id = bc.status_id
+        GROUP BY cards.status_id, bc.title, bc.board_id
+        ORDER BY board_id, status_id
+    """)
