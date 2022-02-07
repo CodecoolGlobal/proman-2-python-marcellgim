@@ -160,7 +160,8 @@ function toggleBoard(boardId){
 
 
 async function getArchivedCardsHandler(clickEvent) {
-  const boardId = clickEvent.target.dataset.boardId
+  const boardId = clickEvent.target.dataset.boardId;
+  toggleArchivedCards();
   if(!clickEvent.target.classList.contains("loaded")){
     clickEvent.target.classList.add("loaded")
   await cardsManager.loadArchivedCards(boardId);
@@ -171,6 +172,20 @@ async function getArchivedCardsHandler(clickEvent) {
     clickEvent.target.innerHTML = "Show Archived Cards"
   }
 }
+
+
+function toggleArchivedCards() {
+  let archive = document.getElementsByClassName("archived-cards")
+  console.log(archive)
+  for (let i = 0; i < archive.length; i++) {
+    if (archive[i].style.display == "none") {
+      archive[i].style.display = "flex"
+    } else if (archive[i].style.display === "flex") {
+      archive[i].style.display = "none"
+    }
+  }
+}
+
 
 async function dropCardHandler(dropEvent) {
   dropEvent.preventDefault()

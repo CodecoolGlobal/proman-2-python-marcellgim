@@ -95,3 +95,4 @@ function handleDragStart(dragEvent) {
   const cardIdentifier = `.card[data-card-id="${dragEvent.target.dataset.cardId}"]`
   dragEvent.dataTransfer.setData("text/plain", cardIdentifier);
 }
+
