@@ -57,6 +57,9 @@ export let dataHandler = {
   },
   moveCard: async function (cardId, newStatus) {
     await apiPut(`/api/cards/${cardId}/move`, newStatus)
+  },
+  deleteBoard: async function(boardId) {
+    return await apiDelete(`/api/boards/${boardId}/delete`)
   }
 };
 
