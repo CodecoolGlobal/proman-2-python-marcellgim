@@ -47,6 +47,11 @@ export let boardsManager = {
         "dragover",
         dragoverHandler
     );
+    domManager.addEventListener(
+        `.delete-board[data-board-id="${board.id}"]`,
+        "click",
+        deleteHandler
+    );
   },
   createBoardButtonListeners: function (user) {
     domManager.addEventListener(
@@ -189,4 +194,15 @@ async function dropCardHandler(dropEvent) {
 function dragoverHandler (dragEvent) {
     dragEvent.preventDefault();
     dragEvent.dataTransfer.dropEffect = "move";
+}
+
+async function deleteHandler(clickEvent) {
+    const deleteButton = clickEvent.currentTarget;
+    const boardId = deleteButton.dataset.boardId;
+    const result = await dataHandler.deleteBoard(boardId);
+    if (result === "Board deleted") {
+        deleteButton.closest(".board").remove();
+    } else {
+      alert("Unauthorized");
+    }
 }

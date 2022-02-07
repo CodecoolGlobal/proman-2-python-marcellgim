@@ -253,3 +253,23 @@ def change_card_status(card_id, new_status):
         ;
         """
         , {"card_id": card_id, "new_status": new_status})
+
+
+def delete_board(board_id, user_id):
+    data_manager.execute_modify(
+        """
+        DELETE FROM boards
+        WHERE id = %(board_id)s
+        AND (user_id = %(user_id)s OR user_id IS NULL);
+        """
+        , {"board_id": board_id, "user_id": user_id})
+
+
+def get_owner(board_id):
+    return data_manager.execute_select(
+        """
+        SELECT username FROM users
+        JOIN boards ON boards.user_id=users.id
+        WHERE boards.id = %(board_id)s;
+        """
+        , {"board_id": board_id}, False)
