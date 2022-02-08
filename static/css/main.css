@@ -103,8 +103,10 @@ section.board {
     background: #eee;
 }
 
-.board-column .title {
+.column-title {
     text-align: center;
+    font-size: 25px;
+    font-weight: bold;
     border: 4px solid #cdcdcd;
     background: #cdcdcd;
 }

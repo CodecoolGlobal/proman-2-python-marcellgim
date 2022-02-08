@@ -222,8 +222,8 @@ def get_column(column_id):
 @json_response
 def rename_column(column_id: int):
     title = request.get_json()
-    queires.update_card_title(column_id, title)
-    return "Card title changed"
+    queires.update_column_title(column_id, title)
+    return "Column title changed"
 
 
 def main():

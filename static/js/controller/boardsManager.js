@@ -54,6 +54,11 @@ export let boardsManager = {
         "click",
         deleteHandler
     );
+    domManager.addEventListener(
+        `.column-title[data-column-id="2"]`,
+        "click",
+        editColumnNameHandler
+    )
   },
   createBoardButtonListeners: function (user) {
     domManager.addEventListener(
@@ -210,10 +215,8 @@ async function deleteHandler(clickEvent) {
     }
 }
 async function renameColumnHandler(submitEvent){
-  console.log("asd4")
   submitEvent.preventDefault();
   const columnId = submitEvent.target.dataset.columnId;
-  console.log(columnId)
   let newTitle = submitEvent.target.querySelector("input").value;
   if(newTitle === ""){
     newTitle = "New Column"
