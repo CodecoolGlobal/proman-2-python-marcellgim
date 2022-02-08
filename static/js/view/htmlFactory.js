@@ -97,7 +97,7 @@ function boardTitleBuilder(board) {
 }
 
 function columnTitleBuilder(column) {
-    return `<span class="column-title" data-column-id="${column.id}">${column.title}</span>`
+    return `<div class="column-title" data-column-id="${column.id}">${column.title}</div>`
 }
 
 function cardTitleBuilder(card) {
