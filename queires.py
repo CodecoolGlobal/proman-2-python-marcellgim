@@ -108,21 +108,23 @@ def add_new_card(column_id, title):
 
 
 def update_card_title(card_id, new_name):
-    data_manager.execute_modify(
+    return data_manager.execute_select(
         """
         UPDATE cards SET title = %(new_name)s
         WHERE id = %(card_id)s
+        RETURNING *;
         """
-        , {"card_id": card_id, "new_name": new_name})
+        , {"card_id": card_id, "new_name": new_name}, False)
 
 
 def update_board_title(board_id, new_name):
-    data_manager.execute_modify(
+    return data_manager.execute_select(
         """
         UPDATE boards SET title = %(new_name)s
         WHERE id = %(board_id)s
+        RETURNING *;
         """
-        , {"board_id": board_id, "new_name": new_name})
+        , {"board_id": board_id, "new_name": new_name}, False)
 
 
 def create_new_board(board_title):

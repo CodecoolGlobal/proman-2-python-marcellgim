@@ -6,20 +6,12 @@ export let dataHandler = {
       return await apiGet("/api/public/boards")
     }
   },
-  getBoard: async function (boardId) {
-    // the board is retrieved and then the callback function is called with the board
-    return await apiGet(`/api/boards/${boardId}`);
-  },
   getStatuses: async function () {
     return await apiGet('/api/statuses/')
     // the statuses are retrieved and then the callback function is called with the statuses
   },
   getCardsByBoardId: async function (boardId) {
     return await apiGet(`/api/boards/${boardId}/cards`);
-  },
-  getCard: async function (cardId) {
-    // the card is retrieved and then the callback function is called with the card
-    return await apiGet(`/api/cards/${cardId}`);
   },
   createPublicBoard: async function () {
     return await apiPost(`/api/boards/create/public/`, {});
@@ -35,10 +27,10 @@ export let dataHandler = {
     return await apiGet(`/api/boards/${boardId}/columns`)
   },
   renameCard: async function (cardId, newTitle) {
-    await apiPut(`/api/cards/${cardId}/change_name`, newTitle);
+    return await apiPut(`/api/cards/${cardId}/change_name`, newTitle);
   },
   renameBoard: async function (boardId, newTitle) {
-    await apiPut(`/api/boards/${boardId}/change_name`, newTitle);
+    return await apiPut(`/api/boards/${boardId}/change_name`, newTitle);
   },
   deleteCard: async function (cardId) {
     await apiDelete(`/api/cards/${cardId}/delete`);

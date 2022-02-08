@@ -103,16 +103,14 @@ def add_new_card(board_id):
 @json_response
 def rename_card(card_id: int):
     name = request.get_json()
-    queires.update_card_title(card_id, name)
-    return "Card title changed"
+    return queires.update_card_title(card_id, name)
 
 
 @app.route("/api/boards/<int:board_id>/change_name", methods=["PUT"])
 @json_response
 def rename_board(board_id: int):
     name = request.get_json()
-    queires.update_board_title(board_id, name)
-    return "Board title changed"
+    return queires.update_board_title(board_id, name)
 
 
 @app.route("/api/cards/<int:card_id>/delete", methods=["DELETE"])

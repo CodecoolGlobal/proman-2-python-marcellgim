@@ -112,11 +112,14 @@ async function renameBoardHandler(submitEvent) {
   if(newTitle === ""){
     newTitle = "Board"
   }
-  await dataHandler.renameBoard(boardId, newTitle);
-  const newBoard = await dataHandler.getBoard(boardId);
+  const newBoard = await dataHandler.renameBoard(boardId, newTitle);
   const titleBuilder = htmlFactory(htmlTemplates.boardTitle);
   submitEvent.target.outerHTML = titleBuilder(newBoard);
-  boardsManager.eventListeners(newBoard)
+  domManager.addEventListener(
+      `.board-title[data-board-id="${newBoard.id}"]`,
+      "click",
+      editBoardnameHandler
+  );
 }
 
 function editBoardnameHandler(clickEvent) {

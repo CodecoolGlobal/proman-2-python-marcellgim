@@ -12,7 +12,6 @@ export let cardsManager = {
           `.board-column-content[data-column-id="${card.column_id}"]`,
           content
       );
-      
       this.initEventListeners(card);
     }
   },
@@ -30,18 +29,18 @@ export let cardsManager = {
     }
   },
   initEventListeners: function (card) {
-  const cardIdentifier = `.card[data-card-id="${card.id}"]`;
-  domManager.addEventListener(
-    `.card-title[data-card-id="${card.id}"]`,
-    "click",
-    editCardnameHandler
+      const cardIdentifier = `.card[data-card-id="${card.id}"]`;
+      domManager.addEventListener(
+          `.card-title[data-card-id="${card.id}"]`,
+          "click",
+          editCardnameHandler
+          );
+      domManager.addEventListener(
+          `.delete-card[data-card-id="${card.id}"]`,
+          "click",
+          deleteButtonHandler
       );
-  domManager.addEventListener(
-    `.delete-card[data-card-id="${card.id}"]`,
-    "click",
-    deleteButtonHandler
-  );
-  domManager.addEventListener(
+      domManager.addEventListener(
           `.archive-card[data-card-id="${card.id}"]`,
           "click",
           archiveCardHandler
@@ -67,11 +66,14 @@ async function renameCardHandler(submitEvent) {
   submitEvent.preventDefault();
   const cardId = submitEvent.target.dataset.cardId;
   const newTitle = submitEvent.target.querySelector("input").value;
-  await dataHandler.renameCard(cardId, newTitle);
-  const newCard = await dataHandler.getCard(cardId);
+  const newCard = await dataHandler.renameCard(cardId, newTitle);
   const titleBuilder = htmlFactory(htmlTemplates.cardTitle);
   submitEvent.target.outerHTML = titleBuilder(newCard);
-  cardsManager.initEventListeners(newCard);
+  domManager.addEventListener(
+      `.card-title[data-card-id="${newCard.id}"]`,
+      "click",
+      editCardnameHandler
+  );
 }
 
 function editCardnameHandler(clickEvent) {
