@@ -9,12 +9,12 @@ export let boardsManager = {
     const boards = await dataHandler.getBoards(user);
     this.createBoardButtonListeners(user);
     for (let board of boards) {
-      const statuses = await dataHandler.getStatusesByBoardId(board.id)
-      console.log(statuses)
+      const columns = await dataHandler.getColumnsByBoardId(board.id)
+      console.log(columns)
       const boardBuilder = htmlFactory(htmlTemplates.board);
-      const content = boardBuilder(board, statuses);
+      const content = boardBuilder(board, columns);
       domManager.addChild("#root", content);
-      this.eventListeners(board, statuses)
+      this.eventListeners(board, columns)
 
     }
   },

@@ -148,10 +148,10 @@ def statuses():
     return queires.get_statuses()
 
 
-@app.route("/api/<int:board_id>/statuses/")
+@app.route("/api/<int:board_id>/columns/")
 @json_response
-def board_statuses(board_id: int):
-    return queires.get_statuses_by_table_id(board_id)
+def board_columns(board_id: int):
+    return queires.get_columns_by_board_id(board_id)
 
 
 @app.route("/api/board/latest/")

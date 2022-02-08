@@ -70,7 +70,7 @@ def get_cards_for_board(board_id):
     return matching_cards
 
 
-def get_statuses_by_table_id(board_id):
+def get_columns_by_board_id(board_id):
     statuses = data_manager.execute_select(
         """
         SELECT status_id, title, id

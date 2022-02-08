@@ -32,10 +32,9 @@ export function htmlFactory(template) {
     }
 }
 
-function boardBuilder(board, statuses) {
-    // console.log(board)
-    // console.log(statuses)
-    let columns = columnBuilder(board, statuses)
+function boardBuilder(board, board_columns) {
+    console.log(board_columns)
+    let columns = columnBuilder(board, board_columns)
     return `
 <section class="board" data-board-id=${board.id}>
     <div class="board-header">
@@ -78,14 +77,14 @@ function nameFormBuilder(currentValue) {
 }
 
 
-function columnBuilder(board, statuses){
+function columnBuilder(board, board_statuses){
     let columns = ``
-    for(let i = 0; i < statuses.length; i++){
+    for(let i = 0; i < board_statuses.length; i++){
         columns +=
 `
 <div class="board-column" data-board-id=${board.id}>
-    <div class="column-title" data-column-id="${statuses[i]['id']}">${statuses[i]['title']}</div>
-    <div class="board-column-content" data-board-id="${board.id}" data-status-id=${statuses[i]['status_id']}></div>
+    <div class="column-title" data-column-id="${board_statuses[i]['id']}">${board_statuses[i]['title']}</div>
+    <div class="board-column-content" data-board-id="${board.id}" data-status-id=${board_statuses[i]['status_id']}></div>
 </div>
 `
     }
