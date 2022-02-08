@@ -255,6 +255,16 @@ def change_card_status(card_id, new_status):
         , {"card_id": card_id, "new_status": new_status})
 
 
+def set_card_order(card_id, card_order):
+    data_manager.execute_modify(
+        """
+        UPDATE cards SET
+            card_order = %(card_order)s
+        WHERE id = %(card_id)s
+        """
+        , {"card_order": card_order, "card_id": card_id})
+
+    
 def delete_board(board_id, user_id):
     data_manager.execute_modify(
         """
