@@ -120,6 +120,18 @@ def create_new_board(board_title):
         , {"board_title": board_title}, False)
 
 
+def create_default_columns_for_board(board_id):
+    data_manager.execute_modify(
+        """
+        INSERT INTO board_columns VALUES(DEFAULT, %(board_id)s, 1, 'new'),
+                                         (DEFAULT, %(board_id)s, 2, 'in progress'),
+                                         (DEFAULT, %(board_id)s, 3, 'testing'),
+                                         (DEFAULT, %(board_id)s, 4, 'done');
+        """
+        , {"board_id": board_id}
+    )
+
+
 def create_private_board(board_title, user_id):
     return data_manager.execute_select(
         """

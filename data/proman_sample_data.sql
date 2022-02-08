@@ -66,14 +66,13 @@ CREATE TABLE archived_cards
 
 CREATE TABLE board_columns
 (
+    id        SERIAL constraint board_columns_pk PRIMARY KEY NOT NULL,
+
     board_id  int
         constraint fk_board_columns_board_id
-            references boards,
-    status_id integer
-        constraint fk_board_columns_status_id
-            references statuses,
-    title     varchar(200),
-    id        SERIAL constraint board_columns_pk PRIMARY KEY NOT NULL
+            references boards(id) ON DELETE CASCADE ,
+    status_id integer,
+    title     varchar(200)
 );
 
 create unique index board_columns_id_uindex
@@ -103,14 +102,14 @@ INSERT INTO cards VALUES (nextval('cards_id_seq'), 2, 3, 'planning', 1);
 INSERT INTO cards VALUES (nextval('cards_id_seq'), 2, 4, 'done card 1', 1);
 INSERT INTO cards VALUES (nextval('cards_id_seq'), 2, 4, 'done card 1', 2);
 
-INSERT INTO board_columns VALUES(1, 1);
-INSERT INTO board_columns VALUES(1, 2);
-INSERT INTO board_columns VALUES(1, 3);
-INSERT INTO board_columns VALUES(1, 4);
-INSERT INTO board_columns VALUES(2, 1);
-INSERT INTO board_columns VALUES(2, 2);
-INSERT INTO board_columns VALUES(2, 3);
-INSERT INTO board_columns VALUES(2, 4);
+INSERT INTO board_columns VALUES(DEFAULT, 1, 1, 'new');
+INSERT INTO board_columns VALUES(DEFAULT, 1, 2, 'in progress');
+INSERT INTO board_columns VALUES(DEFAULT, 1, 3, 'testing');
+INSERT INTO board_columns VALUES(DEFAULT, 1, 4, 'done');
+INSERT INTO board_columns VALUES(DEFAULT, 2, 1, 'new');
+INSERT INTO board_columns VALUES(DEFAULT, 2, 2, 'in progress');
+INSERT INTO board_columns VALUES(DEFAULT, 2, 3, 'testing');
+INSERT INTO board_columns VALUES(DEFAULT, 2, 4, 'done');
 
 ---
 --- add constraints
@@ -125,8 +124,3 @@ ALTER TABLE ONLY cards
 ALTER TABLE ONLY boards
     ADD CONSTRAINT  fk_boards_user_id FOREIGN KEY  (user_id) REFERENCES users(id);
 
-ALTER TABLE ONLY board_columns
-    ADD CONSTRAINT fk_board_columns_board_id FOREIGN KEY (board_id) REFERENCES boards(id);
-
-ALTER TABLE ONLY board_columns
-    ADD CONSTRAINT fk_board_columns_status_id FOREIGN KEY (status_id) REFERENCES statuses(id);
