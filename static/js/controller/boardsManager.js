@@ -61,9 +61,9 @@ export let boardsManager = {
         editColumnNameHandler
     )
     domManager.addEventListener(
-        `.add-column[data-board-id]`,
+        `.add-column[data-board-id="${board.id}"]`,
         "click",
-        addColumnNameHandler
+        addColumnHandler
     )}
   },
   createBoardButtonListeners: function (user) {
@@ -249,10 +249,9 @@ function editColumnNameHandler(clickEvent) {
   clickEvent.target.replaceWith(nameForm);
 }
 
-async function addColumnNameHandler(clickEvent) {
+async function addColumnHandler(clickEvent) {
   const boardId = clickEvent.target.dataset.boardId;
   const new_column = await dataHandler.addColumn(boardId);
   const columnBuilder = htmlFactory(htmlTemplates.addColumn);
   clickEvent.target.closest('.board').querySelector('.board-columns').insertAdjacentHTML("beforeend", columnBuilder(boardId, new_column))
-  alert('Add new column')
 }
