@@ -86,7 +86,9 @@ def create_new_board():
 @json_response
 def create_private_board(user_id):
     default_board_title = "Private Board"
-    return queires.create_private_board(default_board_title, user_id)
+    board = queires.create_private_board(default_board_title, user_id)
+    queires.create_default_columns_for_board(board['id'])
+    return board
 
 
 @app.route("/api/boards/<int:board_id>/add_card", methods=["POST"])
