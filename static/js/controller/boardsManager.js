@@ -186,7 +186,6 @@ async function getArchivedCardsHandler(clickEvent) {
 
 function toggleArchivedCards() {
   let archive = document.getElementsByClassName("archived-cards")
-  console.log(archive)
   for (let i = 0; i < archive.length; i++) {
     if (archive[i].style.display == "none") {
       archive[i].style.display = "flex"
