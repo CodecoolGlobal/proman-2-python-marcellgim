@@ -166,4 +166,9 @@ async function getArchivedCardsHandler(clickEvent) {
 
 async function dropCard(el, target) {
     await dataHandler.moveCard(el.dataset.cardId, target.dataset.statusId);
+    const cardOrder = [];
+    for (let i = 0; i < target.children.length; i++) {
+      cardOrder.push(target.children[i].dataset.cardId);
+    }
+    await dataHandler.reorderCards(cardOrder);
 }

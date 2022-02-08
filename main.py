@@ -195,6 +195,15 @@ def move_card(card_id):
     return "Card moved"
 
 
+@app.route('/api/cards/reorder', methods=["PUT"])
+@json_response
+def reorder_cards():
+    card_order = request.get_json()
+    for position, card_id in enumerate(card_order):
+        queires.set_card_order(int(card_id), position)
+    return "Cards reordered"
+
+
 def main():
     app.run(debug=True)
 
