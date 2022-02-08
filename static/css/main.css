@@ -74,7 +74,7 @@ section.board {
 
 .board-columns {
     display: none;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
 }
 
 .board-columns-shown {
@@ -86,7 +86,7 @@ section.board {
 
 .board-column {
     padding: 10px;
-    flex: 1;
+    width: 210px;
 }
 
 .board-column-content {
@@ -161,7 +161,7 @@ section.board {
 }
 
 form {
-    display: inline-block;
+    /*display: inline-block;*/
 }
 
 #boards {
@@ -191,4 +191,8 @@ nav ul li {
 .button-container {
     display: flex;
     align-items: center;
+}
+input[type=text] {
+    max-width: 195px;
+    text-align: center;
 }
