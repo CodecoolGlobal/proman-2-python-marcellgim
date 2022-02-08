@@ -84,7 +84,7 @@ function columnBuilder(board, statuses){
         columns +=
 `
 <div class="board-column" data-board-id=${board.id}>
-    <div class="column-title" data-column-id="${statuses[i]['id']}"><h2>${statuses[i]['title']}</h2></div>
+    <div class="column-title" data-column-id="${statuses[i]['id']}">${statuses[i]['title']}</div>
     <div class="board-column-content" data-board-id="${board.id}" data-status-id=${statuses[i]['status_id']}></div>
 </div>
 `
@@ -93,11 +93,11 @@ function columnBuilder(board, statuses){
 }
 
 function boardTitleBuilder(board) {
-    return `<span class="board-title" data-board-id="${board.id}">${board.title}</span>`
+    return `<span class="board-title" data-board-id="${board.id}" >${board.title}</span>`
 }
 
 function columnTitleBuilder(column) {
-    return `<span class="board-column title" data-column-id"${column.id}">${column.title}</span>`
+    return `<span class="column-title" data-column-id="${column.id}">${column.title}</span>`
 }
 
 function cardTitleBuilder(card) {
