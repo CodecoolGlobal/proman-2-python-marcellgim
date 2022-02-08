@@ -89,4 +89,3 @@ function unarchiveCardHandler(clickEvent) {
   dataHandler.unarchiveCard(cardId)
   clickEvent.target.parentElement.remove()
 }
-
