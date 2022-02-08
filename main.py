@@ -206,7 +206,7 @@ def delete_board(board_id):
     if "username" in session:
         user_id = queires.get_user_id(session["username"])["id"]
     owner = queires.get_owner(board_id)
-    if owner is not None and (user_id != owner):
+    if owner is not None and (user_id != owner['id']):
         abort(403)
     queires.delete_board(board_id, user_id)
     return "Board deleted"

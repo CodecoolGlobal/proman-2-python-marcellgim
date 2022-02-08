@@ -279,7 +279,7 @@ def delete_board(board_id, user_id):
 def get_owner(board_id):
     return data_manager.execute_select(
         """
-        SELECT username FROM users
+        SELECT users.id FROM users
         JOIN boards ON boards.user_id=users.id
         WHERE boards.id = %(board_id)s;
         """
