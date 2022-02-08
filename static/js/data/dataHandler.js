@@ -60,6 +60,9 @@ export let dataHandler = {
   },
   reorderCards: async function (cardOrder) {
     await apiPut('/api/cards/reorder', cardOrder);
+  },  
+  deleteBoard: async function(boardId) {
+    return await apiDelete(`/api/boards/${boardId}/delete`)
   }
 };
 

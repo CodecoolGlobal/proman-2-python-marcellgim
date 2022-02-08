@@ -39,6 +39,11 @@ export let boardsManager = {
       );
       dragula(Array.from(document.querySelectorAll(`.board-column-content[data-board-id="${board.id}"]`)))
           .on("drop", dropCard);
+      domManager.addEventListener(
+        `.delete-board[data-board-id="${board.id}"]`,
+        "click",
+        deleteHandler
+    );
   },
   createBoardButtonListeners: function (user) {
     domManager.addEventListener(
@@ -171,4 +176,15 @@ async function dropCard(el, target) {
       cardOrder.push(target.children[i].dataset.cardId);
     }
     await dataHandler.reorderCards(cardOrder);
+}
+
+async function deleteHandler(clickEvent) {
+    const deleteButton = clickEvent.currentTarget;
+    const boardId = deleteButton.dataset.boardId;
+    const result = await dataHandler.deleteBoard(boardId);
+    if (result === "Board deleted") {
+        deleteButton.closest(".board").remove();
+    } else {
+      alert("Unauthorized");
+    }
 }
