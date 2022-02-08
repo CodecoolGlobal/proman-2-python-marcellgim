@@ -251,8 +251,8 @@ function editColumnNameHandler(clickEvent) {
 
 async function addColumnNameHandler(clickEvent) {
   const boardId = clickEvent.target.dataset.boardId;
-  const new_column = await dataHandler.addColumn(boardId)
-  console.log(new_column)
-
+  const new_column = await dataHandler.addColumn(boardId);
+  const columnBuilder = htmlFactory(htmlTemplates.addColumn);
+  clickEvent.target.closest('.board').querySelector('.board-columns').insertAdjacentHTML("beforeend", columnBuilder(boardId, new_column))
   alert('Add new column')
 }
