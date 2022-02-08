@@ -7,17 +7,17 @@ export let dataHandler = {
     }
   },
   getStatuses: async function () {
-    return await apiGet('/api/statuses/')
+    return await apiGet('/api/statuses')
     // the statuses are retrieved and then the callback function is called with the statuses
   },
   getCardsByBoardId: async function (boardId) {
     return await apiGet(`/api/boards/${boardId}/cards`);
   },
   createPublicBoard: async function () {
-    return await apiPost(`/api/boards/create/public/`, {});
+    return await apiPost(`/api/boards/create`, {});
   },
   createPrivateBoard: async function(userId) {
-    return await apiPost(`/api/boards/create/private/${userId}`, {userId})
+    return await apiPost(`/api/users/${userId}/boards/create`, {userId})
   },
   createNewCard: async function (boardId, cardTitle) {
     // creates new card, saves it and calls the callback function with its data, statusId needed
@@ -42,10 +42,10 @@ export let dataHandler = {
     await apiPost(`/api/cards/${cardId}/archive`);
   },
   getArchivedCards: async function (boardId) {
-    return await apiGet(`/api/board/${boardId}/archived`);
+    return await apiGet(`/api/boards/${boardId}/archived_cards`);
   },
   unarchiveCard: async function (cardId) {
-    await apiPost( `/api/card/${cardId}/unarchive`);
+    await apiPost( `/api/cards/${cardId}/unarchive`);
   },
   moveCard: async function (cardId, newColumn) {
     await apiPut(`/api/cards/${cardId}/move`, newColumn)

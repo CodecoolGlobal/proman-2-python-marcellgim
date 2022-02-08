@@ -73,7 +73,7 @@ def get_cards_for_board(board_id: int):
     return queires.get_cards_for_board(board_id)
 
 
-@app.route("/api/boards/create/public/", methods=["POST"])
+@app.route("/api/boards/create", methods=["POST"])
 @json_response
 def create_new_board():
     default_board_title = "Board Title"
@@ -82,7 +82,7 @@ def create_new_board():
     return board
 
 
-@app.route("/api/boards/create/private/<int:user_id>", methods=["POST"])
+@app.route("/api/<int:user_id>/boards/create", methods=["POST"])
 @json_response
 def create_private_board(user_id):
     default_board_title = "Private Board"
@@ -127,21 +127,21 @@ def archive_card(card_id):
     return "Card archived"
 
 
-@app.route("/api/board/<int:board_id>/archived", methods=["GET"])
+@app.route("/api/boards/<int:board_id>/archived_cards", methods=["GET"])
 @json_response
 def list_archived_cards(board_id):
     archived_cards = queires.get_archived_cards(board_id)
     return archived_cards
 
 
-@app.route("/api/card/<int:card_id>/unarchive", methods=["POST"])
+@app.route("/api/cards/<int:card_id>/unarchive", methods=["POST"])
 @json_response
 def unarchive_card(card_id):
     queires.unarchive_card(card_id)
     return "Card unarchived"
 
 
-@app.route("/api/statuses/")
+@app.route("/api/statuses")
 @json_response
 def statuses():
     return queires.get_statuses()
@@ -151,12 +151,6 @@ def statuses():
 @json_response
 def board_columns(board_id: int):
     return queires.get_columns_by_board_id(board_id)
-
-
-@app.route("/api/board/latest/")
-@json_response
-def get_latest_board():
-    return queires.get_latest_board()
 
 
 @app.route("/api/boards/<int:board_id>")
