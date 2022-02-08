@@ -159,20 +159,6 @@ def create_private_board(board_title, user_id):
         , {"board_title": board_title, "user_id": user_id}, False)
 
 
-def get_latest_board():
-    board_id = data_manager.execute_select(
-        """
-        SELECT id, title
-        FROM boards
-        WHERE id=(
-            SELECT MAX(id)
-            FROM boards
-        )
-        """
-    , fetchall=False)
-    return board_id
-
-
 def get_password_by_username(username):
     return data_manager.execute_select(
         """
@@ -200,24 +186,6 @@ def check_existing_user(username):
     usernames = [user["username"] for user in users]
     return username in usernames
 
-
-def get_board(board_id):
-    return data_manager.execute_select(
-        """
-        SELECT * FROM boards
-        WHERE id = %(board_id)s;
-        """
-        , {"board_id": board_id}, False)
-
-
-def get_card(card_id):
-    return data_manager.execute_select(
-        """
-        SELECT * FROM cards
-        WHERE id = %(card_id)s;
-        """
-        , {"card_id": card_id}, False)
- 
 
 def delete_card(card_id):
     data_manager.execute_modify(

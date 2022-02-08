@@ -54,15 +54,6 @@ def logout():
     return redirect(url_for("index"))
 
 
-@app.route("/api/boards")
-@json_response
-def get_boards():
-    """
-    All the boards
-    """
-    return queires.get_boards()
-
-
 @app.route("/api/boards/<int:board_id>/cards")
 @json_response
 def get_cards_for_board(board_id: int):
@@ -151,18 +142,6 @@ def statuses():
 @json_response
 def board_columns(board_id: int):
     return queires.get_columns_by_board_id(board_id)
-
-
-@app.route("/api/boards/<int:board_id>")
-@json_response
-def get_board(board_id):
-    return queires.get_board(board_id)
-
-
-@app.route("/api/cards/<int:card_id>")
-@json_response
-def get_card(card_id):
-    return queires.get_card(card_id)
 
 
 @app.route("/api/current_user")
