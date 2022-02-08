@@ -6,7 +6,8 @@ export const htmlTemplates = {
     nameForm: 3,
     boardTitle: 4,
     cardTitle: 5,
-    archivedCards: 6
+    archivedCards: 6,
+    columnTitle: 7
 }
 
 export function htmlFactory(template) {
@@ -23,6 +24,8 @@ export function htmlFactory(template) {
             return cardTitleBuilder
         case htmlTemplates.archivedCards:
             return archivedCardsBuilder
+        case htmlTemplates.columnTitle:
+            return columnTitleBuilder
         default:
             console.error("Undefined template: " + template)
             return () => { return "" }
@@ -81,7 +84,7 @@ function columnBuilder(board, statuses){
         columns +=
 `
 <div class="board-column" data-board-id=${board.id}>
-    <div class="board-column title"><h2>${statuses[i]['title']}</h2></div>
+    <div class="column-title" data-column-id="${statuses[i]['id']}"><h2>${statuses[i]['title']}</h2></div>
     <div class="board-column-content" data-board-id="${board.id}" data-status-id=${statuses[i]['status_id']}></div>
 </div>
 `
@@ -91,6 +94,10 @@ function columnBuilder(board, statuses){
 
 function boardTitleBuilder(board) {
     return `<span class="board-title" data-board-id="${board.id}">${board.title}</span>`
+}
+
+function columnTitleBuilder(column) {
+    return `<span class="board-column title" data-column-id"${column.id}">${column.title}</span>`
 }
 
 function cardTitleBuilder(card) {

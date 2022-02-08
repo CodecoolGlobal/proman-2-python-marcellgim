@@ -66,9 +66,18 @@ CREATE TABLE archived_cards
 
 CREATE TABLE board_columns
 (
-    board_id  integer,
+    board_id  int
+        constraint fk_board_columns_board_id
+            references boards,
     status_id integer
+        constraint fk_board_columns_status_id
+            references statuses,
+    title     varchar(200),
+    id        SERIAL constraint board_columns_pk PRIMARY KEY NOT NULL
 );
+
+create unique index board_columns_id_uindex
+    on board_columns (id);
 ---
 --- insert data
 ---

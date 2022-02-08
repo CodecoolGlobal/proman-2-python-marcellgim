@@ -208,6 +208,20 @@ def delete_board(board_id):
     return "Board deleted"
 
 
+@app.route("/api/columns/<int:column_id>")
+@json_response
+def get_column(column_id):
+    return queires.get_column(column_id)
+
+
+@app.route("/api/board/<int:column_id>/change_title", methods=["PUT"])
+@json_response
+def rename_column(column_id: int):
+    title = request.get_json()
+    queires.update_card_title(column_id, title)
+    return "Card title changed"
+
+
 def main():
     app.run(debug=True)
 

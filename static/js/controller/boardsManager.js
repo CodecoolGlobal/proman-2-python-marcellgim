@@ -10,13 +10,15 @@ export let boardsManager = {
     this.createBoardButtonListeners(user);
     for (let board of boards) {
       const statuses = await dataHandler.getStatusesByBoardId(board.id)
+      console.log(statuses)
       const boardBuilder = htmlFactory(htmlTemplates.board);
       const content = boardBuilder(board, statuses);
       domManager.addChild("#root", content);
-      this.eventListeners(board)
+      this.eventListeners(board, statuses)
+
     }
   },
-  eventListeners: function (board) {
+  eventListeners: function (board, statuses) {
     domManager.addEventListener(
         `.toggle-board-button[data-board-id="${board.id}"]`,
         "click",
@@ -66,7 +68,8 @@ export let boardsManager = {
           createPrivateBoard
       );
     }
-  }
+  },
+
 };
 
 async function createPublicBoard() {
@@ -205,4 +208,30 @@ async function deleteHandler(clickEvent) {
     } else {
       alert("Unauthorized");
     }
+}
+async function renameColumnHandler(submitEvent){
+  console.log("asd4")
+  submitEvent.preventDefault();
+  const columnId = submitEvent.target.dataset.columnId;
+  console.log(columnId)
+  let newTitle = submitEvent.target.querySelector("input").value;
+  if(newTitle === ""){
+    newTitle = "New Column"
+  }
+  await dataHandler.renameColumn(columnId, newTitle);
+  console.log(columnId)
+  const newColumn = await dataHandler.getColumn(columnId);
+  const titleBuilder = htmlFactory(htmlTemplates.columnTitle);
+  submitEvent.target.outerHTML = titleBuilder(newColumn);
+  boardsManager.eventListeners(newColumn)
+}
+
+function editColumnNameHandler(clickEvent) {
+  const nameForm = document.createElement("form");
+  const formBuilder = htmlFactory(htmlTemplates.nameForm);
+  nameForm.dataset.columnId = clickEvent.target.dataset.columnId;
+  nameForm.classList.add("column-title")
+  nameForm.innerHTML = formBuilder(clickEvent.target.innerText);
+  nameForm.addEventListener("submit", renameColumnHandler)
+  clickEvent.target.replaceWith(nameForm);
 }

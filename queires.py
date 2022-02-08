@@ -70,15 +70,14 @@ def get_cards_for_board(board_id):
     return matching_cards
 
 
-def get_statuses_by_table_id(table_id):
+def get_statuses_by_table_id(board_id):
     statuses = data_manager.execute_select(
         """
-        SELECT status_id, statuses.title
-        FROM cards
-        JOIN statuses ON cards.status_id = statuses.id
-        GROUP BY status_id, statuses.id
+        SELECT status_id, title, id
+        FROM board_columns
+        WHERE board_id=%(board_id)s
         ORDER BY status_id
-        """
+        """, {"board_id": board_id}
     )
     return statuses
 
@@ -275,20 +274,25 @@ def get_owner(board_id):
         , {"board_id": board_id}, False)
 
 
-def test():
-    return data_manager.execute_modify("""
-    UPDATE board_columns
-    SET title='test'
-    WHERE status_id = 1 AND board_columns.board_id = 1;
+def update_column_title(column_id, title):
+    return data_manager.execute_modify(
+        """
+        UPDATE board_columns
+        SET title=%(title)s
+        WHERE id=%(column_id)s;
     
-    """)
+    """, {"title": title, "column_id": column_id}
+       )
 
 
-def test2():
-    return data_manager.execute_modify("""
-    SELECT cards.status_id, bc.title, bc.board_id
-        FROM cards
-        JOIN board_columns bc on cards.status_id = bc.status_id
-        GROUP BY cards.status_id, bc.title, bc.board_id
-        ORDER BY board_id, status_id
-    """)
+def update_columns(board_id, status_id):
+    pass
+
+
+def get_column(column_id):
+    return data_manager.execute_select(
+        """
+        SELECT * FROM board_columns
+        WHERE id = %(column_id)s;
+        """
+        , {"column_id": column_id}, False)

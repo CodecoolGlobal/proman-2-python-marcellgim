@@ -60,6 +60,12 @@ export let dataHandler = {
   },
   deleteBoard: async function(boardId) {
     return await apiDelete(`/api/boards/${boardId}/delete`)
+  },
+  getColumn: async function(columnId) {
+    return await apiGet(`/api/columns/${columnId}`);
+  },
+  renameColumn: async function (columnId, newTitle) {
+    await apiPut(`/api/board/${columnId}/change_title`, newTitle)
   }
 };
 
