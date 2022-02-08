@@ -59,6 +59,12 @@ export let boardsManager = {
         "click",
         editColumnNameHandler
     )
+    domManager.addEventListener(
+        `.add-column[data-board-id]`,
+        "click",
+        addColumnNameHandler
+
+    )
   },
   createBoardButtonListeners: function (user) {
     domManager.addEventListener(
@@ -237,4 +243,10 @@ function editColumnNameHandler(clickEvent) {
   nameForm.innerHTML = formBuilder(clickEvent.target.innerText);
   nameForm.addEventListener("submit", renameColumnHandler)
   clickEvent.target.replaceWith(nameForm);
+}
+
+function addColumnNameHandler(clickEvent) {
+  const boardId = clickEvent.target.dataset.boardId;
+  console.log(boardId)
+  alert('Add new column')
 }

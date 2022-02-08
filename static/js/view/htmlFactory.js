@@ -46,6 +46,8 @@ function boardBuilder(board, board_columns) {
             <button class="toggle-board-button" data-board-id="${board.id}">&xvee;</button>
             <button class="archived-cards" data-board-id="${board.id}">Show Archived Cards</button>
             <button class="delete-board" data-board-id="${board.id}"><i class="fas fa-trash-alt"></i></button>
+<!--            //TODO: add_column button-->
+           <button class="add-column" data-board-id="${board.id}">Add column</button>
         </div>
     </div>
     <div class="board-columns" data-board-id="${board.id}">
