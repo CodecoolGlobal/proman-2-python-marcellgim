@@ -82,6 +82,16 @@ def get_columns_by_board_id(board_id):
     return statuses
 
 
+def add_new_column_to_board(board_id, column_title):
+    return data_manager.execute_select(
+        """
+        INSERT INTO board_columns 
+        VALUES(DEFAULT, %(board_id)s , 5, %(column_title)s)
+        RETURNING *;
+        """, {"board_id": board_id, "column_title": column_title}
+    )
+
+
 def add_new_card(board_id, title):
     return data_manager.execute_select(
         """

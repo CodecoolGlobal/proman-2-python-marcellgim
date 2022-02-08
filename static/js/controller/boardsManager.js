@@ -54,8 +54,9 @@ export let boardsManager = {
         "click",
         deleteHandler
     );
+    for (let column of statuses){
     domManager.addEventListener(
-        `.column-title[data-column-id="2"]`,
+        `.column-title[data-column-id="${column.id}"]`,
         "click",
         editColumnNameHandler
     )
@@ -63,8 +64,7 @@ export let boardsManager = {
         `.add-column[data-board-id]`,
         "click",
         addColumnNameHandler
-
-    )
+    )}
   },
   createBoardButtonListeners: function (user) {
     domManager.addEventListener(
@@ -232,7 +232,11 @@ async function renameColumnHandler(submitEvent){
   const newColumn = await dataHandler.getColumn(columnId);
   const titleBuilder = htmlFactory(htmlTemplates.columnTitle);
   submitEvent.target.outerHTML = titleBuilder(newColumn);
-  boardsManager.eventListeners(newColumn)
+  domManager.addEventListener(
+        `.column-title[data-column-id="${columnId}"]`,
+        "click",
+        editColumnNameHandler
+    )
 }
 
 function editColumnNameHandler(clickEvent) {
@@ -245,8 +249,10 @@ function editColumnNameHandler(clickEvent) {
   clickEvent.target.replaceWith(nameForm);
 }
 
-function addColumnNameHandler(clickEvent) {
+async function addColumnNameHandler(clickEvent) {
   const boardId = clickEvent.target.dataset.boardId;
-  console.log(boardId)
+  const new_column = await dataHandler.addColumn(boardId)
+  console.log(new_column)
+
   alert('Add new column')
 }

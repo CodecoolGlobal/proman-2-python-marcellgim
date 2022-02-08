@@ -66,6 +66,9 @@ export let dataHandler = {
   },
   renameColumn: async function (columnId, newTitle) {
     await apiPut(`/api/board/${columnId}/change_title`, newTitle)
+  },
+  addColumn: async function (boardId) {
+    return await apiPost(`/api/board/${boardId}/new_column`, {})
   }
 };
 

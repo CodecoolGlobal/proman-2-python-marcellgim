@@ -226,6 +226,13 @@ def rename_column(column_id: int):
     return "Column title changed"
 
 
+@app.route("/api/board/<int:board_id>/new_column", methods=["POST"])
+@json_response
+def new_column(board_id: int):
+    default_column_name = 'nameless'
+    return queires.add_new_column_to_board(board_id, default_column_name)
+
+
 def main():
     app.run(debug=True)
 
