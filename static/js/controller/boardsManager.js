@@ -37,15 +37,12 @@ export let boardsManager = {
           "click",
           getArchivedCardsHandler
       );
-    domManager.addEventListener(
-        `.board-columns[data-board-id="${board.id}"]`,
-        "drop",
-        dropCardHandler
-    );
-    domManager.addEventListener(
-        `.board-columns[data-board-id="${board.id}"]`,
-        "dragover",
-        dragoverHandler
+      dragula(Array.from(document.querySelectorAll(`.board-column-content[data-board-id="${board.id}"]`)))
+          .on("drop", dropCard);
+      domManager.addEventListener(
+        `.delete-board[data-board-id="${board.id}"]`,
+        "click",
+        deleteHandler
     );
   },
   createBoardButtonListeners: function (user) {
@@ -173,7 +170,6 @@ async function getArchivedCardsHandler(clickEvent) {
   }
 }
 
-
 function toggleArchivedCards() {
   let archive = document.getElementsByClassName("archived-cards")
   console.log(archive)
@@ -186,22 +182,22 @@ function toggleArchivedCards() {
   }
 }
 
-
-async function dropCardHandler(dropEvent) {
-  dropEvent.preventDefault()
-  const targetColumn = dropEvent.target.closest(".board-column");
-  const identifier = dropEvent.dataTransfer.getData("text/plain");
-  const draggedCard = document.querySelector(identifier);
-  if (targetColumn !== null && draggedCard.dataset.boardId === targetColumn.dataset.boardId) {
-    const targetContentBox = targetColumn.querySelector(".board-column-content");
-    const cardId = draggedCard.dataset.cardId;
-    const newStatus = targetContentBox.dataset.statusId;
-    await dataHandler.moveCard(cardId, newStatus);
-    targetContentBox.appendChild(draggedCard);
-  }
+async function dropCard(el, target) {
+    await dataHandler.moveCard(el.dataset.cardId, target.dataset.statusId);
+    const cardOrder = [];
+    for (let i = 0; i < target.children.length; i++) {
+      cardOrder.push(target.children[i].dataset.cardId);
+    }
+    await dataHandler.reorderCards(cardOrder);
 }
 
-function dragoverHandler (dragEvent) {
-    dragEvent.preventDefault();
-    dragEvent.dataTransfer.dropEffect = "move";
+async function deleteHandler(clickEvent) {
+    const deleteButton = clickEvent.currentTarget;
+    const boardId = deleteButton.dataset.boardId;
+    const result = await dataHandler.deleteBoard(boardId);
+    if (result === "Board deleted") {
+        deleteButton.closest(".board").remove();
+    } else {
+      alert("Unauthorized");
+    }
 }

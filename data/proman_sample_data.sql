@@ -16,11 +16,19 @@ SET default_with_oids = false;
 ---
 --- drop tables
 ---
+ALTER TABLE IF EXISTS ONLY public.boards
+    DROP CONSTRAINT IF EXISTS fk_board_id CASCADE;
+ALTER TABLE IF EXISTS ONLY public.board_columns
+    DROP CONSTRAINT IF EXISTS fk_board_columns_board_id CASCADE;
+
 
 DROP TABLE IF EXISTS statuses CASCADE;
 DROP TABLE IF EXISTS boards CASCADE;
+DROP TABLE IF EXISTS archived_cards;
 DROP TABLE IF EXISTS cards;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS archived_cards;
+DROP TABLE IF EXISTS board_columns;
 
 ---
 --- create tables
@@ -61,6 +69,11 @@ CREATE TABLE archived_cards
     card_order int
 );
 
+CREATE TABLE board_columns
+(
+    board_id  integer,
+    status_id integer
+);
 ---
 --- insert data
 ---
@@ -86,15 +99,30 @@ INSERT INTO cards VALUES (nextval('cards_id_seq'), 2, 3, 'planning', 1);
 INSERT INTO cards VALUES (nextval('cards_id_seq'), 2, 4, 'done card 1', 1);
 INSERT INTO cards VALUES (nextval('cards_id_seq'), 2, 4, 'done card 1', 2);
 
+INSERT INTO board_columns VALUES(1, 1);
+INSERT INTO board_columns VALUES(1, 2);
+INSERT INTO board_columns VALUES(1, 3);
+INSERT INTO board_columns VALUES(1, 4);
+INSERT INTO board_columns VALUES(2, 1);
+INSERT INTO board_columns VALUES(2, 2);
+INSERT INTO board_columns VALUES(2, 3);
+INSERT INTO board_columns VALUES(2, 4);
+
 ---
 --- add constraints
 ---
 
 ALTER TABLE ONLY cards
-    ADD CONSTRAINT fk_cards_board_id FOREIGN KEY (board_id) REFERENCES boards(id);
+ADD CONSTRAINT fk_cards_board_id FOREIGN KEY (board_id) REFERENCES boards(id) ON DELETE CASCADE;
 
 ALTER TABLE ONLY cards
     ADD CONSTRAINT fk_cards_status_id FOREIGN KEY (status_id) REFERENCES statuses(id);
 
 ALTER TABLE ONLY boards
     ADD CONSTRAINT  fk_boards_user_id FOREIGN KEY  (user_id) REFERENCES users(id);
+
+ALTER TABLE ONLY board_columns
+    ADD CONSTRAINT fk_board_columns_board_id FOREIGN KEY (board_id) REFERENCES boards(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY board_columns
+    ADD CONSTRAINT fk_board_columns_status_id FOREIGN KEY (status_id) REFERENCES statuses(id);

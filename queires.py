@@ -63,7 +63,7 @@ def get_cards_for_board(board_id):
         """
         SELECT * FROM cards
         WHERE cards.board_id = %(board_id)s
-        ;
+        ORDER BY card_order;
         """
         , {"board_id": board_id})
 
@@ -253,3 +253,33 @@ def change_card_status(card_id, new_status):
         ;
         """
         , {"card_id": card_id, "new_status": new_status})
+
+
+def set_card_order(card_id, card_order):
+    data_manager.execute_modify(
+        """
+        UPDATE cards SET
+            card_order = %(card_order)s
+        WHERE id = %(card_id)s
+        """
+        , {"card_order": card_order, "card_id": card_id})
+
+    
+def delete_board(board_id, user_id):
+    data_manager.execute_modify(
+        """
+        DELETE FROM boards
+        WHERE id = %(board_id)s
+        AND (user_id = %(user_id)s OR user_id IS NULL);
+        """
+        , {"board_id": board_id, "user_id": user_id})
+
+
+def get_owner(board_id):
+    return data_manager.execute_select(
+        """
+        SELECT users.id FROM users
+        JOIN boards ON boards.user_id=users.id
+        WHERE boards.id = %(board_id)s;
+        """
+        , {"board_id": board_id}, False)
