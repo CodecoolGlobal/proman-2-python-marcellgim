@@ -228,10 +228,10 @@ async function renameColumnHandler(submitEvent){
     newTitle = "New Column"
   }
   await dataHandler.renameColumn(columnId, newTitle);
-  console.log(columnId)
   const newColumn = await dataHandler.getColumn(columnId);
   const titleBuilder = htmlFactory(htmlTemplates.columnTitle);
   submitEvent.target.outerHTML = titleBuilder(newColumn);
+  console.log(columnId)
   domManager.addEventListener(
         `.column-title[data-column-id="${columnId}"]`,
         "click",
@@ -253,5 +253,12 @@ async function addColumnHandler(clickEvent) {
   const boardId = clickEvent.target.dataset.boardId;
   const new_column = await dataHandler.addColumn(boardId);
   const columnBuilder = htmlFactory(htmlTemplates.addColumn);
-  clickEvent.target.closest('.board').querySelector('.board-columns').insertAdjacentHTML("beforeend", columnBuilder(boardId, new_column))
+  const content = columnBuilder(boardId, new_column)
+  console.log(new_column)
+  clickEvent.target.closest('.board').querySelector('.board-columns').insertAdjacentHTML("beforeend", content)
+  domManager.addEventListener(
+      `.column-title[data-column-id="${new_column[0]['id']}"]`,
+      "click",
+      editColumnNameHandler
+  )
 }

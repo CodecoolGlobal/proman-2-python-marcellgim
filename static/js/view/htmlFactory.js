@@ -83,6 +83,7 @@ function nameFormBuilder(currentValue) {
 
 
 function columnBuilder(boardId, board_statuses){
+
     let columns = ``
     for(let i = 0; i < board_statuses.length; i++){
         columns +=
