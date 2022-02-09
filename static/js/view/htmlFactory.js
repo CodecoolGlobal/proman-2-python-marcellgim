@@ -48,13 +48,16 @@ function boardBuilder(board, columns) {
         <div class="button-container">
             <button class="new-card" data-board-id="${board.id}"> New Card</button>
             <button class="toggle-board-button" data-board-id="${board.id}">&xvee;</button>
-            <button class="archived-cards" data-board-id="${board.id}">Show Archived Cards</button>
+            <button class="show-archived-cards" data-board-id="${board.id}">Show Archived Cards</button>
             <button class="delete-board" data-board-id="${board.id}"><i class="fas fa-trash-alt"></i></button>
         </div>
     </div>
-    <div class="board-columns" data-board-id="${board.id}">
-        ${columnsContent}
-        <button class="add-column" data-board-id="${board.id}">+</button>
+    <div class="board-content hide" data-board-id="${board.id}">
+        <div class="board-columns" data-board-id="${board.id}">
+            ${columnsContent}
+            <button class="add-column" data-board-id="${board.id}">+</button>
+        </div>
+        <div class="archived-cards hide" data-board-id="${board.id}"></div>
     </div>
 </section>
 `;
@@ -65,7 +68,7 @@ function cardBuilder(card) {
     <div class="card" data-card-id="${card.id}" data-column-id="${card['column_id']}">
         <div class="card-title" data-card-id="${card.id}">${card.title}</div>
         <button class="delete-card" data-card-id="${card.id}"><i class="fas fa-trash-alt"></i></button>
-        <button class="archive-card" data-card-id="${card.id}">Archive</button>
+        <button class="archive-card archive" data-card-id="${card.id}">Archive</button>
     </div>`;
 
 }
@@ -111,8 +114,10 @@ function cardTitleBuilder(card) {
     return `<div class="card-title" data-card-id="${card.id}">${card.title}</div>`
 }
 
-function archivedCardsBuilder(archivedCards) {
-    return `<div class="archived-cards" data-card-id="${archivedCards['card_id']}" style="display:flex">${archivedCards['title']}
-            <button class="unarchive-card" data-card-id="${archivedCards['card_id']}">Unarchive card</button>
+function archivedCardsBuilder(archivedCard) {
+    return `<div class="card" data-card-id="${archivedCard['card_id']}" data-column-id="${archivedCard['column_id']}">
+            <div class="card-title" data-card-id="${archivedCard['card_id']}">${archivedCard.title}</div>
+            <button class="delete-card hide" data-card-id="${archivedCard['card_id']}"><i class="fas fa-trash-alt"></i></button>
+            <button class="archive-card unarchive" data-card-id="${archivedCard['card_id']}">Unarchive</button>
             </div>`
 }

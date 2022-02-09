@@ -20,9 +20,9 @@ export let cardsManager = {
         for (let card of cards) {
             const cardBuilder = htmlFactory(htmlTemplates.archivedCards);
             const content = cardBuilder(card);
-            domManager.addChild(`.board[data-board-id="${boardId}"]`, content);
+            domManager.addChild(`.archived-cards[data-board-id="${boardId}"]`, content);
             domManager.addEventListener(
-                `.unarchive-card[data-card-id="${card["card_id"]}"]`,
+                `.archive-card.unarchive[data-card-id="${card["card_id"]}"]`,
                 "click",
                 unarchiveCardHandler
             );
@@ -41,7 +41,7 @@ export let cardsManager = {
             deleteButtonHandler
         );
         domManager.addEventListener(
-            `.archive-card[data-card-id="${card.id}"]`,
+            `.archive-card.archive[data-card-id="${card.id}"]`,
             "click",
             archiveCardHandler
         );
@@ -55,10 +55,17 @@ function deleteButtonHandler(clickEvent) {
 }
 
 function archiveCardHandler(clickEvent) {
-    const cardId = clickEvent.target.dataset.cardId
+    const targetCard = clickEvent.target.closest(".card")
+    const archiveButton = targetCard.querySelector(".archive-card")
+    archiveButton.removeEventListener("click", archiveCardHandler)
+    archiveButton.addEventListener("click", unarchiveCardHandler);
+    archiveButton.textContent = "Unarchive"
+    targetCard.querySelector(".delete-card").classList.toggle("hide");
+    const cardId = targetCard.dataset.cardId
+    const boardId = targetCard.closest(".board").dataset.boardId;
     dataHandler.archiveCard(cardId)
     dataHandler.deleteCard(cardId)
-    clickEvent.target.parentElement.remove()
+    document.querySelector(`.archived-cards[data-board-id="${boardId}"]`).appendChild(targetCard);
 }
 
 async function renameCardHandler(submitEvent) {
@@ -85,7 +92,14 @@ function editCardnameHandler(clickEvent) {
 }
 
 function unarchiveCardHandler(clickEvent) {
-    const cardId = clickEvent.target.dataset.cardId;
+    const targetCard = clickEvent.target.closest(".card");
+    const archiveButton = targetCard.querySelector(".archive-card");
+    archiveButton.removeEventListener("click", unarchiveCardHandler);
+    archiveButton.addEventListener("click", archiveCardHandler);
+    archiveButton.textContent = "Archive"
+    targetCard.querySelector(".delete-card").classList.toggle("hide");
+    const cardId = targetCard.dataset.cardId;
+    const columnId = targetCard.dataset.columnId;
     dataHandler.unarchiveCard(cardId)
-    clickEvent.target.parentElement.remove()
+    document.querySelector(`.board-column-content[data-column-id="${columnId}"]`).appendChild(targetCard);
 }

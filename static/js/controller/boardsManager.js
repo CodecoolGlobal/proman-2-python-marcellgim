@@ -14,6 +14,8 @@ export let boardsManager = {
             const content = boardBuilder(board, columns);
             domManager.addChild("#root", content);
             this.eventListeners(board, columns)
+            await cardsManager.loadCards(board.id);
+            await cardsManager.loadArchivedCards(board.id)
         }
     },
     eventListeners: function (board, statuses) {
@@ -33,7 +35,7 @@ export let boardsManager = {
             addCardEventHandler
         );
         domManager.addEventListener(
-            `.archived-cards[data-board-id="${board.id}"]`,
+            `.show-archived-cards[data-board-id="${board.id}"]`,
             "click",
             getArchivedCardsHandler
         );
@@ -59,9 +61,7 @@ export let boardsManager = {
             `.delete-column-button[data-column-id="${column.id}"`,
             "click",
             deleteColumnHandler
-        );
-
-
+            );
         }
     },
     createBoardButtonListeners: function (user) {
@@ -102,10 +102,6 @@ async function createPrivateBoard() {
 function showHideButtonHandler(clickEvent) {
     const boardId = clickEvent.target.dataset.boardId;
     toggleBoard(boardId)
-    if (!clickEvent.target.classList.contains("loaded")) {
-        clickEvent.target.classList.add("loaded")
-        cardsManager.loadCards(boardId);
-    }
     if (clickEvent.target.innerHTML === "⋁") {
         clickEvent.target.innerHTML = "⋀"
     } else {
@@ -169,22 +165,14 @@ function addCardEventHandler(clickEvent) {
 }
 
 function toggleBoard(boardId) {
-    let board = document.querySelector(`.board-columns[data-board-id="${boardId}"]`)
-    if (board.style.display === "") {
-        board.style.display = "flex"
-    } else if (board.style.display === "flex") {
-        board.style.display = ""
-    }
+    let board = document.querySelector(`.board-content[data-board-id="${boardId}"]`)
+    board.classList.toggle("hide");
 }
 
 
 async function getArchivedCardsHandler(clickEvent) {
     const boardId = clickEvent.target.dataset.boardId;
-    toggleArchivedCards();
-    if (!clickEvent.target.classList.contains("loaded")) {
-        clickEvent.target.classList.add("loaded")
-        await cardsManager.loadArchivedCards(boardId);
-    }
+    toggleArchivedCards(boardId);
     if (clickEvent.target.innerHTML === "Show Archived Cards") {
         clickEvent.target.innerHTML = "Hide Archived Cards"
     } else {
@@ -192,15 +180,9 @@ async function getArchivedCardsHandler(clickEvent) {
     }
 }
 
-function toggleArchivedCards() {
-    let archive = document.getElementsByClassName("archived-cards")
-    for (let i = 0; i < archive.length; i++) {
-        if (archive[i].style.display == "none") {
-            archive[i].style.display = "flex"
-        } else if (archive[i].style.display === "flex") {
-            archive[i].style.display = "none"
-        }
-    }
+function toggleArchivedCards(boardId) {
+    const archive = document.querySelector(`.archived-cards[data-board-id="${boardId}"]`)
+    archive.classList.toggle("hide");
 }
 
 async function dropCard(el, target) {
