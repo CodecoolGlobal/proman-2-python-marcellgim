@@ -173,7 +173,7 @@ def reorder_cards():
         queires.set_card_order(int(card_id), position)
     return "Cards reordered"
 
-  
+
 @app.route('/api/boards/<int:board_id>/delete', methods=['DELETE'])
 @json_response
 def delete_board(board_id):

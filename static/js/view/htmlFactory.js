@@ -31,7 +31,9 @@ export function htmlFactory(template) {
             return columnBuilder
         default:
             console.error("Undefined template: " + template)
-            return () => { return "" }
+            return () => {
+                return ""
+            }
     }
 }
 
@@ -69,8 +71,8 @@ function cardBuilder(card) {
 }
 
 export function addNewCardForm() {
-    return'<input type="text">' +
-          '<button type="submit">Save</button>'
+    return '<input type="text">' +
+        '<button type="submit">Save</button>'
 
 }
 
@@ -80,11 +82,11 @@ function nameFormBuilder(currentValue) {
 }
 
 
-function columnBuilder(board, columns){
+function columnBuilder(board, columns) {
     let columnsContent = ``
-    for(let i = 0; i < columns.length; i++){
+    for (let i = 0; i < columns.length; i++) {
         columnsContent +=
-`
+            `
 <div class="board-column" data-board-id=${board.id}>
     <div class="column-title" data-column-id=${columns[i]['id']}>${columns[i]['title']}</div>
     <div class="board-column-content" data-board-id="${board.id}" data-column-id=${columns[i]['id']}></div>
@@ -106,7 +108,7 @@ function cardTitleBuilder(card) {
     return `<div class="card-title" data-card-id="${card.id}">${card.title}</div>`
 }
 
-function archivedCardsBuilder(archivedCards){
+function archivedCardsBuilder(archivedCards) {
     return `<div class="archived-cards" data-card-id="${archivedCards['card_id']}" style="display:flex">${archivedCards['title']}
             <button class="unarchive-card" data-card-id="${archivedCards['card_id']}">Unarchive card</button>
             </div>`
