@@ -92,7 +92,7 @@ def add_new_column_to_board(board_id, column_title):
     return data_manager.execute_select(
         """
         INSERT INTO board_columns 
-        VALUES(DEFAULT, %(board_id)s , 5, %(column_title)s)
+        VALUES(DEFAULT, %(board_id)s , %(column_title)s)
         RETURNING *;
         """, {"board_id": board_id, "column_title": column_title})
 
@@ -239,8 +239,8 @@ def get_user_id(username):
 def save_archived_cards(card_id):
     data_manager.execute_modify(
         """
-        INSERT INTO archived_cards (card_id, board_id, status_id, title, card_order)
-        SELECT id, board_id, status_id, title, card_order
+        INSERT INTO archived_cards (card_id, column_id, title, card_order)
+        SELECT id, column_id, title, card_order
         FROM cards
         WHERE id = %(card_id)s;
         """
@@ -250,9 +250,11 @@ def save_archived_cards(card_id):
 def get_archived_cards(board_id):
     return data_manager.execute_select(
         """
-        SELECT card_id, board_id, status_id, title, card_order
+        SELECT card_id, column_id, archived_cards.title, card_order
         FROM archived_cards
-        WHERE board_id = %(board_id)s;
+        JOIN board_columns
+            ON archived_cards.column_id=board_columns.id
+        WHERE board_columns.board_id = %(board_id)s;
         """
         , {"board_id": board_id})
 
@@ -260,8 +262,8 @@ def get_archived_cards(board_id):
 def unarchive_card(card_id):
     data_manager.execute_modify(
         """
-        INSERT INTO cards (id, board_id, status_id, title, card_order)
-        SELECT card_id, board_id, status_id, title, card_order
+        INSERT INTO cards (id, column_id, title, card_order)
+        SELECT card_id, column_id, title, card_order
         FROM archived_cards
         WHERE card_id = %(card_id)s;
         DELETE FROM archived_cards

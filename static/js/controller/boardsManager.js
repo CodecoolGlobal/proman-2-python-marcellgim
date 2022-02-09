@@ -78,7 +78,7 @@ async function createPublicBoard() {
   const boardBuilder = htmlFactory(htmlTemplates.board);
   const content = boardBuilder(newBoard, columns);
   domManager.addChild("#root", content);
-  boardsManager.eventListeners(newBoard, statuses)
+  boardsManager.eventListeners(newBoard, columns)
 }
 
 async function createPrivateBoard() {
@@ -88,7 +88,7 @@ async function createPrivateBoard() {
   const boardBuilder = htmlFactory(htmlTemplates.board);
   const content = boardBuilder(newBoard, columns);
   domManager.addChild("#root", content);
-  boardsManager.eventListeners(newBoard, statuses)
+  boardsManager.eventListeners(newBoard, columns)
 }
 
 function showHideButtonHandler(clickEvent) {
