@@ -9,14 +9,16 @@ export let boardsManager = {
     const boards = await dataHandler.getBoards(user);
     this.createBoardButtonListeners(user);
     for (let board of boards) {
-      const statuses = await dataHandler.getStatusesByBoardId(board.id)
+      const columns = await dataHandler.getColumnsByBoardId(board.id)
+      console.log(columns)
       const boardBuilder = htmlFactory(htmlTemplates.board);
-      const content = boardBuilder(board, statuses);
+      const content = boardBuilder(board, columns);
       domManager.addChild("#root", content);
-      this.eventListeners(board)
+      this.eventListeners(board, columns)
+
     }
   },
-  eventListeners: function (board) {
+  eventListeners: function (board, statuses) {
     domManager.addEventListener(
         `.toggle-board-button[data-board-id="${board.id}"]`,
         "click",
@@ -44,6 +46,17 @@ export let boardsManager = {
         "click",
         deleteHandler
     );
+    for (let column of statuses){
+    domManager.addEventListener(
+        `.column-title[data-column-id="${column.id}"]`,
+        "click",
+        editColumnNameHandler
+    )
+    domManager.addEventListener(
+        `.add-column[data-board-id="${board.id}"]`,
+        "click",
+        addColumnHandler
+    )}
   },
   createBoardButtonListeners: function (user) {
     domManager.addEventListener(
@@ -58,7 +71,8 @@ export let boardsManager = {
           createPrivateBoard
       );
     }
-  }
+  },
+
 };
 
 async function createPublicBoard() {
@@ -67,7 +81,7 @@ async function createPublicBoard() {
   const boardBuilder = htmlFactory(htmlTemplates.board)
   const content = boardBuilder(newBoard, statuses)
   domManager.addChild("#root", content);
-  boardsManager.eventListeners(newBoard)
+  boardsManager.eventListeners(newBoard, statuses)
 }
 
 async function createPrivateBoard() {
@@ -77,7 +91,7 @@ async function createPrivateBoard() {
   const boardBuilder = htmlFactory(htmlTemplates.board)
   const content = boardBuilder(newBoard, statuses)
   domManager.addChild("#root", content);
-  boardsManager.eventListeners(newBoard)
+  boardsManager.eventListeners(newBoard, statuses)
 }
 
 function showHideButtonHandler(clickEvent) {
@@ -200,4 +214,54 @@ async function deleteHandler(clickEvent) {
     } else {
       alert("Unauthorized");
     }
+}
+async function renameColumnHandler(submitEvent){
+  submitEvent.preventDefault();
+  const columnId = submitEvent.target.dataset.columnId;
+  let newTitle = submitEvent.target.querySelector("input").value;
+  if(newTitle === ""){
+    newTitle = "New Column"
+  }
+  await dataHandler.renameColumn(columnId, newTitle);
+  const newColumn = await dataHandler.getColumn(columnId);
+  const titleBuilder = htmlFactory(htmlTemplates.columnTitle);
+  submitEvent.target.outerHTML = titleBuilder(newColumn);
+  console.log(columnId)
+  domManager.addEventListener(
+        `.column-title[data-column-id="${columnId}"]`,
+        "click",
+        editColumnNameHandler
+    )
+}
+
+function editColumnNameHandler(clickEvent) {
+  const nameForm = document.createElement("form");
+  const formBuilder = htmlFactory(htmlTemplates.nameForm);
+  nameForm.dataset.columnId = clickEvent.target.dataset.columnId;
+  nameForm.classList.add("column-title")
+  nameForm.innerHTML = formBuilder(clickEvent.target.innerText);
+  nameForm.addEventListener("submit", renameColumnHandler)
+  clickEvent.target.replaceWith(nameForm);
+}
+
+async function addColumnHandler(clickEvent) {
+  const boardId = clickEvent.target.dataset.boardId;
+  const new_column = await dataHandler.addColumn(boardId);
+  const columnBuilder = htmlFactory(htmlTemplates.addColumn);
+  const content = columnBuilder(boardId, new_column)
+  const test = `<button class="add-column" data-board-id="${boardId}">+</button>`
+  const targetBoard = clickEvent.target.closest('.board').querySelector('.board-columns')
+  targetBoard.insertAdjacentHTML("beforeend", content)
+  clickEvent.target.remove()
+  targetBoard.insertAdjacentHTML("beforeend", test)
+  domManager.addEventListener(
+      `.column-title[data-column-id="${new_column[0]['id']}"]`,
+      "click",
+      editColumnNameHandler
+  )
+    domManager.addEventListener(
+        `.add-column[data-board-id="${boardId}"]`,
+        "click",
+        addColumnHandler
+  )
 }

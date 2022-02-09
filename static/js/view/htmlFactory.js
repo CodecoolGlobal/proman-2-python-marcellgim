@@ -6,7 +6,9 @@ export const htmlTemplates = {
     nameForm: 3,
     boardTitle: 4,
     cardTitle: 5,
-    archivedCards: 6
+    archivedCards: 6,
+    columnTitle: 7,
+    addColumn: 8
 }
 
 export function htmlFactory(template) {
@@ -23,16 +25,19 @@ export function htmlFactory(template) {
             return cardTitleBuilder
         case htmlTemplates.archivedCards:
             return archivedCardsBuilder
+        case htmlTemplates.columnTitle:
+            return columnTitleBuilder
+        case htmlTemplates.addColumn:
+            return columnBuilder
         default:
             console.error("Undefined template: " + template)
             return () => { return "" }
     }
 }
 
-function boardBuilder(board, statuses) {
-    // console.log(board)
-    // console.log(statuses)
-    let columns = columnBuilder(board, statuses)
+function boardBuilder(board, board_columns) {
+    console.log(board_columns)
+    let columns = columnBuilder(board.id, board_columns)
     return `
 <section class="board" data-board-id=${board.id}>
     <div class="board-header">
@@ -48,6 +53,7 @@ function boardBuilder(board, statuses) {
     </div>
     <div class="board-columns" data-board-id="${board.id}">
         ${columns}
+        <button class="add-column" data-board-id="${board.id}">+</button>
     </div>
 </section>
 `;
@@ -75,14 +81,15 @@ function nameFormBuilder(currentValue) {
 }
 
 
-function columnBuilder(board, statuses){
+function columnBuilder(boardId, board_statuses){
+
     let columns = ``
-    for(let i = 0; i < statuses.length; i++){
+    for(let i = 0; i < board_statuses.length; i++){
         columns +=
 `
-<div class="board-column" data-board-id=${board.id}>
-    <div class="board-column title"><h2>${statuses[i]['title']}</h2></div>
-    <div class="board-column-content" data-board-id="${board.id}" data-status-id=${statuses[i]['status_id']}></div>
+<div class="board-column" data-board-id=${boardId}>
+    <div class="column-title" data-column-id="${board_statuses[i]['id']}">${board_statuses[i]['title']}</div>
+    <div class="board-column-content" data-board-id="${boardId}" data-status-id=${board_statuses[i]['status_id']}></div>
 </div>
 `
     }
@@ -90,7 +97,11 @@ function columnBuilder(board, statuses){
 }
 
 function boardTitleBuilder(board) {
-    return `<span class="board-title" data-board-id="${board.id}">${board.title}</span>`
+    return `<span class="board-title" data-board-id="${board.id}" >${board.title}</span>`
+}
+
+function columnTitleBuilder(column) {
+    return `<div class="column-title" data-column-id="${column.id}">${column.title}</div>`
 }
 
 function cardTitleBuilder(card) {

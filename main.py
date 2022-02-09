@@ -77,14 +77,18 @@ def get_cards_for_board(board_id: int):
 @json_response
 def create_new_board():
     default_board_title = "Board Title"
-    return queires.create_new_board(default_board_title)
+    board = queires.create_new_board(default_board_title)
+    queires.create_default_columns_for_board(board['id'])
+    return board
 
 
 @app.route("/api/boards/create/private/<int:user_id>", methods=["POST"])
 @json_response
 def create_private_board(user_id):
     default_board_title = "Private Board"
-    return queires.create_private_board(default_board_title, user_id)
+    board = queires.create_private_board(default_board_title, user_id)
+    queires.create_default_columns_for_board(board['id'])
+    return board
 
 
 @app.route("/api/boards/<int:board_id>/add_card", methods=["POST"])
@@ -144,10 +148,10 @@ def statuses():
     return queires.get_statuses()
 
 
-@app.route("/api/<int:board_id>/statuses/")
+@app.route("/api/<int:board_id>/columns/")
 @json_response
-def board_statuses(board_id: int):
-    return queires.get_statuses_by_table_id(board_id)
+def board_columns(board_id: int):
+    return queires.get_columns_by_board_id(board_id)
 
 
 @app.route("/api/board/latest/")
@@ -215,6 +219,27 @@ def delete_board(board_id):
         abort(403)
     queires.delete_board(board_id, user_id)
     return "Board deleted"
+
+
+@app.route("/api/columns/<int:column_id>")
+@json_response
+def get_column(column_id):
+    return queires.get_column(column_id)
+
+
+@app.route("/api/board/<int:column_id>/change_title", methods=["PUT"])
+@json_response
+def rename_column(column_id: int):
+    title = request.get_json()
+    queires.update_column_title(column_id, title)
+    return "Column title changed"
+
+
+@app.route("/api/board/<int:board_id>/new_column", methods=["POST"])
+@json_response
+def new_column(board_id: int):
+    default_column_name = 'nameless'
+    return queires.add_new_column_to_board(board_id, default_column_name)
 
 
 def main():

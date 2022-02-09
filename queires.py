@@ -70,17 +70,26 @@ def get_cards_for_board(board_id):
     return matching_cards
 
 
-def get_statuses_by_table_id(table_id):
+def get_columns_by_board_id(board_id):
     statuses = data_manager.execute_select(
         """
-        SELECT status_id, statuses.title
-        FROM cards
-        JOIN statuses ON cards.status_id = statuses.id
-        GROUP BY status_id, statuses.id
+        SELECT status_id, title, id
+        FROM board_columns
+        WHERE board_id=%(board_id)s
         ORDER BY status_id
-        """
+        """, {"board_id": board_id}
     )
     return statuses
+
+
+def add_new_column_to_board(board_id, column_title):
+    return data_manager.execute_select(
+        """
+        INSERT INTO board_columns 
+        VALUES(DEFAULT, %(board_id)s , 5, %(column_title)s)
+        RETURNING *;
+        """, {"board_id": board_id, "column_title": column_title}
+    )
 
 
 def add_new_card(board_id, title):
@@ -119,6 +128,18 @@ def create_new_board(board_title):
         RETURNING *;
         """
         , {"board_title": board_title}, False)
+
+
+def create_default_columns_for_board(board_id):
+    data_manager.execute_modify(
+        """
+        INSERT INTO board_columns VALUES(DEFAULT, %(board_id)s, 1, 'new'),
+                                         (DEFAULT, %(board_id)s, 2, 'in progress'),
+                                         (DEFAULT, %(board_id)s, 3, 'testing'),
+                                         (DEFAULT, %(board_id)s, 4, 'done');
+        """
+        , {"board_id": board_id}
+    )
 
 
 def create_private_board(board_title, user_id):
@@ -283,3 +304,27 @@ def get_owner(board_id):
         WHERE boards.id = %(board_id)s;
         """
         , {"board_id": board_id}, False)
+
+
+def update_column_title(column_id, title):
+    return data_manager.execute_modify(
+        """
+        UPDATE board_columns
+        SET title=%(title)s
+        WHERE id=%(column_id)s;
+    
+    """, {"title": title, "column_id": column_id}
+       )
+
+
+def update_columns(board_id, status_id):
+    pass
+
+
+def get_column(column_id):
+    return data_manager.execute_select(
+        """
+        SELECT * FROM board_columns
+        WHERE id = %(column_id)s;
+        """
+        , {"column_id": column_id}, False)
