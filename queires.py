@@ -286,3 +286,11 @@ def get_column(column_id):
         WHERE id = %(column_id)s;
         """
         , {"column_id": column_id}, False)
+
+
+def delete_column(column_id):
+    return data_manager.execute_modify(
+        """
+        DELETE FROM board_columns
+        WHERE id = %(column_id)s;
+        """, {"column_id": column_id})

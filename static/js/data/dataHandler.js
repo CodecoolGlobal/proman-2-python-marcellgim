@@ -60,6 +60,9 @@ export let dataHandler = {
     },
     addColumn: async function (boardId) {
         return await apiPost(`/api/boards/${boardId}/new_column`, {})
+    },
+    deleteColumn: async function (column_id) {
+        return await apiDelete(`/api/boards/columns/${column_id}/delete`)
     }
 };
 
