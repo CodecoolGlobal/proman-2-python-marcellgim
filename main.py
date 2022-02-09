@@ -73,7 +73,7 @@ def create_new_board():
     return board
 
 
-@app.route("/api/<int:user_id>/boards/create", methods=["POST"])
+@app.route("/api/users/<int:user_id>/boards/create", methods=["POST"])
 @json_response
 def create_private_board(user_id):
     default_board_title = "Private Board"
@@ -130,12 +130,6 @@ def list_archived_cards(board_id):
 def unarchive_card(card_id):
     queires.unarchive_card(card_id)
     return "Card unarchived"
-
-
-@app.route("/api/statuses")
-@json_response
-def statuses():
-    return queires.get_statuses()
 
 
 @app.route("/api/boards/<int:board_id>/columns")
@@ -199,7 +193,7 @@ def get_column(column_id):
     return queires.get_column(column_id)
 
 
-@app.route("/api/board/<int:column_id>/change_title", methods=["PUT"])
+@app.route("/api/boards/<int:column_id>/change_title", methods=["PUT"])
 @json_response
 def rename_column(column_id: int):
     title = request.get_json()
@@ -207,7 +201,7 @@ def rename_column(column_id: int):
     return "Column title changed"
 
 
-@app.route("/api/board/<int:board_id>/new_column", methods=["POST"])
+@app.route("/api/boards/<int:board_id>/new_column", methods=["POST"])
 @json_response
 def new_column(board_id: int):
     default_column_name = 'nameless'

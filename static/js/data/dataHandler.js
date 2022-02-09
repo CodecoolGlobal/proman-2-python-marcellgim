@@ -6,10 +6,6 @@ export let dataHandler = {
       return await apiGet("/api/public/boards")
     }
   },
-  getStatuses: async function () {
-    return await apiGet('/api/statuses')
-    // the statuses are retrieved and then the callback function is called with the statuses
-  },
   getCardsByBoardId: async function (boardId) {
     return await apiGet(`/api/boards/${boardId}/cards`);
   },
@@ -60,10 +56,10 @@ export let dataHandler = {
     return await apiGet(`/api/columns/${columnId}`);
   },
   renameColumn: async function (columnId, newTitle) {
-    await apiPut(`/api/board/${columnId}/change_title`, newTitle)
+    await apiPut(`/api/boards/${columnId}/change_title`, newTitle)
   },
   addColumn: async function (boardId) {
-    return await apiPost(`/api/board/${boardId}/new_column`, {})
+    return await apiPost(`/api/boards/${boardId}/new_column`, {})
   }
 };
 
