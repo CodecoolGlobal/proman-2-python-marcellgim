@@ -89,6 +89,9 @@ function columnBuilder(board, columns) {
             `
 <div class="board-column" data-board-id=${board.id}>
     <div class="column-title" data-column-id=${columns[i]['id']}>${columns[i]['title']}</div>
+    <div>
+    <button class="delete-column-button" data-column-id=${columns[i]['id']}>Delete</button>
+    </div>
     <div class="board-column-content" data-board-id="${board.id}" data-column-id=${columns[i]['id']}></div>
 </div>
 `

@@ -49,12 +49,19 @@ export let boardsManager = {
                 `.column-title[data-column-id="${column.id}"]`,
                 "click",
                 editColumnNameHandler
-            )
+            );
             domManager.addEventListener(
                 `.add-column[data-board-id="${board.id}"]`,
                 "click",
                 addColumnHandler
-            )
+            );
+            domManager.addEventListener(
+            `.delete-column-button[data-column-id="${column.id}"`,
+            "click",
+            deleteColumnHandler
+        );
+
+
         }
     },
     createBoardButtonListeners: function (user) {
@@ -265,4 +272,11 @@ async function addColumnHandler(clickEvent) {
         "click",
         addColumnHandler
     )
+}
+
+function deleteColumnHandler(clickEvent) {
+    const columnId = clickEvent.currentTarget.dataset.columnId
+    dataHandler.deleteColumn(columnId)
+    console.log(columnId)
+    clickEvent.currentTarget.parentElement.parentElement.remove()
 }
