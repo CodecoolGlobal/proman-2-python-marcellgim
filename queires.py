@@ -1,32 +1,6 @@
 import data_manager
 
 
-def get_card_status(status_id):
-    """
-    Find the first status matching the given id
-    :param status_id:
-    :return: str
-    """
-    status = data_manager.execute_select(
-        """
-        SELECT * FROM statuses s
-        WHERE s.id = %(status_id)s
-        ;
-        """
-        , {"status_id": status_id})
-
-    return status
-
-
-def get_statuses():
-    status = data_manager.execute_select(
-        """
-        SELECT * FROM statuses
-        """
-    )
-    return status
-
-
 def get_public_boards():
     """
     Gather all public boards
@@ -77,7 +51,7 @@ def get_cards_for_board(board_id):
 
 
 def get_columns_by_board_id(board_id):
-    statuses = data_manager.execute_select(
+    columns = data_manager.execute_select(
         """
         SELECT id, title
         FROM board_columns
@@ -85,7 +59,7 @@ def get_columns_by_board_id(board_id):
         ORDER BY id
         """
         , {"board_id": board_id})
-    return statuses
+    return columns
 
 
 def add_new_column_to_board(board_id, column_title):
@@ -108,21 +82,23 @@ def add_new_card(column_id, title):
 
 
 def update_card_title(card_id, new_name):
-    data_manager.execute_modify(
+    return data_manager.execute_select(
         """
         UPDATE cards SET title = %(new_name)s
         WHERE id = %(card_id)s
+        RETURNING *;
         """
-        , {"card_id": card_id, "new_name": new_name})
+        , {"card_id": card_id, "new_name": new_name}, False)
 
 
 def update_board_title(board_id, new_name):
-    data_manager.execute_modify(
+    return data_manager.execute_select(
         """
         UPDATE boards SET title = %(new_name)s
         WHERE id = %(board_id)s
+        RETURNING *;
         """
-        , {"board_id": board_id, "new_name": new_name})
+        , {"board_id": board_id, "new_name": new_name}, False)
 
 
 def create_new_board(board_title):
@@ -157,20 +133,6 @@ def create_private_board(board_title, user_id):
         , {"board_title": board_title, "user_id": user_id}, False)
 
 
-def get_latest_board():
-    board_id = data_manager.execute_select(
-        """
-        SELECT id, title
-        FROM boards
-        WHERE id=(
-            SELECT MAX(id)
-            FROM boards
-        )
-        """
-    , fetchall=False)
-    return board_id
-
-
 def get_password_by_username(username):
     return data_manager.execute_select(
         """
@@ -198,24 +160,6 @@ def check_existing_user(username):
     usernames = [user["username"] for user in users]
     return username in usernames
 
-
-def get_board(board_id):
-    return data_manager.execute_select(
-        """
-        SELECT * FROM boards
-        WHERE id = %(board_id)s;
-        """
-        , {"board_id": board_id}, False)
-
-
-def get_card(card_id):
-    return data_manager.execute_select(
-        """
-        SELECT * FROM cards
-        WHERE id = %(card_id)s;
-        """
-        , {"card_id": card_id}, False)
- 
 
 def delete_card(card_id):
     data_manager.execute_modify(

@@ -54,15 +54,6 @@ def logout():
     return redirect(url_for("index"))
 
 
-@app.route("/api/boards")
-@json_response
-def get_boards():
-    """
-    All the boards
-    """
-    return queires.get_boards()
-
-
 @app.route("/api/boards/<int:board_id>/cards")
 @json_response
 def get_cards_for_board(board_id: int):
@@ -73,7 +64,7 @@ def get_cards_for_board(board_id: int):
     return queires.get_cards_for_board(board_id)
 
 
-@app.route("/api/boards/create/public/", methods=["POST"])
+@app.route("/api/boards/create", methods=["POST"])
 @json_response
 def create_new_board():
     default_board_title = "Board Title"
@@ -82,7 +73,7 @@ def create_new_board():
     return board
 
 
-@app.route("/api/boards/create/private/<int:user_id>", methods=["POST"])
+@app.route("/api/users/<int:user_id>/boards/create", methods=["POST"])
 @json_response
 def create_private_board(user_id):
     default_board_title = "Private Board"
@@ -103,16 +94,14 @@ def add_new_card(board_id):
 @json_response
 def rename_card(card_id: int):
     name = request.get_json()
-    queires.update_card_title(card_id, name)
-    return "Card title changed"
+    return queires.update_card_title(card_id, name)
 
 
 @app.route("/api/boards/<int:board_id>/change_name", methods=["PUT"])
 @json_response
 def rename_board(board_id: int):
     name = request.get_json()
-    queires.update_board_title(board_id, name)
-    return "Board title changed"
+    return queires.update_board_title(board_id, name)
 
 
 @app.route("/api/cards/<int:card_id>/delete", methods=["DELETE"])
@@ -129,48 +118,24 @@ def archive_card(card_id):
     return "Card archived"
 
 
-@app.route("/api/board/<int:board_id>/archived", methods=["GET"])
+@app.route("/api/boards/<int:board_id>/archived_cards", methods=["GET"])
 @json_response
 def list_archived_cards(board_id):
     archived_cards = queires.get_archived_cards(board_id)
     return archived_cards
 
 
-@app.route("/api/card/<int:card_id>/unarchive", methods=["POST"])
+@app.route("/api/cards/<int:card_id>/unarchive", methods=["POST"])
 @json_response
 def unarchive_card(card_id):
     queires.unarchive_card(card_id)
     return "Card unarchived"
 
 
-@app.route("/api/statuses/")
-@json_response
-def statuses():
-    return queires.get_statuses()
-
-
 @app.route("/api/boards/<int:board_id>/columns")
 @json_response
 def board_columns(board_id: int):
     return queires.get_columns_by_board_id(board_id)
-
-
-@app.route("/api/board/latest/")
-@json_response
-def get_latest_board():
-    return queires.get_latest_board()
-
-
-@app.route("/api/boards/<int:board_id>")
-@json_response
-def get_board(board_id):
-    return queires.get_board(board_id)
-
-
-@app.route("/api/cards/<int:card_id>")
-@json_response
-def get_card(card_id):
-    return queires.get_card(card_id)
 
 
 @app.route("/api/current_user")
@@ -228,7 +193,7 @@ def get_column(column_id):
     return queires.get_column(column_id)
 
 
-@app.route("/api/board/<int:column_id>/change_title", methods=["PUT"])
+@app.route("/api/boards/<int:column_id>/change_title", methods=["PUT"])
 @json_response
 def rename_column(column_id: int):
     title = request.get_json()
@@ -236,7 +201,7 @@ def rename_column(column_id: int):
     return "Column title changed"
 
 
-@app.route("/api/board/<int:board_id>/new_column", methods=["POST"])
+@app.route("/api/boards/<int:board_id>/new_column", methods=["POST"])
 @json_response
 def new_column(board_id: int):
     default_column_name = 'nameless'

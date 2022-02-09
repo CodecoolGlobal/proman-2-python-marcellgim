@@ -112,11 +112,14 @@ async function renameBoardHandler(submitEvent) {
   if(newTitle === ""){
     newTitle = "Board"
   }
-  await dataHandler.renameBoard(boardId, newTitle);
-  const newBoard = await dataHandler.getBoard(boardId);
+  const newBoard = await dataHandler.renameBoard(boardId, newTitle);
   const titleBuilder = htmlFactory(htmlTemplates.boardTitle);
   submitEvent.target.outerHTML = titleBuilder(newBoard);
-  boardsManager.eventListeners(newBoard)
+  domManager.addEventListener(
+      `.board-title[data-board-id="${newBoard.id}"]`,
+      "click",
+      editBoardnameHandler
+  );
 }
 
 function editBoardnameHandler(clickEvent) {
@@ -183,7 +186,6 @@ async function getArchivedCardsHandler(clickEvent) {
 
 function toggleArchivedCards() {
   let archive = document.getElementsByClassName("archived-cards")
-  console.log(archive)
   for (let i = 0; i < archive.length; i++) {
     if (archive[i].style.display == "none") {
       archive[i].style.display = "flex"
