@@ -61,8 +61,14 @@ def get_cards_for_board(board_id):
 
     matching_cards = data_manager.execute_select(
         """
-        SELECT * FROM cards
-        WHERE cards.board_id = %(board_id)s
+        SELECT
+            cards.id,
+            cards.title,
+            cards.column_id
+        FROM cards
+        JOIN board_columns
+            ON cards.column_id=board_columns.id
+        WHERE board_columns.board_id = %(board_id)s
         ORDER BY card_order;
         """
         , {"board_id": board_id})
@@ -73,12 +79,12 @@ def get_cards_for_board(board_id):
 def get_columns_by_board_id(board_id):
     statuses = data_manager.execute_select(
         """
-        SELECT status_id, title, id
+        SELECT id, title
         FROM board_columns
-        WHERE board_id=%(board_id)s
-        ORDER BY status_id
-        """, {"board_id": board_id}
-    )
+        WHERE board_id = %(board_id)s
+        ORDER BY id
+        """
+        , {"board_id": board_id})
     return statuses
 
 
@@ -133,10 +139,10 @@ def create_new_board(board_title):
 def create_default_columns_for_board(board_id):
     data_manager.execute_modify(
         """
-        INSERT INTO board_columns VALUES(DEFAULT, %(board_id)s, 1, 'new'),
-                                         (DEFAULT, %(board_id)s, 2, 'in progress'),
-                                         (DEFAULT, %(board_id)s, 3, 'testing'),
-                                         (DEFAULT, %(board_id)s, 4, 'done');
+        INSERT INTO board_columns VALUES(DEFAULT, %(board_id)s, 'new'),
+                                         (DEFAULT, %(board_id)s, 'in progress'),
+                                         (DEFAULT, %(board_id)s, 'testing'),
+                                         (DEFAULT, %(board_id)s, 'done');
         """
         , {"board_id": board_id}
     )
@@ -265,15 +271,15 @@ def unarchive_card(card_id):
         , {"card_id": card_id})
 
 
-def change_card_status(card_id, new_status):
+def change_card_column(card_id, new_column):
     data_manager.execute_modify(
         """
         UPDATE cards SET
-            status_id = %(new_status)s
+            column_id = %(new_column)s
         WHERE id = %(card_id)s
         ;
         """
-        , {"card_id": card_id, "new_status": new_status})
+        , {"card_id": card_id, "new_column": new_column})
 
 
 def set_card_order(card_id, card_order):

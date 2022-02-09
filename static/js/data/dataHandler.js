@@ -15,7 +15,7 @@ export let dataHandler = {
     // the statuses are retrieved and then the callback function is called with the statuses
   },
   getCardsByBoardId: async function (boardId) {
-    return await apiGet(`/api/boards/${boardId}/cards/`);
+    return await apiGet(`/api/boards/${boardId}/cards`);
   },
   getCard: async function (cardId) {
     // the card is retrieved and then the callback function is called with the card
@@ -32,7 +32,7 @@ export let dataHandler = {
     return await apiPost(`/api/boards/${boardId}/add_card`, cardTitle)
   },
   getColumnsByBoardId: async function (boardId) {
-    return await apiGet(`/api/${boardId}/columns/`)
+    return await apiGet(`/api/boards/${boardId}/columns`)
   },
   renameCard: async function (cardId, newTitle) {
     await apiPut(`/api/cards/${cardId}/change_name`, newTitle);
@@ -55,8 +55,8 @@ export let dataHandler = {
   unarchiveCard: async function (cardId) {
     await apiPost( `/api/card/${cardId}/unarchive`);
   },
-  moveCard: async function (cardId, newStatus) {
-    await apiPut(`/api/cards/${cardId}/move`, newStatus)
+  moveCard: async function (cardId, newColumn) {
+    await apiPut(`/api/cards/${cardId}/move`, newColumn)
   },
   reorderCards: async function (cardOrder) {
     await apiPut('/api/cards/reorder', cardOrder);

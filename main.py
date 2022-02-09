@@ -63,7 +63,7 @@ def get_boards():
     return queires.get_boards()
 
 
-@app.route("/api/boards/<int:board_id>/cards/")
+@app.route("/api/boards/<int:board_id>/cards")
 @json_response
 def get_cards_for_board(board_id: int):
     """
@@ -148,7 +148,7 @@ def statuses():
     return queires.get_statuses()
 
 
-@app.route("/api/<int:board_id>/columns/")
+@app.route("/api/boards/<int:board_id>/columns")
 @json_response
 def board_columns(board_id: int):
     return queires.get_columns_by_board_id(board_id)
@@ -194,8 +194,8 @@ def get_user_boards(user_id=None):
 @app.route("/api/cards/<int:card_id>/move", methods=["PUT"])
 @json_response
 def move_card(card_id):
-    new_status = request.get_json()
-    queires.change_card_status(card_id, new_status)
+    new_column = request.get_json()
+    queires.change_card_column(card_id, new_column)
     return "Card moved"
 
 
