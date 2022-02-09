@@ -89,7 +89,7 @@ async function createPublicBoard() {
   const boardBuilder = htmlFactory(htmlTemplates.board)
   const content = boardBuilder(newBoard, statuses)
   domManager.addChild("#root", content);
-  boardsManager.eventListeners(newBoard)
+  boardsManager.eventListeners(newBoard, statuses)
 }
 
 async function createPrivateBoard() {
@@ -99,7 +99,7 @@ async function createPrivateBoard() {
   const boardBuilder = htmlFactory(htmlTemplates.board)
   const content = boardBuilder(newBoard, statuses)
   domManager.addChild("#root", content);
-  boardsManager.eventListeners(newBoard)
+  boardsManager.eventListeners(newBoard, statuses)
 }
 
 function showHideButtonHandler(clickEvent) {
@@ -254,11 +254,19 @@ async function addColumnHandler(clickEvent) {
   const new_column = await dataHandler.addColumn(boardId);
   const columnBuilder = htmlFactory(htmlTemplates.addColumn);
   const content = columnBuilder(boardId, new_column)
-  console.log(new_column)
-  clickEvent.target.closest('.board').querySelector('.board-columns').insertAdjacentHTML("beforeend", content)
+  const test = `<button class="add-column" data-board-id="${boardId}">+</button>`
+  const targetBoard = clickEvent.target.closest('.board').querySelector('.board-columns')
+  targetBoard.insertAdjacentHTML("beforeend", content)
+  clickEvent.target.remove()
+  targetBoard.insertAdjacentHTML("beforeend", test)
   domManager.addEventListener(
       `.column-title[data-column-id="${new_column[0]['id']}"]`,
       "click",
       editColumnNameHandler
+  )
+    domManager.addEventListener(
+        `.add-column[data-board-id="${boardId}"]`,
+        "click",
+        addColumnHandler
   )
 }
