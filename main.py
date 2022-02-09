@@ -95,7 +95,8 @@ def create_private_board(user_id):
 @json_response
 def add_new_card(board_id):
     title = request.get_json()
-    return queires.add_new_card(board_id, title)
+    first_col = queires.get_first_column_of_board(board_id)
+    return queires.add_new_card(first_col["id"], title)
 
 
 @app.route("/api/cards/<int:card_id>/change_name", methods=["PUT"])
