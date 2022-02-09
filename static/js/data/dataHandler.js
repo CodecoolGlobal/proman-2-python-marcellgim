@@ -6,6 +6,9 @@ export let dataHandler = {
             return await apiGet("/api/public/boards")
         }
     },
+    getBoard: async function (boardId) {
+        return await apiGet(`/api/boards/${boardId}`)
+    },
     getCardsByBoardId: async function (boardId) {
         return await apiGet(`/api/boards/${boardId}/cards`);
     },

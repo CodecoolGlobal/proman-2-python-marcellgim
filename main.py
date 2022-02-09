@@ -208,6 +208,11 @@ def new_column(board_id: int):
     return queires.add_new_column_to_board(board_id, default_column_name)
 
 
+@app.route('/api/boards/<int:board_id>')
+def get_board(board_id):
+    return queires.get_board_by_id(board_id)
+
+
 def main():
     app.run(debug=True)
 

@@ -21,7 +21,13 @@ export let boardsManager = {
         if (operation === "Delete") {
             document.querySelector(`.board[data-board-id="${boardId}"]`).remove();
         } else {
-
+            const updatedBoard = await dataHandler.getBoard(boardId);
+            const columns = await dataHandler.getColumnsByBoardId(updatedBoard.id)
+            const boardBuilder = htmlFactory(htmlTemplates.board);
+            const content = boardBuilder(updatedBoard, columns);
+            domManager.addChild("#root", content);
+            this.eventListeners(updatedBoard, columns)
+            await cardsManager.loadCards(updatedBoard.id);
         }
     },
     eventListeners: function (board, statuses) {

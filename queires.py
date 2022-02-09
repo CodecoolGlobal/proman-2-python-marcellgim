@@ -286,3 +286,12 @@ def get_column(column_id):
         WHERE id = %(column_id)s;
         """
         , {"column_id": column_id}, False)
+
+
+def get_board_by_id(board_id):
+    return data_manager.execute_select(
+        """
+        SELECT * FROM boards
+        WHERE id = %(board_id)s;
+        """
+        , {"board_id": board_id}, False)
