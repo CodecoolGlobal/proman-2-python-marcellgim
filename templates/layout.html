@@ -16,8 +16,7 @@
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/fontawesome.css" integrity="sha384-u5J7JghGz0qUrmEsWzBQkfvc8nK3fUT7DCaQzNQ+q4oEXhGSx+P2OqjWsfIRB8QT" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dragula@3.7.3/dist/dragula.min.css" integrity="sha256-kbjOP63kZCB+lxhssN+h5qDCLSLI7EhP3/r2S/jPCd4=" crossorigin="anonymous">
-        <script defer src="https://cdn.jsdelivr.net/npm/dragula@3.7.3/dist/dragula.min.js" integrity="sha256-egj5xxtj40Ds0GUbObVZ7m2LEOsnvu9i5Ogtmd1I+jk=" crossorigin="anonymous"></script>
-        <script type="module" src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+        {% block scripts %}{% endblock %}
     </head>
     <body>
     {% with messages = get_flashed_messages() %}
