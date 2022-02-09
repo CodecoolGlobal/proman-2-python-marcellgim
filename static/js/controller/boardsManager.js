@@ -14,6 +14,14 @@ export let boardsManager = {
             const content = boardBuilder(board, columns);
             domManager.addChild("#root", content);
             this.eventListeners(board, columns)
+            await cardsManager.loadCards(board.id);
+        }
+    },
+    reloadBoard: async function (boardId, operation) {
+        if (operation === "Delete") {
+            document.querySelector(`.board[data-board-id="${boardId}"]`).remove();
+        } else {
+
         }
     },
     eventListeners: function (board, statuses) {
@@ -95,10 +103,6 @@ async function createPrivateBoard() {
 function showHideButtonHandler(clickEvent) {
     const boardId = clickEvent.target.dataset.boardId;
     toggleBoard(boardId)
-    if (!clickEvent.target.classList.contains("loaded")) {
-        clickEvent.target.classList.add("loaded")
-        cardsManager.loadCards(boardId);
-    }
     if (clickEvent.target.innerHTML === "⋁") {
         clickEvent.target.innerHTML = "⋀"
     } else {
