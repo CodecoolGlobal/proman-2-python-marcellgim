@@ -61,7 +61,7 @@ function boardBuilder(board, board_columns) {
 
 function cardBuilder(card) {
     return `
-    <div class="card" data-card-id="${card.id}" data-board-id="${card['board_id']}" draggable="true">
+    <div class="card" data-card-id="${card.id}" data-board-id="${card['board_id']}">
         <div class="card-title" data-card-id="${card.id}">${card.title}</div>
         <button class="delete-card" data-card-id="${card.id}"><i class="fas fa-trash-alt"></i></button>
         <button class="archive-card" data-card-id="${card.id}">Archive</button>
@@ -109,7 +109,7 @@ function cardTitleBuilder(card) {
 }
 
 function archivedCardsBuilder(archivedCards){
-    return `<div class="archived-cards" data-card-id="${archivedCards['card_id']}">${archivedCards['title']}
+    return `<div class="archived-cards" data-card-id="${archivedCards['card_id']}" style="display:flex">${archivedCards['title']}
             <button class="unarchive-card" data-card-id="${archivedCards['card_id']}">Unarchive card</button>
             </div>`
 }

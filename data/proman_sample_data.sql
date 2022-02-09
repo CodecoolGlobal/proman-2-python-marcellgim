@@ -16,6 +16,11 @@ SET default_with_oids = false;
 ---
 --- drop tables
 ---
+ALTER TABLE IF EXISTS ONLY public.boards
+    DROP CONSTRAINT IF EXISTS fk_board_id CASCADE;
+ALTER TABLE IF EXISTS ONLY public.board_columns
+    DROP CONSTRAINT IF EXISTS fk_board_columns_board_id CASCADE;
+
 
 DROP TABLE IF EXISTS statuses CASCADE;
 DROP TABLE IF EXISTS boards CASCADE;
@@ -124,3 +129,8 @@ ALTER TABLE ONLY cards
 ALTER TABLE ONLY boards
     ADD CONSTRAINT  fk_boards_user_id FOREIGN KEY  (user_id) REFERENCES users(id);
 
+ALTER TABLE ONLY board_columns
+    ADD CONSTRAINT fk_board_columns_board_id FOREIGN KEY (board_id) REFERENCES boards(id) ON DELETE CASCADE;
+
+ALTER TABLE ONLY board_columns
+    ADD CONSTRAINT fk_board_columns_status_id FOREIGN KEY (status_id) REFERENCES statuses(id);

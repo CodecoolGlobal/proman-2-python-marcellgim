@@ -199,6 +199,15 @@ def move_card(card_id):
     return "Card moved"
 
 
+@app.route('/api/cards/reorder', methods=["PUT"])
+@json_response
+def reorder_cards():
+    card_order = request.get_json()
+    for position, card_id in enumerate(card_order):
+        queires.set_card_order(int(card_id), position)
+    return "Cards reordered"
+
+  
 @app.route('/api/boards/<int:board_id>/delete', methods=['DELETE'])
 @json_response
 def delete_board(board_id):
@@ -206,7 +215,7 @@ def delete_board(board_id):
     if "username" in session:
         user_id = queires.get_user_id(session["username"])["id"]
     owner = queires.get_owner(board_id)
-    if owner is not None and (user_id != owner['id']):
+    if owner is not None and (user_id != owner["id"]):
         abort(403)
     queires.delete_board(board_id, user_id)
     return "Board deleted"
