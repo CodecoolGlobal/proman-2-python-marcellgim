@@ -61,8 +61,14 @@ def get_cards_for_board(board_id):
 
     matching_cards = data_manager.execute_select(
         """
-        SELECT * FROM cards
-        WHERE cards.board_id = %(board_id)s
+        SELECT
+            cards.id,
+            cards.title,
+            cards.column_id
+        FROM cards
+        JOIN board_columns
+            ON cards.column_id=board_columns.id
+        WHERE board_columns.board_id = %(board_id)s
         ORDER BY card_order;
         """
         , {"board_id": board_id})
@@ -73,12 +79,12 @@ def get_cards_for_board(board_id):
 def get_columns_by_board_id(board_id):
     statuses = data_manager.execute_select(
         """
-        SELECT status_id, title, id
+        SELECT id, title
         FROM board_columns
-        WHERE board_id=%(board_id)s
-        ORDER BY status_id
-        """, {"board_id": board_id}
-    )
+        WHERE board_id = %(board_id)s
+        ORDER BY id
+        """
+        , {"board_id": board_id})
     return statuses
 
 
@@ -86,20 +92,19 @@ def add_new_column_to_board(board_id, column_title):
     return data_manager.execute_select(
         """
         INSERT INTO board_columns 
-        VALUES(DEFAULT, %(board_id)s , 5, %(column_title)s)
+        VALUES(DEFAULT, %(board_id)s , %(column_title)s)
         RETURNING *;
-        """, {"board_id": board_id, "column_title": column_title}
-    )
+        """, {"board_id": board_id, "column_title": column_title})
 
 
-def add_new_card(board_id, title):
+def add_new_card(column_id, title):
     return data_manager.execute_select(
         """
-        INSERT INTO cards (board_id, title)
-        VALUES(%(board_id)s, %(title)s)
+        INSERT INTO cards (column_id, title)
+        VALUES(%(column_id)s, %(title)s)
         RETURNING *;
         """
-        , {"board_id": board_id, "title": title}, False)
+        , {"column_id": column_id, "title": title}, False)
 
 
 def update_card_title(card_id, new_name):
@@ -133,10 +138,10 @@ def create_new_board(board_title):
 def create_default_columns_for_board(board_id):
     data_manager.execute_modify(
         """
-        INSERT INTO board_columns VALUES(DEFAULT, %(board_id)s, 1, 'new'),
-                                         (DEFAULT, %(board_id)s, 2, 'in progress'),
-                                         (DEFAULT, %(board_id)s, 3, 'testing'),
-                                         (DEFAULT, %(board_id)s, 4, 'done');
+        INSERT INTO board_columns VALUES(DEFAULT, %(board_id)s, 'new'),
+                                         (DEFAULT, %(board_id)s, 'in progress'),
+                                         (DEFAULT, %(board_id)s, 'testing'),
+                                         (DEFAULT, %(board_id)s, 'done');
         """
         , {"board_id": board_id}
     )
@@ -234,8 +239,8 @@ def get_user_id(username):
 def save_archived_cards(card_id):
     data_manager.execute_modify(
         """
-        INSERT INTO archived_cards (card_id, board_id, status_id, title, card_order)
-        SELECT id, board_id, status_id, title, card_order
+        INSERT INTO archived_cards (card_id, column_id, title, card_order)
+        SELECT id, column_id, title, card_order
         FROM cards
         WHERE id = %(card_id)s;
         """
@@ -245,9 +250,11 @@ def save_archived_cards(card_id):
 def get_archived_cards(board_id):
     return data_manager.execute_select(
         """
-        SELECT card_id, board_id, status_id, title, card_order
+        SELECT card_id, column_id, archived_cards.title, card_order
         FROM archived_cards
-        WHERE board_id = %(board_id)s;
+        JOIN board_columns
+            ON archived_cards.column_id=board_columns.id
+        WHERE board_columns.board_id = %(board_id)s;
         """
         , {"board_id": board_id})
 
@@ -255,8 +262,8 @@ def get_archived_cards(board_id):
 def unarchive_card(card_id):
     data_manager.execute_modify(
         """
-        INSERT INTO cards (id, board_id, status_id, title, card_order)
-        SELECT card_id, board_id, status_id, title, card_order
+        INSERT INTO cards (id, column_id, title, card_order)
+        SELECT card_id, column_id, title, card_order
         FROM archived_cards
         WHERE card_id = %(card_id)s;
         DELETE FROM archived_cards
@@ -265,15 +272,15 @@ def unarchive_card(card_id):
         , {"card_id": card_id})
 
 
-def change_card_status(card_id, new_status):
+def change_card_column(card_id, new_column):
     data_manager.execute_modify(
         """
         UPDATE cards SET
-            status_id = %(new_status)s
+            column_id = %(new_column)s
         WHERE id = %(card_id)s
         ;
         """
-        , {"card_id": card_id, "new_status": new_status})
+        , {"card_id": card_id, "new_column": new_column})
 
 
 def set_card_order(card_id, card_order):
@@ -306,6 +313,17 @@ def get_owner(board_id):
         , {"board_id": board_id}, False)
 
 
+def get_first_column_of_board(board_id):
+    return data_manager.execute_select(
+        """
+        SELECT id
+        FROM board_columns
+        WHERE board_id = %(board_id)s
+        ORDER BY id;
+        """
+        , {"board_id": board_id}, False)
+
+
 def update_column_title(column_id, title):
     return data_manager.execute_modify(
         """
@@ -315,10 +333,6 @@ def update_column_title(column_id, title):
     
     """, {"title": title, "column_id": column_id}
        )
-
-
-def update_columns(board_id, status_id):
-    pass
 
 
 def get_column(column_id):

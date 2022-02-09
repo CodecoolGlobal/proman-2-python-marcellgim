@@ -10,12 +10,10 @@ export let boardsManager = {
     this.createBoardButtonListeners(user);
     for (let board of boards) {
       const columns = await dataHandler.getColumnsByBoardId(board.id)
-      console.log(columns)
       const boardBuilder = htmlFactory(htmlTemplates.board);
       const content = boardBuilder(board, columns);
       domManager.addChild("#root", content);
       this.eventListeners(board, columns)
-
     }
   },
   eventListeners: function (board, statuses) {
@@ -71,27 +69,26 @@ export let boardsManager = {
           createPrivateBoard
       );
     }
-  },
-
+  }
 };
 
 async function createPublicBoard() {
-  const newBoard = await dataHandler.createPublicBoard()
-  const statuses = await dataHandler.getStatuses()
-  const boardBuilder = htmlFactory(htmlTemplates.board)
-  const content = boardBuilder(newBoard, statuses)
+  const newBoard = await dataHandler.createPublicBoard();
+  const columns = await dataHandler.getColumnsByBoardId(newBoard.id);
+  const boardBuilder = htmlFactory(htmlTemplates.board);
+  const content = boardBuilder(newBoard, columns);
   domManager.addChild("#root", content);
-  boardsManager.eventListeners(newBoard, statuses)
+  boardsManager.eventListeners(newBoard, columns)
 }
 
 async function createPrivateBoard() {
-  const userId = await dataHandler.getUser()
-  const newBoard = await dataHandler.createPrivateBoard(userId)
-  const statuses = await dataHandler.getStatuses()
-  const boardBuilder = htmlFactory(htmlTemplates.board)
-  const content = boardBuilder(newBoard, statuses)
+  const userId = await dataHandler.getUser();
+  const newBoard = await dataHandler.createPrivateBoard(userId);
+  const columns = await dataHandler.getColumnsByBoardId(newBoard.id);
+  const boardBuilder = htmlFactory(htmlTemplates.board);
+  const content = boardBuilder(newBoard, columns);
   domManager.addChild("#root", content);
-  boardsManager.eventListeners(newBoard, statuses)
+  boardsManager.eventListeners(newBoard, columns)
 }
 
 function showHideButtonHandler(clickEvent) {
@@ -197,7 +194,7 @@ function toggleArchivedCards() {
 }
 
 async function dropCard(el, target) {
-    await dataHandler.moveCard(el.dataset.cardId, target.dataset.statusId);
+    await dataHandler.moveCard(el.dataset.cardId, target.dataset.columnId);
     const cardOrder = [];
     for (let i = 0; i < target.children.length; i++) {
       cardOrder.push(target.children[i].dataset.cardId);
