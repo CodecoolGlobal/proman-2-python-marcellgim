@@ -75,6 +75,14 @@ CREATE TABLE board_columns
     title    varchar(200)
 );
 
+
+CREATE TABLE changelog
+(
+    id          SERIAL PRIMARY KEY NOT NULL,
+    board_id    INTEGER NOT NULL,
+    operation   VARCHAR(20),
+    user_id     INTEGER
+);
 ---
 --- insert data
 ---

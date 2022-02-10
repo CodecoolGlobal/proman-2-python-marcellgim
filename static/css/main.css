@@ -124,7 +124,7 @@ section.board {
     padding: 4px;
     display: flex;
     align-items: center;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
 }
 
 .board-column:nth-of-type(1) .card {

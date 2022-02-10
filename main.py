@@ -208,6 +208,17 @@ def new_column(board_id: int):
     return queires.add_new_column_to_board(board_id, default_column_name)
 
 
+@app.route('/api/boards/<int:board_id>')
+def get_board(board_id):
+    return queires.get_board_by_id(board_id)
+
+
+@app.route('/api/get/data')
+@json_response
+def get_all_data():
+    return queires.get_all_data()
+
+
 @app.route("/api/boards/columns/<int:column_id>/delete", methods=["DELETE"])
 @json_response
 def delete_board_column(column_id: int):

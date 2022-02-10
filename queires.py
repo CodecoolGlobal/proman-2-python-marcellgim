@@ -1,6 +1,25 @@
 import data_manager
 
 
+def get_all_data():
+    return data_manager.execute_select(
+        """
+        SELECT b.id AS table_board_id, b.title AS table_board_title, b.user_id AS table_board_user_id,
+               bc.id AS table_boardColumns_id, bc.title AS table_boardColumns_title,
+               c.id AS table_cards_id, c.column_id AS table_cards_columndId, c.title AS table_cards_title, c.card_order AS table_cards_cardOrder,
+               ac.id AS table_archivedCards_id, ac.card_id AS table_archivedCards_cardId, ac.column_id AS table_archivedCards_columnId, ac.title AS table_archivedCards_title, ac.card_order AS table_archivedCards_cardOrder
+        FROM boards b
+        LEFT JOIN board_columns bc
+            ON b.id = bc.board_id
+        LEFT JOIN cards c
+            ON bc.id = c.column_id
+        LEFT JOIN archived_cards ac
+            ON c.id = ac.card_id
+        WHERE b.user_id IS NULL;
+        """
+    )
+
+
 def get_public_boards():
     """
     Gather all public boards
@@ -286,6 +305,15 @@ def get_column(column_id):
         WHERE id = %(column_id)s;
         """
         , {"column_id": column_id}, False)
+
+
+def get_board_by_id(board_id):
+    return data_manager.execute_select(
+        """
+        SELECT * FROM boards
+        WHERE id = %(board_id)s;
+        """
+        , {"board_id": board_id}, False)
 
 
 def delete_column(column_id):

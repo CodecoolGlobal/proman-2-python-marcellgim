@@ -68,7 +68,7 @@ function cardBuilder(card) {
     <div class="card" data-card-id="${card.id}" data-column-id="${card['column_id']}">
         <div class="card-title" data-card-id="${card.id}">${card.title}</div>
         <button class="delete-card" data-card-id="${card.id}"><i class="fas fa-trash-alt"></i></button>
-        <button class="archive-card archive" data-card-id="${card.id}">Archive</button>
+        <button class="archive-card archive" data-card-id="${card.id}"><i class="fas fa-archive"></i></button>
     </div>`;
 
 }

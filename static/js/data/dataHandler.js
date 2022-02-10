@@ -6,6 +6,9 @@ export let dataHandler = {
             return await apiGet("/api/public/boards")
         }
     },
+    getBoard: async function (boardId) {
+        return await apiGet(`/api/boards/${boardId}`)
+    },
     getCardsByBoardId: async function (boardId) {
         return await apiGet(`/api/boards/${boardId}/cards`);
     },
@@ -60,6 +63,9 @@ export let dataHandler = {
     },
     addColumn: async function (boardId) {
         return await apiPost(`/api/boards/${boardId}/new_column`, {})
+    },
+    getData: async function (){
+        return await apiGet(`/api/get/data`);
     },
     deleteColumn: async function (column_id) {
         return await apiDelete(`/api/boards/columns/${column_id}/delete`)
