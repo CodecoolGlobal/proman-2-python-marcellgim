@@ -38,7 +38,7 @@ button {
 }
 
 .board-container, .container {
-    max-width: 960px;
+    max-width: 1420px;
     margin: 0 auto;
 }
 
@@ -205,7 +205,7 @@ input[type=text] {
 }
 button.add-column {
     width: 210px;
-    height: 322px;
+    height: 345px;
     margin: 10px;
     border: solid 5px #65c4ff;
     border-radius: 25px 25px 25px 25px;
@@ -215,4 +215,17 @@ button.add-column {
 }
 button.add-column:hover {
     opacity: 1.0;
+}
+button.delete-column-button{
+    margin: 0 0 0 5px;
+    width: 15%;
+    align-self: center;
+    background: #b94343;
+    border-radius: 10px 10px 10px 10px;
+}
+button.delete-column-button:hover{
+    background: #590000;
+}
+div.delete-column-button-container{
+    background: #cdcdcd;
 }
