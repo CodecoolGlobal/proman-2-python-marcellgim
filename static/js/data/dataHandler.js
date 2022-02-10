@@ -63,6 +63,9 @@ export let dataHandler = {
     },
     addColumn: async function (boardId) {
         return await apiPost(`/api/boards/${boardId}/new_column`, {})
+    },
+    getData: async function (){
+        return await apiGet(`/api/get/data`);
     }
 };
 

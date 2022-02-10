@@ -213,6 +213,12 @@ def get_board(board_id):
     return queires.get_board_by_id(board_id)
 
 
+@app.route('/api/get/data')
+@json_response
+def get_all_data():
+    return queires.get_all_data()
+
+
 def main():
     app.run(debug=True)
 
