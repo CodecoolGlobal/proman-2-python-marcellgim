@@ -6,7 +6,6 @@ import {cardsManager} from "./cardsManager.js";
 export let boardsManager = {
     init: async function () {
         this.user = await dataHandler.getUser();
-        console.log(this.user)
     },
     saveData: async function () {
         const data = await dataHandler.getData(boardsManager.user)
@@ -16,7 +15,7 @@ export let boardsManager = {
         const data = await dataHandler.getData(boardsManager.user)
         const clients_data = localStorage.getItem('Storage');
         if(JSON.stringify(data) !== clients_data) {
-            getAllColumnContent()
+            await getAllColumnContent()
         }
     },
     loadBoards: async function () {
@@ -101,17 +100,16 @@ async function getAllColumnContent(){
 
         let board_header = document.querySelector(`.board-title[data-board-id="${board.id}"]`);
         board_header.innerText = `${board.title}`
-        console.log(board_header)
         let board_column = document.querySelector(`.board-columns[data-board-id="${board.id}"]`)
         let columns = await dataHandler.getColumnsByBoardId(board.id)
         let columnBuilder = htmlFactory(htmlTemplates.addColumn)
         let content = columnBuilder(board, columns)
 
         board_column.innerHTML = content+`<button class="add-column" data-board-id="${board.id}">+</button>`
-        cardsManager.loadCards(board.id)
+        await cardsManager.loadCards(board.id)
         boardsManager.eventListeners(board, columns)
     }
-    boardsManager.saveData()
+    await boardsManager.saveData()
 }
 
 async function createPublicBoard() {
@@ -121,7 +119,7 @@ async function createPublicBoard() {
     const content = boardBuilder(newBoard, columns);
     domManager.addChild("#root", content);
     boardsManager.eventListeners(newBoard, columns)
-    boardsManager.saveData()
+    await boardsManager.saveData()
 }
 
 async function createPrivateBoard() {
@@ -153,7 +151,7 @@ async function renameBoardHandler(submitEvent) {
     const newBoard = await dataHandler.renameBoard(boardId, newTitle);
     const titleBuilder = htmlFactory(htmlTemplates.boardTitle);
     submitEvent.target.outerHTML = titleBuilder(newBoard);
-    boardsManager.saveData()
+    await boardsManager.saveData()
     domManager.addEventListener(
         `.board-title[data-board-id="${newBoard.id}"]`,
         "click",
@@ -189,7 +187,7 @@ async function createCardEventHandler(submitEvent) {
     addButton.textContent = "Add new card";
     addButton.addEventListener("click", addCardEventHandler);
     submitEvent.target.replaceWith(addButton);
-    boardsManager.saveData()
+    await boardsManager.saveData()
 }
 
 
@@ -231,7 +229,7 @@ async function dropCard(el, target) {
         cardOrder.push(target.children[i].dataset.cardId);
     }
     await dataHandler.reorderCards(cardOrder);
-    boardsManager.saveData()
+    await boardsManager.saveData()
 }
 
 async function deleteHandler(clickEvent) {
@@ -243,7 +241,7 @@ async function deleteHandler(clickEvent) {
     } else {
         alert("Unauthorized");
     }
-    boardsManager.saveData()
+    await boardsManager.saveData()
 }
 
 async function renameColumnHandler(submitEvent) {
@@ -257,7 +255,7 @@ async function renameColumnHandler(submitEvent) {
     const newColumn = await dataHandler.getColumn(columnId);
     const titleBuilder = htmlFactory(htmlTemplates.columnTitle);
     submitEvent.target.outerHTML = titleBuilder(newColumn);
-    boardsManager.saveData()
+    await boardsManager.saveData()
     domManager.addEventListener(
         `.column-title[data-column-id="${columnId}"]`,
         "click",
@@ -302,14 +300,12 @@ async function addColumnHandler(clickEvent) {
         deleteColumnHandler
     )
     dragula(Array.from(document.querySelectorAll(`.board-column-content[data-board-id="${board.id}"]`)))
-    .on("drop", dropCard);
-
-    boardsManager.saveData()
+        .on("drop", dropCard);
+    await boardsManager.saveData()
 }
 
 function deleteColumnHandler(clickEvent) {
     const columnId = clickEvent.currentTarget.dataset.columnId
     dataHandler.deleteColumn(columnId)
-    console.log(columnId)
     clickEvent.currentTarget.parentElement.parentElement.remove()
 }
