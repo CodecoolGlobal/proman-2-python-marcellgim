@@ -108,18 +108,21 @@ export let boardsManager = {
 async function getAllColumnContent(){
     const boards = await dataHandler.getBoards();
     for(let board of boards){
+
+        let board_header = document.querySelector(`.board-title[data-board-id="${board.id}"]`);
+        board_header.innerText = `${board.title}`
+        console.log(board_header)
         let board_column = document.querySelector(`.board-columns[data-board-id="${board.id}"]`)
         let columns = await dataHandler.getColumnsByBoardId(board.id)
         let columnBuilder = htmlFactory(htmlTemplates.addColumn)
         let content = columnBuilder(board, columns)
+
         board_column.innerHTML = content+`<button class="add-column" data-board-id="${board.id}">+</button>`
         cardsManager.loadCards(board.id)
         boardsManager.eventListeners(board, columns)
     }
     boardsManager.init()
-
 }
-
 
 async function createPublicBoard() {
     const newBoard = await dataHandler.createPublicBoard();
