@@ -5,26 +5,23 @@ import {cardsManager} from "./cardsManager.js";
 
 export let boardsManager = {
     init: async function () {
-        const data = await dataHandler.getData()
-        // console.log('changed')
+        this.user = await dataHandler.getUser();
+        console.log(this.user)
+    },
+    saveData: async function () {
+        const data = await dataHandler.getData(boardsManager.user)
         localStorage.setItem('Storage', JSON.stringify(data))
     },
     clientChange: async function(){
-        const data = await dataHandler.getData()
+        const data = await dataHandler.getData(boardsManager.user)
         const clients_data = localStorage.getItem('Storage');
-        // console.log(JSON.stringify(data))
-        // console.log(clients_data)
-        if(JSON.stringify(data) === clients_data){
-            console.log('Same data')
-        } else {
-            console.log('CHANGED DATA')
+        if(JSON.stringify(data) !== clients_data) {
             getAllColumnContent()
         }
     },
     loadBoards: async function () {
-        const user = await dataHandler.getUser();
-        const boards = await dataHandler.getBoards(user);
-        this.createBoardButtonListeners(user);
+        const boards = await dataHandler.getBoards(boardsManager.user);
+        this.createBoardButtonListeners(boardsManager.user);
         for (let board of boards) {
             const columns = await dataHandler.getColumnsByBoardId(board.id)
             const boardBuilder = htmlFactory(htmlTemplates.board);
@@ -99,7 +96,7 @@ export let boardsManager = {
 
 
 async function getAllColumnContent(){
-    const boards = await dataHandler.getBoards();
+    const boards = await dataHandler.getBoards(boardsManager.user);
     for(let board of boards){
 
         let board_header = document.querySelector(`.board-title[data-board-id="${board.id}"]`);
@@ -114,7 +111,7 @@ async function getAllColumnContent(){
         cardsManager.loadCards(board.id)
         boardsManager.eventListeners(board, columns)
     }
-    boardsManager.init()
+    boardsManager.saveData()
 }
 
 async function createPublicBoard() {
@@ -124,12 +121,11 @@ async function createPublicBoard() {
     const content = boardBuilder(newBoard, columns);
     domManager.addChild("#root", content);
     boardsManager.eventListeners(newBoard, columns)
-    boardsManager.init()
+    boardsManager.saveData()
 }
 
 async function createPrivateBoard() {
-    const userId = await dataHandler.getUser();
-    const newBoard = await dataHandler.createPrivateBoard(userId);
+    const newBoard = await dataHandler.createPrivateBoard(boardsManager.user);
     const columns = await dataHandler.getColumnsByBoardId(newBoard.id);
     const boardBuilder = htmlFactory(htmlTemplates.board);
     const content = boardBuilder(newBoard, columns);
@@ -157,7 +153,7 @@ async function renameBoardHandler(submitEvent) {
     const newBoard = await dataHandler.renameBoard(boardId, newTitle);
     const titleBuilder = htmlFactory(htmlTemplates.boardTitle);
     submitEvent.target.outerHTML = titleBuilder(newBoard);
-    boardsManager.init()
+    boardsManager.saveData()
     domManager.addEventListener(
         `.board-title[data-board-id="${newBoard.id}"]`,
         "click",
@@ -173,7 +169,7 @@ function editBoardnameHandler(clickEvent) {
     nameForm.innerHTML = formBuilder(clickEvent.target.innerText);
     nameForm.addEventListener("submit", renameBoardHandler)
     clickEvent.target.replaceWith(nameForm);
-    boardsManager.init()
+    boardsManager.saveData()
 
 }
 
@@ -193,7 +189,7 @@ async function createCardEventHandler(submitEvent) {
     addButton.textContent = "Add new card";
     addButton.addEventListener("click", addCardEventHandler);
     submitEvent.target.replaceWith(addButton);
-    boardsManager.init()
+    boardsManager.saveData()
 }
 
 
@@ -203,7 +199,7 @@ function addCardEventHandler(clickEvent) {
     cardForm.innerHTML = addNewCardForm();
     cardForm.addEventListener("submit", createCardEventHandler);
     clickEvent.target.replaceWith(cardForm);
-    boardsManager.init()
+    boardsManager.saveData()
 }
 
 function toggleBoard(boardId) {
@@ -234,7 +230,7 @@ async function dropCard(el, target) {
         cardOrder.push(target.children[i].dataset.cardId);
     }
     await dataHandler.reorderCards(cardOrder);
-    boardsManager.init()
+    boardsManager.saveData()
 }
 
 async function deleteHandler(clickEvent) {
@@ -246,7 +242,7 @@ async function deleteHandler(clickEvent) {
     } else {
         alert("Unauthorized");
     }
-    boardsManager.init()
+    boardsManager.saveData()
 }
 
 async function renameColumnHandler(submitEvent) {
@@ -260,7 +256,7 @@ async function renameColumnHandler(submitEvent) {
     const newColumn = await dataHandler.getColumn(columnId);
     const titleBuilder = htmlFactory(htmlTemplates.columnTitle);
     submitEvent.target.outerHTML = titleBuilder(newColumn);
-    boardsManager.init()
+    boardsManager.saveData()
     domManager.addEventListener(
         `.column-title[data-column-id="${columnId}"]`,
         "click",
@@ -307,7 +303,7 @@ async function addColumnHandler(clickEvent) {
     dragula(Array.from(document.querySelectorAll(`.board-column-content[data-board-id="${board.id}"]`)))
     .on("drop", dropCard);
 
-    boardsManager.init()
+    boardsManager.saveData()
 }
 
 function deleteColumnHandler(clickEvent) {

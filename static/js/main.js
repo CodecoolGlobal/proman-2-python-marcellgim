@@ -1,8 +1,9 @@
 import { boardsManager } from "./controller/boardsManager.js";
 
-function init() {
-  boardsManager.init();
-  boardsManager.loadBoards();
+async function init() {
+  await boardsManager.init();
+  await boardsManager.saveData();
+  await boardsManager.loadBoards();
   setInterval(boardsManager.clientChange, 500)
 }
 
