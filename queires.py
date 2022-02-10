@@ -1,7 +1,7 @@
 import data_manager
 
 
-def get_all_data():
+def get_all_data(user_id):
     return data_manager.execute_select(
         """
         SELECT b.id AS table_board_id, b.title AS table_board_title, b.user_id AS table_board_user_id,
@@ -15,9 +15,9 @@ def get_all_data():
             ON bc.id = c.column_id
         LEFT JOIN archived_cards ac
             ON c.id = ac.card_id
-        WHERE b.user_id IS NULL;
+        WHERE b.user_id IS NULL OR b.user_id = %(user_id)s;
         """
-    )
+        , {"user_id": user_id})
 
 
 def get_public_boards():

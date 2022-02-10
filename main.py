@@ -216,7 +216,8 @@ def get_board(board_id):
 @app.route('/api/get/data')
 @json_response
 def get_all_data():
-    return queires.get_all_data()
+    user_id = request.args.get("user")
+    return queires.get_all_data(user_id)
 
 
 @app.route("/api/boards/columns/<int:column_id>/delete", methods=["DELETE"])

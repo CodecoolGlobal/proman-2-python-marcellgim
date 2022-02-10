@@ -64,8 +64,8 @@ export let dataHandler = {
     addColumn: async function (boardId) {
         return await apiPost(`/api/boards/${boardId}/new_column`, {})
     },
-    getData: async function (){
-        return await apiGet(`/api/get/data`);
+    getData: async function (userId){
+        return await apiGet(`/api/get/data?user=${userId}`);
     },
     deleteColumn: async function (column_id) {
         return await apiDelete(`/api/boards/columns/${column_id}/delete`)
