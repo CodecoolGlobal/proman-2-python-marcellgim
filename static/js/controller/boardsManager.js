@@ -225,6 +225,7 @@ function toggleArchivedCards(boardId) {
 
 async function dropCard(el, target) {
     await dataHandler.moveCard(el.dataset.cardId, target.dataset.columnId);
+    el.dataset.columnId = target.dataset.columnId;
     const cardOrder = [];
     for (let i = 0; i < target.children.length; i++) {
         cardOrder.push(target.children[i].dataset.cardId);
