@@ -299,6 +299,11 @@ async function addColumnHandler(clickEvent) {
         "click",
         addColumnHandler
     )
+    domManager.addEventListener(
+        `.delete-column-button[data-column-id="${new_column[0]['id']}"`,
+        "click",
+        deleteColumnHandler
+    )
     dragula(Array.from(document.querySelectorAll(`.board-column-content[data-board-id="${board.id}"]`)))
     .on("drop", dropCard);
 
