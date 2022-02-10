@@ -219,6 +219,13 @@ def get_all_data():
     return queires.get_all_data()
 
 
+@app.route("/api/boards/columns/<int:column_id>/delete", methods=["DELETE"])
+@json_response
+def delete_board_column(column_id: int):
+    queires.delete_column(column_id)
+    return "Column deleted"
+
+
 def main():
     app.run(debug=True)
 

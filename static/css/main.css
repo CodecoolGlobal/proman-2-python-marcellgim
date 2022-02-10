@@ -73,8 +73,12 @@ section.board {
 }
 
 .board-columns {
-    display: none;
+    display: flex;
     flex-wrap: wrap;
+}
+
+.hide {
+    display: none;
 }
 
 .board-columns-shown {
