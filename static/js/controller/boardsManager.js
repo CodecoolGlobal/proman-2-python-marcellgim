@@ -288,6 +288,7 @@ async function addColumnHandler(clickEvent) {
     targetBoard.insertAdjacentHTML("beforeend", content)
     clickEvent.target.remove()
     targetBoard.insertAdjacentHTML("beforeend", test)
+
     domManager.addEventListener(
         `.column-title[data-column-id="${new_column[0]['id']}"]`,
         "click",
@@ -298,6 +299,9 @@ async function addColumnHandler(clickEvent) {
         "click",
         addColumnHandler
     )
+    dragula(Array.from(document.querySelectorAll(`.board-column-content[data-board-id="${board.id}"]`)))
+    .on("drop", dropCard);
+
     boardsManager.init()
 }
 
