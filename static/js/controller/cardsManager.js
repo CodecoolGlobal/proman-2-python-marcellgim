@@ -49,16 +49,16 @@ export let cardsManager = {
 };
 
 function deleteButtonHandler(clickEvent) {
-    const cardId = clickEvent.currentTarget.dataset.cardId
+    const cardId = clickEvent.target.dataset.cardId
     dataHandler.deleteCard(cardId)
-    clickEvent.currentTarget.parentElement.remove()
+    clickEvent.target.parentElement.remove()
 }
 
 function archiveCardHandler(clickEvent) {
-    const cardId = clickEvent.target.dataset.cardId
+    const cardId = clickEvent.currentTarget.dataset.cardId
     dataHandler.archiveCard(cardId)
     dataHandler.deleteCard(cardId)
-    clickEvent.target.parentElement.remove()
+    clickEvent.currentTarget.parentElement.remove()
 }
 
 async function renameCardHandler(submitEvent) {
