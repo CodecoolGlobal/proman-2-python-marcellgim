@@ -1,13 +1,28 @@
+import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
 import {dataHandler} from "../data/dataHandler.js";
 import {addNewCardForm, htmlFactory, htmlTemplates} from "../view/htmlFactory.js";
 import {domManager} from "../view/domManager.js";
 import {cardsManager} from "./cardsManager.js";
 
+
 export let boardsManager = {
+    socket: io(),
+    init: async function () {
+        this.user = await dataHandler.getUser();
+        this.localStruct = dataHandler.getServerStruct(this.user);
+        this.socket.on("refresh", async () => {
+            const serverStruct = dataHandler.getServerStruct(this.user)
+            if (boardsManager.localStruct !== serverStruct) {
+                await this.loadBoards()
+            } else {console.log("No change")}
+            boardsManager.localStruct = serverStruct;
+        })
+        await this.loadBoards();
+    },
     loadBoards: async function () {
-        const user = await dataHandler.getUser();
-        const boards = await dataHandler.getBoards(user);
-        this.createBoardButtonListeners(user);
+        document.querySelector("#root").innerHTML = '';
+        const boards = await dataHandler.getBoards(this.user);
+        this.createBoardButtonListeners(this.user);
         for (let board of boards) {
             const columns = await dataHandler.getColumnsByBoardId(board.id)
             const boardBuilder = htmlFactory(htmlTemplates.board);
@@ -87,6 +102,7 @@ async function createPublicBoard() {
     const content = boardBuilder(newBoard, columns);
     domManager.addChild("#root", content);
     boardsManager.eventListeners(newBoard, columns)
+    boardsManager.socket.emit("change")
 }
 
 async function createPrivateBoard() {
@@ -97,6 +113,7 @@ async function createPrivateBoard() {
     const content = boardBuilder(newBoard, columns);
     domManager.addChild("#root", content);
     boardsManager.eventListeners(newBoard, columns)
+    boardsManager.socket.emit("change", true)
 }
 
 function showHideButtonHandler(clickEvent) {
@@ -117,8 +134,10 @@ async function renameBoardHandler(submitEvent) {
         newTitle = "Board"
     }
     const newBoard = await dataHandler.renameBoard(boardId, newTitle);
+    const isPrivate = (newBoard.user_id !== null)
     const titleBuilder = htmlFactory(htmlTemplates.boardTitle);
     submitEvent.target.outerHTML = titleBuilder(newBoard);
+    boardsManager.socket.emit("change", isPrivate)
     domManager.addEventListener(
         `.board-title[data-board-id="${newBoard.id}"]`,
         "click",
@@ -152,6 +171,7 @@ async function createCardEventHandler(submitEvent) {
     addButton.textContent = "Add new card";
     addButton.addEventListener("click", addCardEventHandler);
     submitEvent.target.replaceWith(addButton);
+    boardsManager.socket.emit("change")
 }
 
 
@@ -192,6 +212,7 @@ async function dropCard(el, target) {
         cardOrder.push(target.children[i].dataset.cardId);
     }
     await dataHandler.reorderCards(cardOrder);
+    boardsManager.socket.emit("change")
 }
 
 async function deleteHandler(clickEvent) {
@@ -200,6 +221,7 @@ async function deleteHandler(clickEvent) {
     const result = await dataHandler.deleteBoard(boardId);
     if (result === "Board deleted") {
         deleteButton.closest(".board").remove();
+        boardsManager.socket.emit("change")
     } else {
         alert("Unauthorized");
     }
@@ -222,6 +244,7 @@ async function renameColumnHandler(submitEvent) {
         "click",
         editColumnNameHandler
     )
+        boardsManager.socket.emit("change")
 }
 
 function editColumnNameHandler(clickEvent) {
@@ -254,6 +277,7 @@ async function addColumnHandler(clickEvent) {
         "click",
         addColumnHandler
     )
+    boardsManager.socket.emit("change")
 }
 
 function deleteColumnHandler(clickEvent) {
@@ -261,4 +285,5 @@ function deleteColumnHandler(clickEvent) {
     dataHandler.deleteColumn(columnId)
     console.log(columnId)
     clickEvent.currentTarget.parentElement.parentElement.remove()
+    boardsManager.socket.emit("change")
 }

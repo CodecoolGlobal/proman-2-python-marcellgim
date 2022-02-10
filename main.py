@@ -1,4 +1,5 @@
 from flask import Flask, render_template, url_for, request, redirect, session, flash, abort
+from flask_socketio import SocketIO, join_room, emit
 from dotenv import load_dotenv
 
 from util import json_response, hash_password, check_password
@@ -8,6 +9,7 @@ import queires
 mimetypes.add_type('application/javascript', '.js')
 app = Flask(__name__)
 app.secret_key = "so_secret"
+socketio = SocketIO(app)
 load_dotenv()
 
 
@@ -215,8 +217,29 @@ def delete_board_column(column_id: int):
     return "Column deleted"
 
 
+@app.route('/api/structure')
+@json_response
+def get_struct():
+    user_id = request.args.get("user")
+    return queires.get_structure(user_id)
+
+
+@socketio.on("connect")
+def handle_connect():
+    if "username" in session:
+        join_room(session["username"])
+
+
+@socketio.on("change")
+def handle_change(private=False):
+    if not private:
+        emit("refresh", broadcast=True)
+    else:
+        emit("refresh", to=session["username"])
+
+
 def main():
-    app.run(debug=True)
+    socketio.run(app)
 
     # Serving the favicon
     with app.app_context():

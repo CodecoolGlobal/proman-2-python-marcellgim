@@ -63,6 +63,9 @@ export let dataHandler = {
     },
     deleteColumn: async function (column_id) {
         return await apiDelete(`/api/boards/columns/${column_id}/delete`)
+    },
+    getServerStruct: async function (userId) {
+        return await apiGet(`/api/structure?user=${userId}`)
     }
 };
 

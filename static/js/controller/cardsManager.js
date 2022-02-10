@@ -1,6 +1,7 @@
 import {dataHandler} from "../data/dataHandler.js";
 import {htmlFactory, htmlTemplates} from "../view/htmlFactory.js";
 import {domManager} from "../view/domManager.js";
+import {boardsManager} from "./boardsManager.js";
 
 export let cardsManager = {
     loadCards: async function (boardId) {
@@ -52,6 +53,7 @@ function deleteButtonHandler(clickEvent) {
     const cardId = clickEvent.currentTarget.dataset.cardId
     dataHandler.deleteCard(cardId)
     clickEvent.currentTarget.parentElement.remove()
+    boardsManager.socket.emit("change")
 }
 
 function archiveCardHandler(clickEvent) {
@@ -66,6 +68,7 @@ function archiveCardHandler(clickEvent) {
     dataHandler.archiveCard(cardId)
     dataHandler.deleteCard(cardId)
     document.querySelector(`.archived-cards[data-board-id="${boardId}"]`).appendChild(targetCard);
+    boardsManager.socket.emit("change")
 }
 
 async function renameCardHandler(submitEvent) {
@@ -80,6 +83,7 @@ async function renameCardHandler(submitEvent) {
         "click",
         editCardnameHandler
     );
+    boardsManager.socket.emit("change")
 }
 
 function editCardnameHandler(clickEvent) {
@@ -102,4 +106,5 @@ function unarchiveCardHandler(clickEvent) {
     const columnId = targetCard.dataset.columnId;
     dataHandler.unarchiveCard(cardId)
     document.querySelector(`.board-column-content[data-column-id="${columnId}"]`).appendChild(targetCard);
+    boardsManager.socket.emit("change")
 }

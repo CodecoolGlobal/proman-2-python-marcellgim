@@ -294,3 +294,19 @@ def delete_column(column_id):
         DELETE FROM board_columns
         WHERE id = %(column_id)s;
         """, {"column_id": column_id})
+
+
+def get_structure(user_id):
+    data_manager.execute_select(
+        """
+        SELECT *
+        FROM boards
+        LEFT JOIN board_columns
+            ON boards.id = board_columns.board_id
+        LEFT JOIN cards
+            ON board_columns.id = cards.column_id
+        LEFT JOIN archived_cards
+            ON cards.id = archived_cards.card_id
+        WHERE boards.user_id IS NULL OR boards.user_id = %(user_id)s;
+        """
+        , {"user_id": user_id})
